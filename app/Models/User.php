@@ -19,7 +19,6 @@ class User extends Authenticatable
         'uuid',
         'role_id',
         'nama_lengkap',
-        'username',
         'password_hash',
         'is_active',
     ];

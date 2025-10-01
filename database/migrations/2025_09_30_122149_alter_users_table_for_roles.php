@@ -17,7 +17,6 @@ return new class extends Migration
             $table->renameColumn('password', 'password_hash');
             $table->uuid()->unique()->after('id');
             $table->foreignId('role_id')->after('uuid')->constrained('roles');
-            $table->string('username', 100)->unique()->after('nama_lengkap');
             $table->boolean('is_active')->default(true)->after('password_hash');
             $table->dropColumn(['email', 'email_verified_at', 'remember_token']);
         });
