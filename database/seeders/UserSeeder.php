@@ -15,12 +15,12 @@ class UserSeeder extends Seeder
         $adminRole = Role::where('nama_role', 'Admin')->first();
 
         if ($adminRole) {
-            User::create([
+            User::firstOrCreate([
                 'uuid' => Str::uuid(),
                 'role_id' => $adminRole->id,
                 'nama_lengkap' => 'Administrator',
-                'username' => 'admin',
-                'password_hash' => Hash::make('password'), 
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('password'), 
                 'is_active' => true,
             ]);
         }
