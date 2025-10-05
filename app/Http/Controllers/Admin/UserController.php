@@ -93,7 +93,6 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User berhasil dibuat.');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -191,7 +190,6 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User berhasil diperbarui.');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -248,7 +246,6 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User berhasil dihapus.');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
