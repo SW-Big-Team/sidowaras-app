@@ -5,6 +5,15 @@ use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\UserController;
 
+// Route::group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Welcome');
+    })->name('welcome');
+
+    Route::get('/karyawan/scanner', function () {
+        return Inertia::render('Karyawan/Scanner');
+    })->name('scanner');
+// });
 
 // CSRF token endpoint (untuk axios di React/Inertia)
 Route::get('/csrf-token', function () {
