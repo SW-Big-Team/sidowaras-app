@@ -1,47 +1,14 @@
-import react from "@vitejs/plugin-react";
-import laravel from "laravel-vite-plugin";
-import path from "path";
-import { defineConfig } from "vite";
-import compression from "vite-plugin-compression2";
-import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: "resources/js/app.tsx",
+            input: [
+                'resources/sass/app.scss',
+                'resources/js/app.js',
+            ],
             refresh: true,
         }),
-        react(),
-        compression(),
-        ViteImageOptimizer()
     ],
-    resolve: {
-        alias: {
-            "!assets": path.resolve(__dirname, "./resources/assets"),
-            'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
-            '@next-ui/react': path.resolve(__dirname, './node_modules/@next-ui/react'),
-        },
-    },
-    build: {
-        minify: "terser",
-        sourcemap: "hidden",
-        manifest: "manifest.json",
-        rollupOptions: {
-            output: {
-                // Template untuk nama asset yang menambahkan hash
-                assetFileNames: `assets/[hash].[ext]`,
-                // Template untuk nama chunks yang menambahkan hash
-                chunkFileNames: `assets/[hash].js`,
-                // Template untuk nama entry files yang menambahkan hash
-                entryFileNames: `assets/[hash].js`,
-            },
-            onwarn(warning, defaultHandler) {
-                if (warning.code === "SOURCEMAP_ERROR") {
-                    return;
-                }
-
-                defaultHandler(warning);
-            },
-        },
-    },
 });

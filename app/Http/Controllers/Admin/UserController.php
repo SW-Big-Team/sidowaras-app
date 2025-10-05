@@ -13,6 +13,12 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        // Pastikan user login DAN role-nya Head
+        $this->middleware(['auth', 'role:Admin']);
+    }
+
     /**
      * Tampilkan semua pengguna.
      */
@@ -63,7 +69,6 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User berhasil dibuat.');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -119,7 +124,6 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User berhasil diperbarui.');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -151,7 +155,6 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User berhasil dihapus.');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
