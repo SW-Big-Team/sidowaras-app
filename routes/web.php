@@ -15,6 +15,10 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('welcome');
 
+    Route::get('/karyawan/scanner', function () {
+        return Inertia::render('Karyawan/Scanner');
+    })->name('scanner');
+
 // Auth routes 
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('throttle:5,1');
