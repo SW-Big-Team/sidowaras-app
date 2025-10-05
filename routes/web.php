@@ -102,3 +102,14 @@ Route::middleware(['auth', 'role:Admin,Karyawan,Kasir'])->group(function () {
         'message' => 'Halo Semua Role'
     ]));
 });
+
+// Admin Routes with Material Dashboard Layout
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.index');
+    })->name('dashboard');
+});
+
+Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
