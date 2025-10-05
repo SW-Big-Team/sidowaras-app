@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('no_faktur', 100)->unique()->nullable();
             $table->string('nama_pengirim', 100);
             $table->string('no_telepon_pengirim', 16)->nullable();
-            $table->string('metode_pembayaran', 20);
+            $table->enum('metode_pembayaran', ['tunai', 'non tunai'])->default('tunai');
             $table->dateTime('tgl_pembelian')->useCurrent();
             $table->decimal('total_harga', 15, 2);
             $table->foreignId('user_id')->constrained('users');
