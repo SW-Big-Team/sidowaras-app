@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthController;
-
+use App\Http\Controllers\Admin\UserController;
 
 // CSRF token endpoint (untuk axios di React/Inertia)
 Route::get('/csrf-token', function () {
@@ -30,6 +30,11 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin-area', fn() => response()->json([
         'message' => 'Halo Admin'
     ]));
+});
+
+Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->group(function () {
+    
+    Route::resource('users', UserController::class);
 });
 
 Route::middleware(['auth', 'role:Admin,Karyawan'])->group(function () {
