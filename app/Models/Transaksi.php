@@ -2,15 +2,44 @@
 
 namespace App\Models;
 
- 
+use App\Enums\MetodePembayaran;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Transaksi extends Model
 {
-    use HasFactory  ;
+    use HasFactory, HasUuids;
+
     protected $table = 'transaksi';
-    protected $guarded = ['id'];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'uuid',
+        'no_transaksi',
+        'user_id',
+        'total_harga',
+        'total_bayar',
+        'kembalian',
+        'metode_pembayaran',
+        'tgl_transaksi',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'metode_pembayaran' => MetodePembayaran::class,
+        ];
+    }
 
     public function user()
     {
@@ -22,3 +51,4 @@ class Transaksi extends Model
         return $this->hasMany(DetailTransaksi::class);
     }
 }
+

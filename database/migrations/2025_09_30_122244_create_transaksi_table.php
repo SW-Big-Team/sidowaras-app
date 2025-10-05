@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('total_harga', 15, 2);
             $table->decimal('total_bayar', 15, 2);
             $table->decimal('kembalian', 15, 2);
+            $table->enum('metode_pembayaran', ['tunai', 'non tunai'])->default('tunai');
             $table->dateTime('tgl_transaksi')->useCurrent();
             $table->timestamps();
         });
@@ -26,3 +27,4 @@ return new class extends Migration
         Schema::dropIfExists('transaksi');
     }
 };
+
