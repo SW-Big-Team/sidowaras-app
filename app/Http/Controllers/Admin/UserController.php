@@ -7,107 +7,157 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     /**
-     * Menampilkan halaman daftar semua pengguna.
+     * Tampilkan semua pengguna.
      */
     public function index()
     {
-        // Ambil semua data user beserta relasi rolenya, urutkan dari yang terbaru
-        $users = User::with('role')->latest()->paginate(10);
+        $users = User::with('role:id,nama_role')
+            ->select('id', 'uuid', 'nama_lengkap', 'email', 'role_id', 'is_active')
+            ->get();
 
-        // Tampilkan view dan kirim data user ke sana
-        // Frontend developer akan membuat file 'admin.users.index'
-        return view('admin.users.index', compact('users'));
+        return view('users.index', compact('users'));
     }
 
     /**
-     * Menampilkan form untuk membuat pengguna baru.
+     * Form tambah pengguna baru.
      */
     public function create()
     {
-        // Ambil semua role untuk ditampilkan di form (misalnya dropdown)
-        $roles = Role::all();
-        return view('admin.users.create', compact('roles'));
+        $roles = Role::select('id', 'nama_role')->get();
+        return view('users.create', compact('roles'));
     }
 
     /**
-     * Menyimpan pengguna baru ke database.
+     * Simpan pengguna baru.
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
-            'username' => 'required|string|max:100|unique:users,username',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
-            'password' => 'required|string|min:8|confirmed',
-            'is_active' => 'required|boolean',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        User::create([
-            'uuid' => Str::uuid(),
-            'nama_lengkap' => $validated['nama_lengkap'],
-            'username' => $validated['username'],
-            'role_id' => $validated['role_id'],
-            'password_hash' => Hash::make($validated['password']),
-            'is_active' => $validated['is_active'],
-        ]);
+        DB::beginTransaction();
+        try {
+            User::create([
+                'uuid' => Str::uuid(),
+                'nama_lengkap' => $validated['nama_lengkap'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role_id' => $validated['role_id'],
+                'is_active' => $validated['is_active'] ?? true,
+            ]);
 
-        return redirect()->route('users.index')->with('success', 'User baru berhasil ditambahkan.');
+            DB::commit();
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User berhasil dibuat.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Gagal membuat user: ' . $e->getMessage());
+        }
     }
 
     /**
-     * Menampilkan form untuk mengedit data pengguna.
+     * Form edit pengguna.
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        $roles = Role::all();
-        return view('admin.users.edit', compact('user', 'roles'));
+        $user = User::findOrFail($id);
+        $roles = Role::select('id', 'nama_role')->get();
+
+        return view('users.edit', compact('user', 'roles'));
     }
 
     /**
-     * Mengupdate data pengguna di database.
+     * Update data pengguna.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
+
         $validated = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
-            'username' => ['required', 'string', 'max:100', Rule::unique('users')->ignore($user->id)],
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
-            'password' => 'nullable|string|min:8|confirmed', 
-            'is_active' => 'required|boolean',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        $user->update([
-            'nama_lengkap' => $validated['nama_lengkap'],
-            'username' => $validated['username'],
-            'role_id' => $validated['role_id'],
-            'is_active' => $validated['is_active'],
-        ]);
+        DB::beginTransaction();
+        try {
+            $user->update([
+                'nama_lengkap' => $validated['nama_lengkap'],
+                'email' => $validated['email'],
+                'role_id' => $validated['role_id'],
+                'is_active' => $validated['is_active'] ?? $user->is_active,
+            ]);
 
-        if ($request->filled('password')) {
-            $user->password_hash = Hash::make($request->password);
-            $user->save();
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+                $user->save();
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Gagal memperbarui user: ' . $e->getMessage());
         }
-
-        return redirect()->route('users.index')->with('success', 'Data user berhasil diperbarui.');
     }
 
     /**
-     * Menghapus data pengguna dari database.
+     * Hapus pengguna.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        if ($user->id === auth()->id()) {
-            return back()->with('error', 'Anda tidak bisa menghapus akun sendiri.');
-        }
-        
-        $user->delete();
+        $user = User::findOrFail($id);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+        if ($user->id === Auth::id()) {
+            return redirect()
+                ->route('users.index')
+                ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $user->delete();
+            DB::commit();
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User berhasil dihapus.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->route('users.index')
+                ->with('error', 'Gagal menghapus user: ' . $e->getMessage());
+        }
     }
 }
