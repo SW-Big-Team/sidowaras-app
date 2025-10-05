@@ -14,22 +14,21 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $roles): Response
+    public function handle(Request $request, Closure $next, string $roles): Response
     {
-        //check user role
         $user = Auth::user();
 
-        // If user is not authenticated
+        // Jika user belum login
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return redirect()->route('login');
         }
 
-        // Support multiple roles separated by commas
+        // Mendukung beberapa role dipisah koma
         $allowedRoles = array_map('trim', explode(',', $roles));
 
-        // Check if user's role is in the allowed roles
+        // Jika role user tidak ada dalam allowed roles
         if (!in_array($user->role->nama_role, $allowedRoles, true)) {
-            return response()->json(['message' => 'Forbidden'], 403);
+            abort(403, 'Forbidden');
         }
 
         return $next($request);
