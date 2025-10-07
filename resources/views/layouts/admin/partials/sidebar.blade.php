@@ -9,69 +9,117 @@
   <hr class="horizontal dark mt-0 mb-2">
   <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
     <ul class="navbar-nav">
+      {{-- Dashboard --}}
       <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.dashboard') }}">
           <i class="material-symbols-rounded opacity-5">dashboard</i>
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.tables*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="#">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
-          <span class="nav-link-text ms-1">Tables</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.billing*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="#">
-          <i class="material-symbols-rounded opacity-5">receipt_long</i>
-          <span class="nav-link-text ms-1">Billing</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.virtual-reality*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="#">
-          <i class="material-symbols-rounded opacity-5">view_in_ar</i>
-          <span class="nav-link-text ms-1">Virtual Reality</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.rtl*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="#">
-          <i class="material-symbols-rounded opacity-5">format_textdirection_r_to_l</i>
-          <span class="nav-link-text ms-1">RTL</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.notifications*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="#">
-          <i class="material-symbols-rounded opacity-5">notifications</i>
-          <span class="nav-link-text ms-1">Notifications</span>
-        </a>
-      </li>
+
+      {{-- Manajemen Sistem --}}
       <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Sistem</h6>
       </li>
+
+      {{-- Manajemen Pengguna --}}
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.profile*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="#">
+        <a class="nav-link {{ request()->routeIs('admin.users*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.users.index') }}">
+          <i class="material-symbols-rounded opacity-5">group</i>
+          <span class="nav-link-text ms-1">Manajemen Pengguna</span>
+        </a>
+      </li>
+
+      {{-- Dashboard Role --}}
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.kasir.dashboard') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.kasir.dashboard') }}">
+          <i class="material-symbols-rounded opacity-5">point_of_sale</i>
+          <span class="nav-link-text ms-1">Dashboard Kasir</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.karyawan.dashboard') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.karyawan.dashboard') }}">
+          <i class="material-symbols-rounded opacity-5">badge</i>
+          <span class="nav-link-text ms-1">Dashboard Karyawan</span>
+        </a>
+      </li>
+
+      {{-- Manajemen Stok --}}
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Stok</h6>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.karyawan.stock.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.karyawan.stock.index') }}">
+          <i class="material-symbols-rounded opacity-5">inventory_2</i>
+          <span class="nav-link-text ms-1">Daftar Stok</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.karyawan.stock.tambah') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.karyawan.stock.tambah') }}">
+          <i class="material-symbols-rounded opacity-5">add_box</i>
+          <span class="nav-link-text ms-1">Tambah Obat Baru</span>
+        </a>
+      </li>
+
+      {{-- Laporan & Monitoring --}}
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Laporan & Monitoring</h6>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#">
+          <i class="material-symbols-rounded opacity-5">bar_chart</i>
+          <span class="nav-link-text ms-1">Laporan Keuangan</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#">
+          <i class="material-symbols-rounded opacity-5">assessment</i>
+          <span class="nav-link-text ms-1">Laporan Stok</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#">
+          <i class="material-symbols-rounded opacity-5">history</i>
+          <span class="nav-link-text ms-1">Aktivitas Pengguna</span>
+        </a>
+      </li>
+
+      {{-- Notifikasi --}}
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#">
+          <i class="material-symbols-rounded opacity-5">notifications</i>
+          <span class="nav-link-text ms-1">Notifikasi</span>
+          <span class="badge badge-sm bg-gradient-danger ms-auto">12</span>
+        </a>
+      </li>
+
+      {{-- Account --}}
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Akun</h6>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#">
           <i class="material-symbols-rounded opacity-5">person</i>
-          <span class="nav-link-text ms-1">Profile</span>
+          <span class="nav-link-text ms-1">Profil Saya</span>
         </a>
       </li>
+
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
-          <i class="material-symbols-rounded opacity-5">login</i>
-          <span class="nav-link-text ms-1">Sign In</span>
+        <a class="nav-link text-dark" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+          <i class="material-symbols-rounded opacity-5">logout</i>
+          <span class="nav-link-text ms-1">Logout</span>
         </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
-          <i class="material-symbols-rounded opacity-5">assignment</i>
-          <span class="nav-link-text ms-1">Sign Up</span>
-        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+          @csrf
+        </form>
       </li>
     </ul>
-  </div>
-  <div class="sidenav-footer position-absolute w-100 bottom-0">
-    <div class="mx-3">
-      <a class="btn btn-outline-dark mt-4 w-100" href="#" type="button">Documentation</a>
-      <a class="btn bg-gradient-dark w-100" href="#" type="button">Upgrade to pro</a>
-    </div>
   </div>
 </aside>

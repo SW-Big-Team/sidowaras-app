@@ -26,6 +26,10 @@ class RoleMiddleware
         // Mendukung beberapa role dipisah koma
         $allowedRoles = array_map('trim', explode(',', $roles));
 
+        if ($user->role->nama_role === 'Admin') {
+            return $next($request);
+        }
+
         // Jika role user tidak ada dalam allowed roles
         if (!in_array($user->role->nama_role, $allowedRoles, true)) {
             abort(403, 'Forbidden');

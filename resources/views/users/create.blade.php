@@ -6,7 +6,7 @@
 <body>
     <h1>Tambah User Baru</h1>
 
-    <form action="{{ route('users.store') }}" method="POST">
+    <form action="{{ route('admin.users.store') }}" method="POST">
         @csrf
 
         <label>Nama Lengkap:</label><br>
@@ -34,6 +34,6 @@
         <button type="submit">Simpan</button>
     </form>
 
-    <a href="{{ route('users.index') }}">← Kembali</a>
+    <a href="{{ route('admin.users.index') }}">← Kembali</a>
 </body>
 </html>

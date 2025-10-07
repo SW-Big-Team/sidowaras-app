@@ -6,7 +6,7 @@
 <body>
     <h1>Daftar User</h1>
 
-    <a href="{{ route('users.create') }}">+ Tambah User</a>
+    <a href="{{ route('admin.users.create') }}">+ Tambah User</a>
 
     @if (session('success'))
         <p style="color:green;">{{ session('success') }}</p>
@@ -36,8 +36,8 @@
                     <td>{{ $user->role->nama_role ?? '-' }}</td>
                     <td>{{ $user->is_active ? 'Ya' : 'Tidak' }}</td>
                     <td>
-                        <a href="{{ route('users.edit', $user->id) }}">Edit</a>
-                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('admin.users.edit', $user->id) }}">Edit</a>
+                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" onclick="return confirm('Yakin ingin menghapus user ini?')">Hapus</button>

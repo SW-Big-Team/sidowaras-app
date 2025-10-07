@@ -6,7 +6,7 @@
 <body>
     <h1>Edit User</h1>
 
-    <form action="{{ route('users.update', $user->id) }}" method="POST">
+    <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -37,6 +37,6 @@
         <button type="submit">Update</button>
     </form>
 
-    <a href="{{ route('users.index') }}">← Kembali</a>
+    <a href="{{ route('admin.users.index') }}">← Kembali</a>
 </body>
 </html>

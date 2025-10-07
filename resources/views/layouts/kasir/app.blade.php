@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
-  <title>@yield('title', 'Dashboard Karyawan - Sidowaras App')</title>
+  <title>@yield('title', 'Dashboard Kasir - Sidowaras App')</title>
   
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
@@ -25,20 +25,20 @@
 
 <body class="g-sidenav-show bg-gray-100">
   
-  @include('layouts.karyawan.partials.sidebar')
+  @include('layouts.kasir.partials.sidebar')
   
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     
-    @include('layouts.karyawan.partials.navbar')
+    @include('layouts.kasir.partials.navbar')
     
     <div class="container-fluid py-2">
       @yield('content')
       
-      @include('layouts.karyawan.partials.footer')
+      @include('layouts.kasir.partials.footer')
     </div>
   </main>
   
-  @include('layouts.karyawan.partials.configurator')
+  @include('layouts.kasir.partials.configurator')
   
   <!--   Core JS Files   -->
   <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>

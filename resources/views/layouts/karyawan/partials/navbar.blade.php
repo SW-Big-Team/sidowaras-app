@@ -20,8 +20,8 @@
         <li class="mt-1">
           <a class="nav-link text-body p-0 position-relative" href="#" target="_blank">
             <i class="material-symbols-rounded">notifications</i>
-            <span class="position-absolute top-5 start-100 translate-middle badge rounded-pill bg-danger border border-white small py-1 px-2">
-              <span class="small">12</span>
+            <span class="position-absolute top-5 start-100 translate-middle badge rounded-pill bg-warning border border-white small py-1 px-2">
+              <span class="small">5</span>
               <span class="visually-hidden">unread notifications</span>
             </span>
           </a>
@@ -29,7 +29,7 @@
         <li class="nav-item dropdown d-flex align-items-center px-3">
           <a href="#" class="nav-link text-body font-weight-bold px-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="material-symbols-rounded">account_circle</i>
-            <span class="d-sm-inline d-none ms-1">{{ Auth::user()->nama ?? 'Administrator' }}</span>
+            <span class="d-sm-inline d-none ms-1">{{ Auth::user()->nama ?? 'Karyawan' }}</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end me-sm-n4 px-2 py-3" aria-labelledby="dropdownMenuButton">
             <li class="mb-2">
@@ -56,7 +56,7 @@
                     </h6>
                     <p class="text-xs text-secondary mb-0">
                       <i class="fa fa-cog me-1"></i>
-                      Konfigurasi sistem
+                      Preferensi akun
                     </p>
                   </div>
                 </div>

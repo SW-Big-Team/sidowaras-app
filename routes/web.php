@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Auth;
 
 // Halaman public
 Route::get('/', function () {
@@ -24,13 +24,6 @@ Route::get('/karyawan/scanner', function () {
 
 // // Profil pengguna yang sedang login
 // Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth')->name('profile');
-
-// Admin Routes with Material Dashboard Layout
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.index');
-    })->name('dashboard');
-});
 
 // Route::get('/login', function () {
 //         return view('auth.login');
