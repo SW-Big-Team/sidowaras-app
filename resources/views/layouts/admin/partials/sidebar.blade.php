@@ -32,14 +32,14 @@
 
       {{-- Dashboard Role --}}
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.kasir.dashboard') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.kasir.dashboard') }}">
+        <a class="nav-link {{ request()->routeIs('kasir.dashboard') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.dashboard') }}">
           <i class="material-symbols-rounded opacity-5">point_of_sale</i>
           <span class="nav-link-text ms-1">Dashboard Kasir</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.karyawan.dashboard') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.karyawan.dashboard') }}">
+        <a class="nav-link {{ request()->routeIs('karyawan.dashboard') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.dashboard') }}">
           <i class="material-symbols-rounded opacity-5">badge</i>
           <span class="nav-link-text ms-1">Dashboard Karyawan</span>
         </a>

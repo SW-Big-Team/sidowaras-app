@@ -31,11 +31,11 @@ class LoginController extends Controller
         $user = Auth::user();
 
         switch ($user->role->nama_role) {
-            case 1:
+            case 'Admin':
                 return '/adminx/dashboard';
-            case 2:
+            case 'Karyawan':
                 return '/karyawan/dashboard';
-            case 3:
+            case 'Kasir':
                 return '/kasir/dashboard';
         }
     }

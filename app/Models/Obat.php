@@ -12,6 +12,10 @@ class Obat extends Model
     protected $table = 'obat';
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'kandungan_id' => 'array',
+    ];
+
     public function kategori()
     {
         return $this->belongsTo(KategoriObat::class, 'kategori_id');
@@ -24,7 +28,7 @@ class Obat extends Model
 
     public function kandungan()
     {
-        return $this->belongsTo(KandunganObat::class, 'kandungan_id');
+        return KandunganObat::whereIn('id', $this->kandungan_id ?? [])->get();
     }
 
     public function stokBatches()

@@ -10,12 +10,12 @@ return new class extends Migration
     {
         Schema::create('stok_batch', function (Blueprint $table) {
             $table->id();
-            $table->uuid()->unique();
+            $table->uuid('uuid')->unique();
             $table->foreignId('obat_id')->constrained('obat');
-            $table->uuid('pembelian_id')->nullable();
-            $table->foreign('pembelian_id')->references('uuid')->on('pembelian')->onDelete('set null');
+            // gunakan foreignId integer mengacu ke pembelian.id
+            $table->foreignId('pembelian_id')->nullable()->constrained('pembelian')->nullOnDelete();
             $table->string('no_batch', 100)->nullable();
-            $table->string('barcode', 100)->unique()->nullable();
+            $table->string('barcode', 100)->nullable(); // jangan paksa unique bila bisa duplikat
             $table->decimal('harga_beli', 15, 2);
             $table->decimal('harga_jual', 15, 2);
             $table->integer('jumlah_masuk');

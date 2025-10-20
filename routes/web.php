@@ -4,16 +4,16 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
-// Halaman public
+// Login
 Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('welcome');
-
+    return redirect()->route('login');
+});
 
 
 require __DIR__ . '/admin.php';
 require __DIR__ . '/karyawan.php';
 require __DIR__ . '/kasir.php';
+require __DIR__ . '/shared.php';
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -25,6 +25,3 @@ Route::get('/karyawan/scanner', function () {
 // // Profil pengguna yang sedang login
 // Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth')->name('profile');
 
-// Route::get('/login', function () {
-//         return view('auth.login');
-//     })->name('login');

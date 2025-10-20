@@ -2,27 +2,17 @@
 
 namespace App\Models;
 
-use App\Enums\MetodePembayaran;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Pembelian extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'pembelian';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // primary key tetap integer auto increment (default)
     protected $fillable = [
         'uuid',
         'no_faktur',
@@ -34,32 +24,36 @@ class Pembelian extends Model
         'user_id',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'metode_pembayaran' => MetodePembayaran::class,
-            'tgl_pembelian' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'tgl_pembelian' => 'datetime',
+    ];
 
     /**
-     * Get the user that recorded the purchase.
+     * Gunakan uuid untuk route-model-binding
      */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get the stock batches associated with this purchase.
-     */
     public function stokBatches()
     {
-        return $this->hasMany(StokBatch::class, 'pembelian_id', 'uuid');
+        return $this->hasMany(StokBatch::class, 'pembelian_id', 'id');
     }
 }

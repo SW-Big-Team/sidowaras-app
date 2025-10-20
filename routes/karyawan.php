@@ -10,6 +10,9 @@ Route::middleware(['auth', 'role:Karyawan,Admin'])->prefix('karyawan')->name('ka
     // Keranjang
     Route::get('/keranjang', fn() => view('karyawan.cart.index'))->name('keranjang');
 
+    // Pembelian Obat
+
+
     // Stock barang
     Route::get('/stock', fn() => view('karyawan.inventory.index'))->name('stock.index');
     Route::get('/stock/tambah', fn() => view('karyawan.inventory.tambah'))->name('stock.tambah');

@@ -122,7 +122,7 @@
               <i class="material-symbols-rounded text-white text-sm">admin_panel_settings</i>
             </span>
             <div class="timeline-content">
-              <a href="{{ route('admin.karyawan.dashboard') }}" class="text-dark text-sm font-weight-bold">Dashboard Karyawan</a>
+              <a href="{{ route('karyawan.dashboard') }}" class="text-dark text-sm font-weight-bold">Dashboard Karyawan</a>
               <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">10 karyawan aktif</p>
             </div>
           </div>
@@ -131,7 +131,7 @@
               <i class="material-symbols-rounded text-white text-sm">point_of_sale</i>
             </span>
             <div class="timeline-content">
-              <a href="{{ route('admin.kasir.dashboard') }}" class="text-dark text-sm font-weight-bold">Dashboard Kasir</a>
+              <a href="{{ route('kasir.dashboard') }}" class="text-dark text-sm font-weight-bold">Dashboard Kasir</a>
               <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">6 kasir aktif</p>
             </div>
           </div>
