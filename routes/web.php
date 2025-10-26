@@ -14,7 +14,12 @@ require __DIR__ . '/admin.php';
 require __DIR__ . '/karyawan.php';
 require __DIR__ . '/kasir.php';
 require __DIR__ . '/shared.php';
-Auth::routes();
+Auth::routes([
+    'verify' => false,
+    'reset' => false,
+    'confirm' => false,
+    'register' => false
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
