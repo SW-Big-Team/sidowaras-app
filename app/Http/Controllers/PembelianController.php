@@ -33,60 +33,73 @@ class PembelianController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'obat_id' => 'required|exists:obat,id',
+            'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur',
             'nama_pengirim' => 'required|string|max:100',
             'no_telepon_pengirim' => 'nullable|string|max:20',
             'metode_pembayaran' => 'required|in:tunai,non tunai',
             'tgl_pembelian' => 'required|date',
-            'harga_beli' => 'required|numeric|min:0',
-            'harga_jual' => 'required|numeric|min:0',
-            'jumlah_masuk' => 'required|integer|min:1',
-            'tgl_kadaluarsa' => 'required|date|after:today',
+            'total_harga' => 'required|numeric|min:0',
+            'obat' => 'required|array|min:1',
+            'obat.*.obat_id' => 'required|exists:obat,id',
+            'obat.*.harga_beli' => 'required|numeric|min:0',
+            'obat.*.harga_jual' => 'required|numeric|min:0',
+            'obat.*.jumlah_masuk' => 'required|integer|min:1',
+            'obat.*.tgl_kadaluarsa' => 'required|date|after:today',
         ]);
+
+        dd($request->all());
 
         DB::beginTransaction();
         try {
             $tglPembelian = date('Y-m-d H:i:s', strtotime($request->tgl_pembelian));
-            $obat = Obat::findOrFail($request->obat_id);
 
+            // Create pembelian record
             $pembelian = Pembelian::create([
                 'uuid' => (string) Str::uuid(),
-                'no_faktur' => 'INV-' . strtoupper(Str::random(6)),
+                'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
                 'nama_pengirim' => $request->nama_pengirim,
                 'no_telepon_pengirim' => $request->no_telepon_pengirim,
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,
-                'total_harga' => $request->harga_beli * $request->jumlah_masuk,
+                'total_harga' => $request->total_harga,
                 'user_id' => Auth::id(),
             ]);
 
-            $batch = StokBatch::create([
-                'uuid' => (string) Str::uuid(),
-                'obat_id' => $obat->id,
-                'pembelian_id' => $pembelian->id, // pake integer id (FK)
-                'no_batch' => 'BATCH-' . strtoupper(Str::random(6)),
-                'barcode' => $obat->barcode,
-                'harga_beli' => $request->harga_beli,
-                'harga_jual' => $request->harga_jual,
-                'jumlah_masuk' => $request->jumlah_masuk,
-                'sisa_stok' => $request->jumlah_masuk,
-                'tgl_kadaluarsa' => $request->tgl_kadaluarsa,
-            ]);
+            // Create batch and log for each obat
+            foreach ($request->obat as $obatData) {
+                $obat = Obat::findOrFail($obatData['obat_id']);
+                if (!$obat) {
+                    continue;
+                }
 
-            LogPerubahanStok::create([
-                'uuid' => (string) Str::uuid(),
-                'batch_id' => $batch->id,
-                'user_id' => Auth::id(),
-                'stok_sebelum' => 0,
-                'stok_sesudah' => $request->jumlah_masuk,
-                'keterangan' => 'Penambahan stok dari pembelian (' . $pembelian->no_faktur . ')',
-            ]);
+                $batch = StokBatch::create([
+                    'uuid' => (string) Str::uuid(),
+                    'obat_id' => $obat->id,
+                    'pembelian_id' => $pembelian->id,
+                    'no_batch' => 'BATCH-' . strtoupper(Str::random(8)),
+                    'barcode' => $obat->barcode,
+                    'harga_beli' => $obatData['harga_beli'],
+                    'harga_jual' => $obatData['harga_jual'],
+                    'jumlah_masuk' => $obatData['jumlah_masuk'],
+                    'sisa_stok' => $obatData['jumlah_masuk'],
+                    'tgl_kadaluarsa' => $obatData['tgl_kadaluarsa'],
+                ]);
+
+                LogPerubahanStok::create([
+                    'uuid' => (string) Str::uuid(),
+                    'batch_id' => $batch->id,
+                    'user_id' => Auth::id(),
+                    'stok_sebelum' => 0,
+                    'stok_sesudah' => $obatData['jumlah_masuk'],
+                    'keterangan' => 'Penambahan stok dari pembelian (' . $pembelian->no_faktur . ') - ' . $obat->nama_obat,
+                ]);
+            }
 
             DB::commit();
-            return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dan stok batch berhasil disimpan!');
+            return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dengan ' . count($request->obat) . ' item obat berhasil disimpan!');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()])->withInput();
         }
     }
 
