@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SupplierController;
 
 
 Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->group(function () {
@@ -29,5 +30,13 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
     // Admin can access all kasir routes (add when needed)
     Route::prefix('kasir')->name('kasir.')->group(function () {
         // Kasir specific routes will go here
+    });
+
+    // Supplier Management (single-page index for create/update/delete)
+    Route::prefix('suppliers')->name('suppliers.')->group(function () {
+        Route::get('/', [SupplierController::class, 'index'])->name('index');
+        Route::post('/', [SupplierController::class, 'store'])->name('store');
+        Route::put('/{supplier}', [SupplierController::class, 'update'])->name('update');
+        Route::delete('/{supplier}', [SupplierController::class, 'destroy'])->name('destroy');
     });
 });

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('supplier_status')->default(true);
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
