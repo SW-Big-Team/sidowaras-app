@@ -18,9 +18,7 @@
       </li>
 
 <<<<<<< HEAD
-      {{-- Manajemen Obat --}}
-      <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
+=======
       {{-- Manajemen Obat --}}
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
@@ -58,8 +56,7 @@
           </a>
       </li>
 
-=======
->>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 1976067 (feat: update sidebar navigation to include 'Manajemen Obat' section and restore 'Pembelian' link across admin, karyawan, and kasir layouts)
       {{-- Operasional --}}
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Operasional</h6>
@@ -78,14 +75,6 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Stok</h6>
       </li>
 
-      <li class="nav-item">
-<<<<<<< HEAD
-          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Pembelian</span>
-          </a>
-      </li>
-
       {{-- Pembelian --}}
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
@@ -95,8 +84,6 @@
       </li>
 
       <li class="nav-item">
-=======
->>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         <a class="nav-link {{ request()->routeIs('stok.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('stok.index') }}">
           <i class="material-symbols-rounded opacity-5">inventory_2</i>
           <span class="nav-link-text ms-1">Daftar Stok</span>
