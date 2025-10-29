@@ -15,7 +15,19 @@ class ObatController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'role:Admin,Karyawan,Kasir']);
+        $this->middleware('auth');
+
+        $this->middleware('role:Admin,Karyawan,Kasir')->only([
+            'index', 
+            'edit', 
+            'update'
+        ]);
+
+        $this->middleware('role:Admin')->only([
+            'create',     
+            'store',     
+            'destroy'       
+        ]);
     }
 
     // Menampilkan daftar obat
