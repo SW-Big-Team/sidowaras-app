@@ -14,27 +14,26 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $roles): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         $user = Auth::user();
 
-        // Jika user belum login
         if (!$user) {
             return redirect()->route('login');
         }
 
-        // Mendukung beberapa role dipisah koma
-        $allowedRoles = array_map('trim', explode(',', $roles));
+        // Normalisasi nama role
+        $allowedRoles = array_map('trim', $roles);
 
         if ($user->role->nama_role === 'Admin') {
             return $next($request);
         }
 
-        // Jika role user tidak ada dalam allowed roles
         if (!in_array($user->role->nama_role, $allowedRoles, true)) {
             abort(403, 'Forbidden');
         }
 
         return $next($request);
     }
+
 }

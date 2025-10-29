@@ -15,7 +15,20 @@ class PembelianController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'role:Admin,Karyawan,Kasir']);
+        $this->middleware('auth');
+
+        $this->middleware('role:Admin,Karyawan,Kasir')->only([
+            'index',
+            'show',
+            'edit',
+            'update'
+        ]);
+
+        $this->middleware('role:Admin')->only([
+            'create',
+            'store',
+            'destroy'
+        ]);
     }
 
     public function index()
@@ -46,8 +59,6 @@ class PembelianController extends Controller
             'obat.*.jumlah_masuk' => 'required|integer|min:1',
             'obat.*.tgl_kadaluarsa' => 'required|date|after:today',
         ]);
-
-        dd($request->all());
 
         DB::beginTransaction();
         try {
