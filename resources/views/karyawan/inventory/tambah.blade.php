@@ -108,9 +108,9 @@
             </div>
 
             <div class="col-md-6">
-              <label for="bentuk" class="form-label">Bentuk</label>
+              <label for="bentuk" class="form-label">Jenis</label>
               <select id="bentuk" class="form-select">
-                <option value="">Pilih bentuk</option>
+                <option value="">Pilih Jenis</option>
                 <option>Tablet</option>
                 <option>Kapsul</option>
                 <option>Sirup</option>
