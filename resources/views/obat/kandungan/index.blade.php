@@ -1,5 +1,9 @@
-@extends('layouts.app')
+@php
+    $role = Auth::user()->role->nama_role; 
+    $layoutPath = 'layouts.' . strtolower($role) . '.app';
+@endphp
 
+@extends($layoutPath)
 @section('content')
 <div class="container">
     <h4 class="mb-4">Daftar Kandungan Obat</h4>
