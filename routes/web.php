@@ -6,6 +6,17 @@ use Illuminate\Support\Facades\Auth;
 
 // Login
 Route::get('/', function () {
+    if (Auth::check()) {
+        $user = Auth::user();
+        switch ($user->role->nama_role) {
+            case 'Admin':
+                return redirect()->route('admin.dashboard');
+            case 'Karyawan':
+                return redirect()->route('karyawan.dashboard');
+            case 'Kasir':
+                return redirect()->route('kasir.dashboard');
+        }
+    }
     return redirect()->route('login');
 });
 
@@ -21,7 +32,7 @@ Auth::routes([
     'register' => false
 ]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/karyawan/scanner', function () {
     return Inertia::render('Karyawan/Scanner');
