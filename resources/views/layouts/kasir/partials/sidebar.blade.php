@@ -20,9 +20,6 @@
       {{-- Manajemen Obat --}}
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
-      {{-- Manajemen Obat --}}
-      <li class="nav-item mt-3">
-          <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Stok</h6>
       </li>
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('stok.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('stok.index') }}">
@@ -41,6 +38,16 @@
       <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Transaksi</h6>
       </li>
+
+      {{-- Pembelian --}}
+      <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
+              <i class="material-symbols-rounded opacity-5">dashboard</i>
+              <span class="nav-link-text">Pembelian</span>
+          </a>
+      </li>
+
+      {{-- POS / Transaksi --}}
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('kasir.cart.approval') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.cart.approval') }}">
               <i class="material-symbols-rounded">shopping_cart</i>
