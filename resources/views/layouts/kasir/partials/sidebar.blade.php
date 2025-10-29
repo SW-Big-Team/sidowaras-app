@@ -20,6 +20,9 @@
       {{-- Manajemen Obat --}}
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
+      {{-- Manajemen Obat --}}
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
       </li>
 
       {{-- Obat --}}
@@ -59,6 +62,21 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Transaksi</h6>
       </li>
 
+      {{-- Pembelian --}}
+      <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
+              <i class="material-symbols-rounded opacity-5">dashboard</i>
+              <span class="nav-link-text">Pembelian</span>
+          </a>
+      </li>
+
+      {{-- POS / Transaksi --}}
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('kasir.transaksi.*') ? 'active bg-gradient-success text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.pos') }}">
+          <i class="material-symbols-rounded opacity-5">point_of_sale</i>
+          <span class="nav-link-text ms-1">POS / Transaksi</span>
+        </a>
+      </li>
       {{-- Pembelian --}}
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
