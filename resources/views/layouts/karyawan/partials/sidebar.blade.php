@@ -43,7 +43,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('karyawan.stock.tambah') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.stock.tambah') }}">
+        <a class="nav-link {{ request()->routeIs('pembelian.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
           <i class="material-symbols-rounded opacity-5">add_box</i>
           <span class="nav-link-text ms-1">Tambah Obat Baru</span>
         </a>
