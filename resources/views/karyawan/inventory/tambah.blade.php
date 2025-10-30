@@ -90,104 +90,110 @@
   <div class="col-12">
     <div class="card card-modern">
       <div class="card-body p-4">
-        <form>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="nama_obat" class="form-label">Nama Obat</label>
-              <input type="text" id="nama_obat" class="form-control" placeholder="Masukkan nama obat">
+      @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
-            <div class="col-md-6">
-              <label for="kategori" class="form-label">Kategori</label>
-              <select id="kategori" class="form-select">
-                <option value="">Pilih kategori</option>
-                <option>Analgesik</option>
-                <option>Antibiotik</option>
-                <option>Anti-inflamasi</option>
-                <option>Vitamin</option>
-              </select>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+      <form action="{{ route('karyawan.stock.store') }}" method="POST">
+          @csrf
+            <div class="row g-3">
+                <!-- Nama Obat -->
+                <div class="col-md-6">
+                    <label for="nama_obat" class="form-label">Nama Obat</label>
+                    <input type="text" id="nama_obat" name="nama_obat" class="form-control" placeholder="Masukkan nama obat" required>
+                </div>
+
+                <!-- Kategori -->
+                <div class="col-md-6">
+                    <label for="kategori_id" class="form-label">Kategori</label>
+                    <select id="kategori_id" name="kategori_id" class="form-select" required>
+                        <option value="">Pilih kategori</option>
+                        @foreach($kategori as $k)
+                            <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Satuan -->
+                <div class="col-md-6">
+                    <label for="satuan_obat_id" class="form-label">Satuan</label>
+                    <select id="satuan_obat_id" name="satuan_obat_id" class="form-select" required>
+                        <option value="">Pilih satuan</option>
+                        @foreach($satuan as $s)
+                            <option value="{{ $s->id }}">{{ $s->nama_satuan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="kandungan_id" class="form-label">Kandungan</label>
+                    <select id="kandungan_id" name="kandungan_id[]" class="form-select" multiple>
+                        @foreach($kandungan as $k)
+                          <option value="{{ $k->id }}">
+                            @php
+                              $decoded = json_decode($k->nama_kandungan, true);
+                              echo is_array($decoded) ? implode(', ', $decoded) : $k->nama_kandungan;
+                            @endphp
+                          </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Harga Beli & Jual -->
+                <div class="col-md-6">
+                    <label for="harga_beli" class="form-label">Harga Beli</label>
+                    <input type="number" id="harga_beli" name="harga_beli" class="form-control" placeholder="0" min="0" step="0.01" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="harga_jual" class="form-label">Harga Jual</label>
+                    <input type="number" id="harga_jual" name="harga_jual" class="form-control" placeholder="0" min="0" step="0.01" required>
+                </div>
+
+                <!-- Stok Awal & Kadaluarsa -->
+                <div class="col-md-6">
+                    <label for="stok_awal" class="form-label">Stok Awal</label>
+                    <input type="number" id="stok_awal" name="stok_awal" class="form-control" placeholder="Jumlah stok awal" min="1" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="tgl_kadaluarsa" class="form-label">Tanggal Kadaluarsa</label>
+                    <input type="date" id="tgl_kadaluarsa" name="tgl_kadaluarsa" class="form-control" required>
+                </div>
+
+                <!-- Supplier -->
+                <div class="col-md-6">
+                    <label for="nama_pengirim" class="form-label">Supplier</label>
+                    <input type="text" id="nama_pengirim" name="nama_pengirim" class="form-control" placeholder="Nama supplier" required>
+                </div>
+
+                <!-- Stok Minimum -->
+                <div class="col-md-6">
+                    <label for="stok_minimum" class="form-label">Stok Minimum</label>
+                    <input type="number" id="stok_minimum" name="stok_minimum" class="form-control" value="10" min="0">
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="col-md-12">
+                    <label for="deskripsi" class="form-label">Deskripsi</label>
+                    <textarea id="deskripsi" name="deskripsi" class="form-control" rows="3" placeholder="Deskripsi obat"></textarea>
+                </div>
             </div>
 
-            <div class="col-md-6">
-              <label for="bentuk" class="form-label">Jenis</label>
-              <select id="bentuk" class="form-select">
-                <option value="">Pilih Jenis</option>
-                <option>Tablet</option>
-                <option>Kapsul</option>
-                <option>Sirup</option>
-                <option>Salep</option>
-              </select>
+            <div class="text-end mt-4">
+                <a href="{{ route('karyawan.stock.index') }}" class="btn btn-secondary-custom me-2">Batal</a>
+                <button type="submit" class="btn btn-primary-custom">Simpan Obat & Stok</button>
             </div>
-            <div class="col-md-6">
-              <label for="satuan" class="form-label">Satuan</label>
-              <select id="satuan" class="form-select">
-                <option value="">Pilih satuan</option>
-                <option>Pcs</option>
-                <option>Botol</option>
-                <option>Tube</option>
-              </select>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="col-md-6">
-              <label for="harga_beli" class="form-label">Harga Beli</label>
-              <input type="number" id="harga_beli" class="form-control" placeholder="Rp 0">
-            </div>
-            <div class="col-md-6">
-              <label for="harga_jual" class="form-label">Harga Jual</label>
-              <input type="number" id="harga_jual" class="form-control" placeholder="Rp 0">
-            </div>
-
-            <div class="col-md-6">
-              <label for="stok_awal" class="form-label">Stok Awal</label>
-              <input type="number" id="stok_awal" class="form-control" placeholder="Jumlah stok awal">
-            </div>
-            <div class="col-md-6">
-              <label for="kadaluarsa" class="form-label">Tanggal Kadaluarsa</label>
-              <input type="date" id="kadaluarsa" class="form-control">
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="col-md-6">
-              <label for="supplier" class="form-label">Supplier</label>
-              <select id="supplier" name="supplier" class="form-select">
-                <option value="">Pilih supplier</option>
-                <option value="PT. Kimia Farma">PT. Kimia Farma</option>
-                <option value="PT. Indofarma">PT. Indofarma</option>
-                <option value="CV. Apotek Sehat">CV. Apotek Sehat</option>
-                <option value="other">Lainnya</option>
-              </select>
-            </div>
-
-            <div class="col-md-6" id="supplier_other_wrap" style="display: none;">
-              <label for="supplier_other" class="form-label">Nama Supplier (Lainnya)</label>
-              <input type="text" id="supplier_other" name="supplier_other" class="form-control" placeholder="Masukkan nama supplier">
-            </div>
-
-            <script>
-              document.addEventListener('DOMContentLoaded', function () {
-                var supplierSelect = document.getElementById('supplier');
-                var otherWrap = document.getElementById('supplier_other_wrap');
-
-                function toggleOther() {
-                  otherWrap.style.display = supplierSelect.value === 'other' ? 'block' : 'none';
-                }
-
-                supplierSelect.addEventListener('change', toggleOther);
-                toggleOther();
-              });
-            </script>
-            <div class="col-md-12">
-              <label for="deskripsi" class="form-label">Deskripsi</label>
-              <textarea id="deskripsi" class="form-control" rows="3" placeholder="Tuliskan deskripsi singkat mengenai obat ini"></textarea>
-            </div>
-          </div>
-
-          <div class="text-end mt-4">
-            <button type="button" class="btn btn-secondary-custom me-2">Batal</button>
-            <button type="submit" class="btn btn-primary-custom">Simpan Obat</button>
-          </div>
         </form>
       </div>
     </div>

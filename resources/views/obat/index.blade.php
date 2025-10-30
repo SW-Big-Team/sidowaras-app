@@ -46,7 +46,7 @@
         <tbody>
             @forelse ($obats as $index => $obat)
             @php
-                $kandunganList = $obat->kandungan()->pluck('nama_kandungan')->toArray();
+                $kandunganList = $obat->kandungans->pluck('nama_kandungan')->toArray();
             @endphp
                 <tr>
                     <td class="text-center">{{ $obats->firstItem() + $index }}</td>

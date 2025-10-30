@@ -10,7 +10,7 @@
         "@heroui/react": "^2.8.4",
         "@popperjs/core": "^2.11.6",
         "axios": "^1.11.0",
-        "bootstrap": "^5.2.3",
+        "bootstrap": "^5.3.8",
         "concurrently": "^9.0.1",
         "html5-qrcode": "^2.3.8",
         "sass": "^1.56.1",

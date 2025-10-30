@@ -97,10 +97,10 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
-          <i class="material-symbols-rounded opacity-5">history</i>
-          <span class="nav-link-text ms-1">Riwayat Transaksi</span>
-        </a>
+          <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
+              <i class="material-symbols-rounded opacity-5">receipt_long</i>
+              <span class="nav-link-text ms-1">Riwayat Transaksi</span>
+          </a>
       </li>
 
       {{-- Notifikasi --}}

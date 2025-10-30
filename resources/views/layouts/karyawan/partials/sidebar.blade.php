@@ -61,10 +61,10 @@
 
       {{-- Keranjang --}}
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('karyawan.keranjang') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.keranjang') }}">
-          <i class="material-symbols-rounded opacity-5">shopping_cart</i>
-          <span class="nav-link-text ms-1">Keranjang</span>
-        </a>
+          <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
+              <i class="material-symbols-rounded opacity-5">shopping_cart</i>
+              <span class="nav-link-text ms-1">Keranjang</span>
+          </a>
       </li>
 
       {{-- Stock Barang --}}
