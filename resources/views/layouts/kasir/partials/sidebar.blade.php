@@ -55,6 +55,7 @@
           </a>
       </li>
 
+<<<<<<< HEAD
       {{-- POS / Transaksi --}}
       <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('kasir.transaksi.*') ? 'active bg-gradient-success text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.pos') }}">
@@ -70,6 +71,8 @@
           </a>
       </li>
 
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
 
 
       {{-- Cart Approval --}}
@@ -98,10 +101,13 @@
               <i class="material-symbols-rounded opacity-5">receipt_long</i>
               <span class="nav-link-text ms-1">Riwayat Transaksi</span>
           </a>
+<<<<<<< HEAD
           <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
               <i class="material-symbols-rounded opacity-5">receipt_long</i>
               <span class="nav-link-text ms-1">Riwayat Transaksi</span>
           </a>
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
       </li>
 
       {{-- Notifikasi --}}

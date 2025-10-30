@@ -86,7 +86,10 @@ class ObatController extends Controller
             'kandungan_id' => 'nullable|array',
             'kandungan_id.*' => 'exists:kandungan_obat,id',
             'stok_minimum' => 'nullable|integer|min:0',
+<<<<<<< HEAD
             'stok_minimum' => 'nullable|integer|min:0',
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
             'is_racikan' => 'nullable|boolean',
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
@@ -99,7 +102,10 @@ class ObatController extends Controller
             'nama_pengirim' => 'required|string|max:100',
         ]);
     
+<<<<<<< HEAD
     
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
         DB::beginTransaction();
         try {
             // 1. Simpan obat
@@ -107,15 +113,21 @@ class ObatController extends Controller
                 'uuid' => Str::uuid(),
                 'nama_obat' => $request->nama_obat,
                 'kode_obat' => 'OBAT-' . strtoupper(Str::random(6)),
+<<<<<<< HEAD
                 'kode_obat' => 'OBAT-' . strtoupper(Str::random(6)),
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
                 'kategori_id' => $request->kategori_id,
                 'satuan_obat_id' => $request->satuan_obat_id,
                 'kandungan_id' => $request->kandungan_id,
                 'stok_minimum' => $request->stok_minimum ?? 10,
                 'is_racikan' => false,
+<<<<<<< HEAD
                 'kandungan_id' => $request->kandungan_id,
                 'stok_minimum' => $request->stok_minimum ?? 10,
                 'is_racikan' => false,
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
                 'lokasi_rak' => $request->lokasi_rak,
                 'barcode' => $request->barcode,
                 'deskripsi' => $request->deskripsi,
@@ -151,7 +163,10 @@ class ObatController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+<<<<<<< HEAD
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
         }
     }
 

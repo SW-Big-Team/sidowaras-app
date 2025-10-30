@@ -7,7 +7,11 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/sass/app.scss',
+<<<<<<< HEAD
                 'resources/js/app.tsx',
+=======
+                'resources/js/app.js',
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
                 'resources/js/bootstrap.js',
             ],
             refresh: true,

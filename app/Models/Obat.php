@@ -9,14 +9,20 @@ class Obat extends Model
 {
     use HasFactory;
 
+<<<<<<< HEAD
     use HasFactory;
 
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
     protected $table = 'obat';
     protected $guarded = ['id'];
 
     protected $casts = [
         'kandungan_id' => 'array', 
+<<<<<<< HEAD
         'kandungan_id' => 'array', 
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
     ];
 
     public function kategori()
@@ -30,7 +36,10 @@ class Obat extends Model
     }
 
     // Relasi ke batch stok
+<<<<<<< HEAD
     // Relasi ke batch stok
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
     public function stokBatches()
     {
         return $this->hasMany(StokBatch::class);

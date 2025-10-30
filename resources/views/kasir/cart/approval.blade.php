@@ -11,8 +11,11 @@
                 <div class="card-header bg-transparent border-0 pb-0">
                     <h6 class="text-dark font-weight-bold mb-0">Daftar Cart Menunggu Approval</h6>
                     <p class="text-sm text-muted mb-0">Kelola pengajuan cart dari karyawan</p>
+<<<<<<< HEAD
                     <h6 class="text-dark font-weight-bold mb-0">Daftar Cart Menunggu Approval</h6>
                     <p class="text-sm text-muted mb-0">Kelola pengajuan cart dari karyawan</p>
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
                 </div>
                 <div class="card-body px-0 pb-2">
                     @if(session('success'))
@@ -22,6 +25,7 @@
                         </div>
                     @endif
 
+<<<<<<< HEAD
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show mx-4" role="alert">
                             {{ session('success') }}
@@ -29,6 +33,8 @@
                         </div>
                     @endif
 
+=======
+>>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
                     <div class="table-responsive p-0">
                         <table class="table align-items-center mb-0">
                             <thead>
