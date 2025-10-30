@@ -64,10 +64,17 @@
 
       {{-- Cart & Scanner --}}
       <li class="nav-item">
+<<<<<<< HEAD
         <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
           <i class="material-symbols-rounded opacity-5">shopping_cart</i>
           <span class="nav-link-text ms-1">Cart / Scanner</span>
         </a>
+=======
+          <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
+              <i class="material-symbols-rounded opacity-5">shopping_cart</i>
+              <span class="nav-link-text ms-1">Keranjang</span>
+          </a>
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
       </li>
 
       {{-- Manajemen Stok --}}

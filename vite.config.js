@@ -11,7 +11,11 @@ export default defineConfig({
                 'resources/js/app.tsx',
 =======
                 'resources/js/app.js',
+<<<<<<< HEAD
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+>>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
                 'resources/js/bootstrap.js',
             ],
             refresh: true,

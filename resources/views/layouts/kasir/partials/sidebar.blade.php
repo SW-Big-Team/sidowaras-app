@@ -128,9 +128,11 @@
       </li>
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
+<<<<<<< HEAD
               <i class="material-symbols-rounded">receipt_long</i>
               <span class="nav-link-text ms-1">Riwayat Transaksi</span>
           </a>
+<<<<<<< HEAD
 <<<<<<< HEAD
           <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
               <i class="material-symbols-rounded opacity-5">receipt_long</i>
@@ -138,6 +140,38 @@
           </a>
 =======
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
+=======
+=======
+              <i class="material-symbols-rounded opacity-5">receipt_long</i>
+              <span class="nav-link-text ms-1">Riwayat Transaksi</span>
+          </a>
+      </li>
+
+      {{-- Notifikasi --}}
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Notifikasi</h6>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#">
+          <i class="material-symbols-rounded opacity-5">inventory</i>
+          <span class="nav-link-text ms-1">Stok Minimum</span>
+          <span class="badge badge-sm bg-gradient-danger ms-auto">12</span>
+        </a>
+      </li>
+
+      {{-- Account --}}
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Akun</h6>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#">
+          <i class="material-symbols-rounded opacity-5">person</i>
+          <span class="nav-link-text ms-1">Profil Saya</span>
+        </a>
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+>>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
       </li>
 
       <li class="nav-item">

@@ -11,7 +11,17 @@ use App\Models\KandunganObat;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pembelian;   
+<<<<<<< HEAD
 use App\Models\StokBatch; 
+=======
+<<<<<<< HEAD
+use App\Models\StokBatch;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+=======
+use App\Models\StokBatch; 
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+>>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
 
 class ObatController extends Controller
 {
@@ -101,6 +111,12 @@ class ObatController extends Controller
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
             'deskripsi' => 'nullable|string',
+            // Input tambahan untuk stok awal
+            'harga_beli' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|min:0|gt:harga_beli',
+            'stok_awal' => 'required|integer|min:1',
+            'tgl_kadaluarsa' => 'required|date|after:today',
+            'nama_pengirim' => 'required|string|max:100',
         ]);
     
 <<<<<<< HEAD
@@ -109,6 +125,10 @@ class ObatController extends Controller
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
         DB::beginTransaction();
         try {
+<<<<<<< HEAD
+=======
+            // 1. Simpan obat
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
             $obat = Obat::create([
                 'uuid' => Str::uuid(),
                 'nama_obat' => $request->nama_obat,
@@ -133,9 +153,39 @@ class ObatController extends Controller
                 'deskripsi' => $request->deskripsi,
             ]);
     
+<<<<<<< HEAD
             DB::commit();
             return redirect()->route('admin.obat.index')
                              ->with('success', 'Obat berhasil ditambahkan.');
+=======
+            // 2. Simpan pembelian
+            $pembelian = Pembelian::create([
+                'uuid' => Str::uuid(),
+                'no_faktur' => 'BELI-' . now()->format('ymd') . Str::random(6),
+                'nama_pengirim' => $request->nama_pengirim,
+                'metode_pembayaran' => 'tunai',
+                'tgl_pembelian' => now(),
+                'total_harga' => $request->harga_beli * $request->stok_awal,
+                'user_id' => auth()->id(),
+            ]);
+    
+            // 3. Simpan stok batch
+            StokBatch::create([
+                'uuid' => Str::uuid(),
+                'obat_id' => $obat->id,
+                'pembelian_id' => $pembelian->uuid,
+                'no_batch' => 'BATCH-' . now()->format('ymd') . Str::random(5),
+                'harga_beli' => $request->harga_beli,
+                'harga_jual' => $request->harga_jual,
+                'jumlah_masuk' => $request->stok_awal,
+                'sisa_stok' => $request->stok_awal,
+                'tgl_kadaluarsa' => $request->tgl_kadaluarsa,
+            ]);
+    
+            DB::commit();
+            return redirect()->route('karyawan.stock.index')
+                             ->with('success', 'Obat dan stok awal berhasil ditambahkan.');
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -224,5 +274,17 @@ class ObatController extends Controller
             return back()->with('error', 'Gagal menghapus data obat: ' . $e->getMessage());
         }
     }
+<<<<<<< HEAD
+=======
+
+    public function createForKaryawan()
+    {
+    $kategori = KategoriObat::all();
+    $satuan = SatuanObat::all();
+    $kandungan = KandunganObat::all();
+
+    return view('karyawan.inventory.tambah', compact('kategori', 'satuan', 'kandungan'));
+    }
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
     
 }

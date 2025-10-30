@@ -74,9 +74,18 @@ class CartController extends Controller
 
     public function checkout(Request $request)
     {
+<<<<<<< HEAD
         $request->validate([
             'metode_pembayaran' => 'required|in:tunai,non tunai',
         ]);
+=======
+<<<<<<< HEAD
+=======
+        $request->validate([
+            'metode_pembayaran' => 'required|in:tunai,non tunai',
+        ]);
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+>>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
 
         $cart = Cart::where('user_id', auth()->id())
                     ->where('is_approved', false)
@@ -86,8 +95,16 @@ class CartController extends Controller
             return back()->withErrors(['cart' => 'Keranjang kosong.']);
         }
 
+<<<<<<< HEAD
         $cart->update(['metode_pembayaran' => $request->metode_pembayaran]);
 
+=======
+<<<<<<< HEAD
+=======
+        $cart->update(['metode_pembayaran' => $request->metode_pembayaran]);
+
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+>>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
         return redirect()->route('karyawan.cart.index')
                          ->with('success', 'Keranjang dikirim ke kasir untuk approval.');
     }
