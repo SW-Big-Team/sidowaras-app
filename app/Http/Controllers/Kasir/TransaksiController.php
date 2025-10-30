@@ -14,16 +14,18 @@ class TransaksiController extends Controller
     public function index()
     {
         $transaksis = Transaksi::with('user')
-                                ->where('user_id', auth()->id())
-                                ->latest()
-                                ->paginate(15);
+                               ->latest()
+                               ->paginate(10);
 
         return view('kasir.transaksi.riwayat', compact('transaksis'));
     }
 
-    public function show(Transaksi $transaksi) // 
+    /**
+     * Menampilkan detail transaksi lengkap.
+     */
+    public function show(Transaksi $transaksi)
     {
         $detail = $transaksi->detail()->with('batch.obat')->get();
-        return view('kasir.transaksi.show', compact('transaksi', 'detail'));
+        return view('kasir.transaksi.detail', compact('transaksi', 'detail'));
     }
 }

@@ -9,10 +9,13 @@ class Obat extends Model
 {
     use HasFactory;
 
+    use HasFactory;
+
     protected $table = 'obat';
     protected $guarded = ['id'];
 
     protected $casts = [
+        'kandungan_id' => 'array', 
         'kandungan_id' => 'array', 
     ];
 
@@ -27,6 +30,7 @@ class Obat extends Model
     }
 
     // Relasi ke batch stok
+    // Relasi ke batch stok
     public function stokBatches()
     {
         return $this->hasMany(StokBatch::class);
@@ -34,9 +38,9 @@ class Obat extends Model
 
     /**
      * Accessor: Mengembalikan koleksi kandungan terkait.
-     * $obat->kandungan
+     * $obat->kandungans
      */
-    public function getkandunganAttribute()
+    public function getKandungansAttribute()
     {
         if (empty($this->kandungan_id) || !is_array($this->kandungan_id)) {
             return collect();
@@ -50,7 +54,7 @@ class Obat extends Model
      */
     public function getDaftarKandunganAttribute()
     {
-        return $this->kandungan->flatMap(function ($k) {
+        return $this->kandungans->flatMap(function ($k) {
             return $k->nama_kandungan ?? [];
         })->values();
     }
