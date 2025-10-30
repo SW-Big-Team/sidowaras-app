@@ -73,14 +73,9 @@
           </a>
       </li>
 
-      {{-- POS / Transaksi --}}
->>>>>>> 1976067 (feat: update sidebar navigation to include 'Manajemen Obat' section and restore 'Pembelian' link across admin, karyawan, and kasir layouts)
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('stok.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('stok.index') }}">
-              <i class="material-symbols-rounded">inventory_2</i>
-              <span class="nav-link-text ms-1">Daftar Stok</span>
-          </a>
-      </li>
+
+
+      {{-- Cart Approval --}}
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('pembelian.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
               <i class="material-symbols-rounded">shopping_cart</i>
@@ -127,6 +122,14 @@
           </a>
       </li>
       <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
+              <i class="material-symbols-rounded opacity-5">receipt_long</i>
+              <span class="nav-link-text ms-1">Riwayat Transaksi</span>
+          </a>
+          <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
+              <i class="material-symbols-rounded opacity-5">receipt_long</i>
+              <span class="nav-link-text ms-1">Riwayat Transaksi</span>
+          </a>
           <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
 <<<<<<< HEAD
               <i class="material-symbols-rounded">receipt_long</i>
