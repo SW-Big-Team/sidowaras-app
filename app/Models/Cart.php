@@ -5,30 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Transaksi extends Model
+class Cart extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaksi';
-
     protected $fillable = [
         'uuid',
-        'no_transaksi',
         'user_id',
-        'total_harga',
-        'total_bayar',
-        'kembalian',
         'metode_pembayaran',
-        'tgl_transaksi',
+        'is_approved',
+        'approved_at',
+        'approved_by',
     ];
 
     protected static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
-            if (empty($model->uuid)) {
-                $model->uuid = \Illuminate\Support\Str::uuid();
-            }
+            $model->uuid = \Illuminate\Support\Str::uuid();
         });
     }
 
@@ -37,12 +31,13 @@ class Transaksi extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function detail()
+    public function approvedBy()
     {
-        return $this->hasMany(DetailTransaksi::class);
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
-    protected $casts = [
-        'tgl_transaksi' => 'datetime',
-    ];
+    public function items()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }
