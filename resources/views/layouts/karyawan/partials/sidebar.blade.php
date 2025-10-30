@@ -63,6 +63,7 @@
       <li class="nav-item">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
@@ -71,13 +72,18 @@
         </a>
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
           <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
               <i class="material-symbols-rounded opacity-5">shopping_cart</i>
               <span class="nav-link-text ms-1">Keranjang</span>
           </a>
+<<<<<<< HEAD
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
 =======
 >>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
       </li>
 
       {{-- Manajemen Stok --}}

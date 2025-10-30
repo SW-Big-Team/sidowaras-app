@@ -12,8 +12,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pembelian;   
 <<<<<<< HEAD
+<<<<<<< HEAD
 use App\Models\StokBatch; 
 =======
+=======
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 <<<<<<< HEAD
 use App\Models\StokBatch;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +24,13 @@ use Inertia\Inertia;
 =======
 use App\Models\StokBatch; 
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+<<<<<<< HEAD
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+=======
+use App\Models\StokBatch; 
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 
 class ObatController extends Controller
 {
@@ -112,21 +121,36 @@ class ObatController extends Controller
             'kandungan_id.*' => 'exists:kandungan_obat,id',
             'stok_minimum' => 'nullable|integer|min:0',
 <<<<<<< HEAD
+<<<<<<< HEAD
             'stok_minimum' => 'nullable|integer|min:0',
 =======
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
+=======
+            'stok_minimum' => 'nullable|integer|min:0',
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
             'is_racikan' => 'nullable|boolean',
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
             'deskripsi' => 'nullable|string',
+            // Input tambahan untuk stok awal
+            'harga_beli' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|min:0|gt:harga_beli',
+            'stok_awal' => 'required|integer|min:1',
+            'tgl_kadaluarsa' => 'required|date|after:today',
+            'nama_pengirim' => 'required|string|max:100',
         ]);
     
+<<<<<<< HEAD
 <<<<<<< HEAD
     
 =======
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
+=======
+    
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
         DB::beginTransaction();
         try {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -134,30 +158,44 @@ class ObatController extends Controller
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
 =======
 >>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+            // 1. Simpan obat
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
             $obat = Obat::create([
                 'uuid' => Str::uuid(),
                 'nama_obat' => $request->nama_obat,
                 'kode_obat' => 'OBAT-' . strtoupper(Str::random(6)),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 'kode_obat' => 'OBAT-' . strtoupper(Str::random(6)),
 =======
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
+=======
+                'kode_obat' => 'OBAT-' . strtoupper(Str::random(6)),
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
                 'kategori_id' => $request->kategori_id,
                 'satuan_obat_id' => $request->satuan_obat_id,
                 'kandungan_id' => $request->kandungan_id,
                 'stok_minimum' => $request->stok_minimum ?? 10,
                 'is_racikan' => false,
 <<<<<<< HEAD
+<<<<<<< HEAD
                 'kandungan_id' => $request->kandungan_id,
                 'stok_minimum' => $request->stok_minimum ?? 10,
                 'is_racikan' => false,
 =======
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
+=======
+                'kandungan_id' => $request->kandungan_id,
+                'stok_minimum' => $request->stok_minimum ?? 10,
+                'is_racikan' => false,
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
                 'lokasi_rak' => $request->lokasi_rak,
                 'barcode' => $request->barcode,
                 'deskripsi' => $request->deskripsi,
             ]);
     
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             DB::commit();
@@ -197,13 +235,46 @@ class ObatController extends Controller
             return redirect()->route('admin.obat.index')
                              ->with('success', 'Obat berhasil ditambahkan.');
 >>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+            // 2. Simpan pembelian
+            $pembelian = Pembelian::create([
+                'uuid' => Str::uuid(),
+                'no_faktur' => 'BELI-' . now()->format('ymd') . Str::random(6),
+                'nama_pengirim' => $request->nama_pengirim,
+                'metode_pembayaran' => 'tunai',
+                'tgl_pembelian' => now(),
+                'total_harga' => $request->harga_beli * $request->stok_awal,
+                'user_id' => auth()->id(),
+            ]);
+    
+            // 3. Simpan stok batch
+            StokBatch::create([
+                'uuid' => Str::uuid(),
+                'obat_id' => $obat->id,
+                'pembelian_id' => $pembelian->uuid,
+                'no_batch' => 'BATCH-' . now()->format('ymd') . Str::random(5),
+                'harga_beli' => $request->harga_beli,
+                'harga_jual' => $request->harga_jual,
+                'jumlah_masuk' => $request->stok_awal,
+                'sisa_stok' => $request->stok_awal,
+                'tgl_kadaluarsa' => $request->tgl_kadaluarsa,
+            ]);
+    
+            DB::commit();
+            return redirect()->route('karyawan.stock.index')
+                             ->with('success', 'Obat dan stok awal berhasil ditambahkan.');
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
 <<<<<<< HEAD
+<<<<<<< HEAD
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
 =======
 >>>>>>> 3c117fd (Add Cart functionality and update Bootstrap version)
+=======
+            return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
         }
     }
 
@@ -291,7 +362,10 @@ class ObatController extends Controller
     }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
 
     public function createForKaryawan()
     {
@@ -301,8 +375,11 @@ class ObatController extends Controller
 
     return view('karyawan.inventory.tambah', compact('kategori', 'satuan', 'kandungan'));
     }
+<<<<<<< HEAD
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
 =======
 >>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
     
 }

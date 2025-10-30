@@ -75,17 +75,28 @@ class CartController extends Controller
     public function checkout(Request $request)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         $request->validate([
             'metode_pembayaran' => 'required|in:tunai,non tunai',
         ]);
 =======
+=======
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 <<<<<<< HEAD
 =======
         $request->validate([
             'metode_pembayaran' => 'required|in:tunai,non tunai',
         ]);
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+<<<<<<< HEAD
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+=======
+        $request->validate([
+            'metode_pembayaran' => 'required|in:tunai,non tunai',
+        ]);
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 
         $cart = Cart::where('user_id', auth()->id())
                     ->where('is_approved', false)
@@ -96,15 +107,25 @@ class CartController extends Controller
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $cart->update(['metode_pembayaran' => $request->metode_pembayaran]);
 
 =======
+=======
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 <<<<<<< HEAD
 =======
         $cart->update(['metode_pembayaran' => $request->metode_pembayaran]);
 
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+<<<<<<< HEAD
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+=======
+        $cart->update(['metode_pembayaran' => $request->metode_pembayaran]);
+
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
         return redirect()->route('karyawan.cart.index')
                          ->with('success', 'Keranjang dikirim ke kasir untuk approval.');
     }

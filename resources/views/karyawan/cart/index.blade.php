@@ -22,7 +22,10 @@
                         <div class="mb-3">
                             <label class="form-label text-sm">Pilih Obat</label>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 <<<<<<< HEAD
                             <div class="input-group">
                                 <select name="obat_id" id="obatSelect" class="form-control" required>
@@ -43,7 +46,12 @@
                                 </button>
                             </div>
 =======
+<<<<<<< HEAD
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
                             <select name="obat_id" class="form-control" required>
                                 <option value="">-- Cari atau pilih obat --</option>
                                 @foreach($obats as $obat)
@@ -58,9 +66,15 @@
                                 @endforeach
                             </select>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-sm">Jumlah</label>
@@ -86,8 +100,11 @@
                     @if($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show mt-2 p-2" role="alert">
 <<<<<<< HEAD
+<<<<<<< HEAD
                             {{ $errors->first() }}
 =======
+=======
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 <<<<<<< HEAD
                             <ul class="mb-0">
                                 @foreach ($errors->all() as $error)
@@ -97,7 +114,13 @@
 =======
                             {{ $errors->first() }}
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+<<<<<<< HEAD
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+=======
+                            {{ $errors->first() }}
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
@@ -151,7 +174,10 @@
                         </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 <<<<<<< HEAD
                         <form action="{{ route('karyawan.cart.checkout') }}" method="POST" class="mt-4">
                             @csrf
@@ -160,7 +186,12 @@
                             </button>
                         </form>
 =======
+<<<<<<< HEAD
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
                         @if(!$cart->metode_pembayaran)
                             <form action="{{ route('karyawan.cart.checkout') }}" method="POST" class="mt-4">
                                 @csrf
@@ -184,9 +215,15 @@
                             </div>
                         @endif
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
                     @else
                         <div class="text-center py-4">
                             <i class="material-symbols-rounded text-muted" style="font-size: 3rem;">shopping_cart</i>
@@ -200,7 +237,10 @@
     </div>
 </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 <<<<<<< HEAD
 
 <!-- Modal: QR Code Scanner -->
@@ -333,5 +373,10 @@
 </script>
 =======
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+<<<<<<< HEAD
 >>>>>>> 2d4f65f (Add Cart functionality and update Bootstrap version)
+=======
+=======
+>>>>>>> f5d5d3d (Add Cart functionality and update Bootstrap version)
+>>>>>>> 476bacf (Add Cart functionality and update Bootstrap version)
 @endsection
