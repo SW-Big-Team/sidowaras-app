@@ -17,11 +17,9 @@ class TransaksiController extends Controller
         return view('admin.transaksi.riwayat', compact('transaksis'));
     }
 
-    public function show($uuid)
+    public function show(Transaksi $transaksi) // Laravel otomatis cari by id
     {
-        $transaksi = Transaksi::where('uuid', $uuid)->firstOrFail();
         $detail = $transaksi->detail()->with('batch.obat')->get();
-
         return view('admin.transaksi.show', compact('transaksi', 'detail'));
     }
 }

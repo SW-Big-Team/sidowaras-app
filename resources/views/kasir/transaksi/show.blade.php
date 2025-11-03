@@ -1,10 +1,4 @@
-@php
-    $layoutPath = 'layouts.admin.app';
-@endphp
-
-@extends($layoutPath)
-
-@section('title', 'Detail Transaksi')
+@extends('layouts.kasir.app')
 
 @section('content')
 <div class="container py-4">
@@ -16,8 +10,18 @@
                 </div>
                 <div class="card-body">
                     <p><strong>No Transaksi:</strong> {{ $transaksi->no_transaksi }}</p>
-                    <p><strong>Kasir:</strong> {{ $transaksi->user->nama_lengkap }}</p>
                     <p><strong>Tanggal:</strong> {{ $transaksi->tgl_transaksi->format('d M Y H:i') }}</p>
+                    <p><strong>Metode Pembayaran:</strong> 
+                        @if($transaksi->metode_pembayaran === 'tunai')
+                            <span class="badge bg-gradient-success">Tunai</span>
+                        @else
+                            <span class="badge bg-gradient-info">Non Tunai</span>
+                        @endif
+                    </p>
+                    @if($transaksi->metode_pembayaran === 'tunai')
+                        <p><strong>Total Bayar:</strong> Rp {{ number_format($transaksi->total_bayar, 0, ',', '.') }}</p>
+                        <p><strong>Kembalian:</strong> Rp {{ number_format($transaksi->kembalian, 0, ',', '.') }}</p>
+                    @endif
                     <hr>
                     <h6>Daftar Item:</h6>
                     <table class="table table-sm">
@@ -49,7 +53,7 @@
                         </tfoot>
                     </table>
                     <div class="text-end mt-3">
-                        <a href="{{ route('admin.transaksi.riwayat') }}" class="btn btn-secondary">Kembali</a>
+                        <a href="{{ route('kasir.transaksi.riwayat') }}" class="btn btn-secondary">Kembali</a>
                     </div>
                 </div>
             </div>
