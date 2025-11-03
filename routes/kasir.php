@@ -3,17 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Kasir\CartApprovalController;
 use App\Http\Controllers\Kasir\TransaksiController;
+use App\Http\Controllers\Shared\StokController;
 
 Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')->group(function () {
-
-    // Dashboard kasir
     Route::get('/dashboard', fn() => view('kasir.index'))->name('dashboard');
-    
-    // Transaksi / POS
-    Route::prefix('transaksi')->name('transaksi.')->group(function () {
-        Route::get('/riwayat', [TransaksiController::class, 'index'])->name('riwayat');
-        Route::get('/{transaksi}', [TransaksiController::class, 'show'])->name('show');
-    });
 
     // Cart Approval
     Route::prefix('cart')->name('cart.')->group(function () {
@@ -22,11 +15,21 @@ Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')
         Route::post('/{cart}/reject', [CartApprovalController::class, 'reject'])->name('reject');
     });
 
-    // Pembelian Obat
+    // Riwayat Transaksi
+    Route::prefix('transaksi')->name('transaksi.')->group(function () {
+        Route::get('/riwayat', [TransaksiController::class, 'index'])->name('riwayat');
+        Route::get('/{transaksi}', [TransaksiController::class, 'show'])->name('show');
+    });
+
     // Laporan
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/transaksi', fn() => view('kasir.laporan.transaksi'))->name('transaksi');
         Route::get('/harian', fn() => view('kasir.laporan.transaksi'))->name('harian');
     });
-});
 
+    // Manajemen Stok (hanya lihat & input via pembelian)
+    Route::prefix('stok')->name('stok.')->group(function () {
+        Route::get('/', [StokController::class, 'index'])->name('index');
+    });
+    Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'index'])->name('pembelian.index');
+});
