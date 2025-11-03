@@ -74,9 +74,6 @@ class CartController extends Controller
 
     public function checkout(Request $request)
     {
-        $request->validate([
-            'metode_pembayaran' => 'required|in:tunai,non tunai',
-        ]);
 
         $cart = Cart::where('user_id', auth()->id())
                     ->where('is_approved', false)
@@ -85,8 +82,6 @@ class CartController extends Controller
         if (!$cart || $cart->items->isEmpty()) {
             return back()->withErrors(['cart' => 'Keranjang kosong.']);
         }
-
-        $cart->update(['metode_pembayaran' => $request->metode_pembayaran]);
 
         return redirect()->route('karyawan.cart.index')
                          ->with('success', 'Keranjang dikirim ke kasir untuk approval.');

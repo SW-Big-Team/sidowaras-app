@@ -11,7 +11,8 @@ Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')
     // Cart Approval
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/approval', [CartApprovalController::class, 'index'])->name('approval');
-        Route::post('/{cart}/approve', [CartApprovalController::class, 'approve'])->name('approve');
+        Route::get('/{cart}/approve', [CartApprovalController::class, 'showPayment'])->name('showPayment');
+        Route::post('/process-payment', [CartApprovalController::class, 'processPayment'])->name('processPayment');
         Route::post('/{cart}/reject', [CartApprovalController::class, 'reject'])->name('reject');
     });
 

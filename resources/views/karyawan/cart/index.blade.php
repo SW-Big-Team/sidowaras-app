@@ -17,34 +17,35 @@
                     <h6 class="text-dark font-weight-bold mb-0">Tambah Obat ke Keranjang</h6>
                 </div>
                 <div class="card-body">
-                <form action="{{ route('karyawan.cart.add') }}" method="POST">
+                    <form action="{{ route('karyawan.cart.add') }}" method="POST">
                         @csrf
-                    <div class="mb-3">
-                        <label class="form-label text-sm">Pilih Obat</label>
-                        <div class="input-group">
-                            <select name="obat_id" class="form-control" required>
-                                <option value="">-- Cari atau pilih obat --</option>
-                                @foreach($obats as $obat)
-                                    <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_tersedia ?? 0 }}">
-                                        {{ $obat->nama_obat }} ({{ $obat->kode_obat }})
-                                        @if($obat->stok_tersedia && $obat->stok_tersedia > 0)
-                                            — Stok: {{ $obat->stok_tersedia }}
-                                        @else
-                                            — <span class="text-danger">Stok habis</span>
-                                        @endif
-                                    </option>
-                                @endforeach
-                            </select>
-                            <a href="{{ route('scanner') }}" class="btn btn-outline-primary" title="Scan Barcode">
-                                <i class="material-symbols-rounded">qr_code_scanner</i>
-                            </a>
+                        <div class="mb-3">
+                            <label class="form-label text-sm">Pilih Obat</label>
+                            <div class="input-group">
+                                <select name="obat_id" class="form-control" required>
+                                    <option value="">-- Cari atau pilih obat --</option>
+                                    @foreach($obats as $obat)
+                                        <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_tersedia ?? 0 }}">
+                                            {{ $obat->nama_obat }} ({{ $obat->kode_obat }})
+                                            @if($obat->stok_tersedia && $obat->stok_tersedia > 0)
+                                                — Stok: {{ $obat->stok_tersedia }}
+                                            @else
+                                                — <span class="text-danger">Stok habis</span>
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <a href="{{ route('scanner') }}" class="btn btn-outline-primary" title="Scan Barcode">
+                                    <i class="material-symbols-rounded">qr_code_scanner</i>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label text-sm">Jumlah</label>
-                        <input type="number" name="jumlah" class="form-control" min="1" value="1" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-sm w-100">Tambah ke Keranjang</button>
+                        <div class="mb-3">
+                            <label class="form-label text-sm">Jumlah</label>
+                            <input type="number" name="jumlah" class="form-control" min="1" value="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Tambah ke Keranjang</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -62,7 +63,11 @@
                     @endif
                     @if($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show mt-2 p-2" role="alert">
-                            {{ $errors->first() }}
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
@@ -115,28 +120,12 @@
                             </table>
                         </div>
 
-                        @if(!$cart->metode_pembayaran)
-                            <form action="{{ route('karyawan.cart.checkout') }}" method="POST" class="mt-4">
-                                @csrf
-                                <div class="mb-3">
-                                    <label class="form-label text-sm">Metode Pembayaran</label>
-                                    <select name="metode_pembayaran" class="form-control" required>
-                                        <option value="">-- Pilih metode pembayaran --</option>
-                                        <option value="tunai">Tunai</option>
-                                        <option value="non tunai">Non Tunai</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-success btn-sm w-100">
-                                    Simpan & Kirim ke Kasir untuk Approval
-                                </button>
-                            </form>
-                        @else
-                            <div class="alert alert-info mt-4 mb-0">
-                                <i class="material-symbols-rounded me-1">info</i>
-                                <strong>Keranjang siap!</strong> Menunggu approval dari kasir.<br>
-                                Metode: <strong>{{ ucfirst($cart->metode_pembayaran) }}</strong>
-                            </div>
-                        @endif
+                        <form action="{{ route('karyawan.cart.checkout') }}" method="POST" class="mt-4">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm w-100">
+                                Kirim ke Kasir untuk Approval
+                            </button>
+                        </form>
                     @else
                         <div class="text-center py-4">
                             <i class="material-symbols-rounded text-muted" style="font-size: 3rem;">shopping_cart</i>
