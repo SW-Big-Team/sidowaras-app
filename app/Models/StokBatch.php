@@ -43,7 +43,7 @@ class StokBatch extends Model
 
     public function pembelian()
     {
-        return $this->belongsTo(Pembelian::class, 'pembelian_id', 'uuid');
+        return $this->belongsTo(Pembelian::class, 'pembelian_id', 'id');
     }
 
     public function logs()

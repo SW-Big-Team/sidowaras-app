@@ -26,6 +26,7 @@
         <a class="nav-link {{ request()->routeIs('admin.obat.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.obat.index') }}">
           <i class="material-symbols-rounded opacity-5">inventory</i>
           <span class="nav-link-text ms-1">Obat</span>
+<<<<<<< HEAD
         </a>
       </li>
       <li class="nav-item">
@@ -76,6 +77,29 @@
         </a>
       </li>
       <li class="nav-item">
+=======
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.kategori.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.kategori.index') }}">
+          <i class="material-symbols-rounded opacity-5">category</i>
+          <span class="nav-link-text ms-1">Kategori</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.satuan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.satuan.index') }}">
+          <i class="material-symbols-rounded opacity-5">scale</i>
+          <span class="nav-link-text ms-1">Satuan</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.kandungan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.kandungan.index') }}">
+          <i class="material-symbols-rounded opacity-5">science</i>
+          <span class="nav-link-text ms-1">Kandungan</span>
+        </a>
+      </li>
+      <li class="nav-item">
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         <a class="nav-link {{ request()->routeIs('admin.supplier.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.supplier.index') }}">
           <i class="material-symbols-rounded opacity-5">local_shipping</i>
           <span class="nav-link-text ms-1">Supplier</span>

@@ -73,7 +73,11 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
     // Riwayat Transaksi & Laporan
     Route::prefix('transaksi')->name('transaksi.')->group(function () {
         Route::get('/riwayat', [TransaksiController::class, 'riwayat'])->name('riwayat');
+<<<<<<< HEAD
         Route::get('/{transaksi}', [TransaksiController::class, 'show'])->name('show');
+=======
+        Route::get('/{uuid}', [TransaksiController::class, 'show'])->name('show');
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
     });
 
     Route::prefix('laporan')->name('laporan.')->group(function () {

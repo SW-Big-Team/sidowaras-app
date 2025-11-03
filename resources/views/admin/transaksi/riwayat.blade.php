@@ -1,13 +1,28 @@
+<<<<<<< HEAD
 @extends('layouts.admin.app')
+=======
+@php
+    $layoutPath = 'layouts.admin.app';
+@endphp
+
+@extends($layoutPath)
+
+@section('title', 'Riwayat Transaksi')
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
             <div class="card">
+<<<<<<< HEAD
                 <div class="card-header bg-transparent">
                     <h5 class="mb-0">Riwayat Transaksi Saya</h5>
                     <p class="text-sm text-muted">Daftar transaksi yang telah saya proses</p>
+=======
+                <div class="card-header">
+                    <h5 class="mb-0">Riwayat Semua Transaksi</h5>
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                 </div>
                 <div class="card-body px-0 pb-2">
                     <div class="table-responsive">
@@ -17,7 +32,10 @@
                                     <th>No Transaksi</th>
                                     <th>Kasir</th>
                                     <th>Total Harga</th>
+<<<<<<< HEAD
                                     <th>Metode</th>
+=======
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                                     <th>Tanggal</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -26,6 +44,7 @@
                                 @forelse($transaksis as $t)
                                     <tr>
                                         <td>{{ $t->no_transaksi }}</td>
+<<<<<<< HEAD
                                         <td>
                                             {{ $t->user->nama_lengkap }}<br>
                                             <small class="text-muted">{{ $t->user->role->nama_role }}</small>
@@ -42,6 +61,14 @@
                                         <td>
                                             <a href="{{ route('admin.transaksi.show', $t->id) }}" class="btn btn-sm btn-info">
                                                 <i class="material-symbols-rounded text-sm">visibility</i>
+=======
+                                        <td>{{ $t->user->nama_lengkap }}</td>
+                                        <td>Rp {{ number_format($t->total_harga, 0, ',', '.') }}</td>
+                                        <td>{{ $t->tgl_transaksi->format('d M Y H:i') }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.transaksi.show', $t->uuid) }}" class="btn btn-sm btn-info">
+                                                <i class="material-symbols-rounded">visibility</i>
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                                             </a>
                                         </td>
                                     </tr>
@@ -53,7 +80,11 @@
                             </tbody>
                         </table>
                     </div>
+<<<<<<< HEAD
                     <div class="mt-3">
+=======
+                    <div class="mt-3 px-3">
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                         {{ $transaksis->links() }}
                     </div>
                 </div>

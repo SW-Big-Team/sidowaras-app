@@ -17,9 +17,17 @@ class TransaksiController extends Controller
         return view('admin.transaksi.riwayat', compact('transaksis'));
     }
 
+<<<<<<< HEAD
     public function show(Transaksi $transaksi) // Laravel otomatis cari by id
     {
         $detail = $transaksi->detail()->with('batch.obat')->get();
+=======
+    public function show($uuid)
+    {
+        $transaksi = Transaksi::where('uuid', $uuid)->firstOrFail();
+        $detail = $transaksi->detail()->with('batch.obat')->get();
+
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         return view('admin.transaksi.show', compact('transaksi', 'detail'));
     }
 }

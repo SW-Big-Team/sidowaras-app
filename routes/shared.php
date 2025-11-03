@@ -24,10 +24,14 @@ Route::middleware(['auth', 'role:Admin,Karyawan,Kasir'])->prefix('shared')->grou
 
     // Stok Opname (input oleh karyawan & admin)
     Route::prefix('opname')->name('opname.')->group(function () {
+<<<<<<< HEAD
         // Route::get('/', [StokOpnameController::class, 'index'])->name('index'); change to dd()
         Route::get('/', function () {
             dd('ongoing');
         })->name('index');
+=======
+        Route::get('/', [StokOpnameController::class, 'index'])->name('index');
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         Route::get('/create', [StokOpnameController::class, 'create'])->name('create');
         Route::post('/', [StokOpnameController::class, 'store'])->name('store');
     });

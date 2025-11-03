@@ -1,4 +1,14 @@
+<<<<<<< HEAD
 @extends('layouts.admin.app')
+=======
+@php
+    $layoutPath = 'layouts.admin.app';
+@endphp
+
+@extends($layoutPath)
+
+@section('title', 'Detail Transaksi')
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
 
 @section('content')
 <div class="container py-4">
@@ -10,6 +20,7 @@
                 </div>
                 <div class="card-body">
                     <p><strong>No Transaksi:</strong> {{ $transaksi->no_transaksi }}</p>
+<<<<<<< HEAD
                     <p><strong>Tanggal:</strong> {{ $transaksi->tgl_transaksi->format('d M Y H:i') }}</p>
                     <p><strong>Kasir:</strong> {{ $transaksi->user->nama_lengkap }}</p>
                     <p><strong>Metode Pembayaran:</strong> 
@@ -23,6 +34,10 @@
                         <p><strong>Total Bayar:</strong> Rp {{ number_format($transaksi->total_bayar, 0, ',', '.') }}</p>
                         <p><strong>Kembalian:</strong> Rp {{ number_format($transaksi->kembalian, 0, ',', '.') }}</p>
                     @endif
+=======
+                    <p><strong>Kasir:</strong> {{ $transaksi->user->nama_lengkap }}</p>
+                    <p><strong>Tanggal:</strong> {{ $transaksi->tgl_transaksi->format('d M Y H:i') }}</p>
+>>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                     <hr>
                     <h6>Daftar Item:</h6>
                     <table class="table table-sm">
