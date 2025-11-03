@@ -18,12 +18,12 @@ class SatuanObatController extends Controller
     public function index()
     {
         $satuan = SatuanObat::latest()->paginate(10);
-        return view('obat.satuan.index', compact('satuan'));
+        return view('admin.satuan.index', compact('satuan'));
     }
 
     public function create()
     {
-        return view('obat.satuan.create');
+        return view('admin.satuan.create');
     }
 
     public function store(Request $request)
@@ -42,7 +42,7 @@ class SatuanObatController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('satuan.index')->with('success', 'Satuan berhasil ditambahkan.');
+            return redirect()->route('admin.satuan.index')->with('success', 'Satuan berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menambah satuan: ' . $e->getMessage());
@@ -52,7 +52,7 @@ class SatuanObatController extends Controller
     public function edit($id)
     {
         $satuan = SatuanObat::findOrFail($id);
-        return view('obat.satuan.edit', compact('satuan'));
+        return view('admin.satuan.edit', compact('satuan'));
     }
 
     public function update(Request $request, $id)
@@ -65,7 +65,7 @@ class SatuanObatController extends Controller
         $satuan = SatuanObat::findOrFail($id);
         $satuan->update($validated);
 
-        return redirect()->route('satuan.index')->with('success', 'Satuan berhasil diperbarui.');
+        return redirect()->route('admin.satuan.index')->with('success', 'Satuan berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -73,6 +73,6 @@ class SatuanObatController extends Controller
         $satuan = SatuanObat::findOrFail($id);
         $satuan->delete();
 
-        return redirect()->route('satuan.index')->with('success', 'Satuan berhasil dihapus.');
+        return redirect()->route('admin.satuan.index')->with('success', 'Satuan berhasil dihapus.');
     }
 }

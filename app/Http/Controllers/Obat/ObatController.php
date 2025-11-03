@@ -53,7 +53,7 @@ class ObatController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('obat.index', compact('obats', 'search'));
+        return view('admin.obat.index', compact('obats', 'search'));
     }
 
     // Form tambah obat
@@ -63,12 +63,16 @@ class ObatController extends Controller
         $satuan = SatuanObat::all();
         $kandungan = KandunganObat::all();
 
-        return view('obat.create', compact('kategori', 'satuan', 'kandungan'));
+        return view('admin.obat.create', compact('kategori', 'satuan', 'kandungan'));
     }
 
     // Simpan data obat
     public function store(Request $request)
     {
+        if (auth()->user()->role->nama_role !== 'Admin') {
+            abort(403, 'Hanya admin yang boleh mengelola master data obat.');
+        }
+    
         $request->validate([
             'nama_obat' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategori_obat,id',
@@ -80,17 +84,10 @@ class ObatController extends Controller
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
             'deskripsi' => 'nullable|string',
-            // Input tambahan untuk stok awal
-            'harga_beli' => 'required|numeric|min:0',
-            'harga_jual' => 'required|numeric|min:0|gt:harga_beli',
-            'stok_awal' => 'required|integer|min:1',
-            'tgl_kadaluarsa' => 'required|date|after:today',
-            'nama_pengirim' => 'required|string|max:100',
         ]);
     
         DB::beginTransaction();
         try {
-            // 1. Simpan obat
             $obat = Obat::create([
                 'uuid' => Str::uuid(),
                 'nama_obat' => $request->nama_obat,
@@ -105,33 +102,9 @@ class ObatController extends Controller
                 'deskripsi' => $request->deskripsi,
             ]);
     
-            // 2. Simpan pembelian
-            $pembelian = Pembelian::create([
-                'uuid' => Str::uuid(),
-                'no_faktur' => 'BELI-' . now()->format('ymd') . Str::random(6),
-                'nama_pengirim' => $request->nama_pengirim,
-                'metode_pembayaran' => 'tunai',
-                'tgl_pembelian' => now(),
-                'total_harga' => $request->harga_beli * $request->stok_awal,
-                'user_id' => auth()->id(),
-            ]);
-    
-            // 3. Simpan stok batch
-            StokBatch::create([
-                'uuid' => Str::uuid(),
-                'obat_id' => $obat->id,
-                'pembelian_id' => $pembelian->uuid,
-                'no_batch' => 'BATCH-' . now()->format('ymd') . Str::random(5),
-                'harga_beli' => $request->harga_beli,
-                'harga_jual' => $request->harga_jual,
-                'jumlah_masuk' => $request->stok_awal,
-                'sisa_stok' => $request->stok_awal,
-                'tgl_kadaluarsa' => $request->tgl_kadaluarsa,
-            ]);
-    
             DB::commit();
-            return redirect()->route('karyawan.stock.index')
-                             ->with('success', 'Obat dan stok awal berhasil ditambahkan.');
+            return redirect()->route('admin.obat.index')
+                             ->with('success', 'Obat berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -146,13 +119,18 @@ class ObatController extends Controller
         $satuan = SatuanObat::all();
         $kandungan = KandunganObat::all();
 
-        return view('obat.edit', compact('obat', 'kategori', 'satuan', 'kandungan'));
+        return view('admin.obat.edit', compact('obat', 'kategori', 'satuan', 'kandungan'));
     }
 
 
     // Update data obat
     public function update(Request $request, $id)
     {
+
+        if (auth()->user()->role->nama_role !== 'Admin') {
+            abort(403, 'Hanya admin yang boleh mengelola master data obat.');
+        }
+
         $obat = Obat::findOrFail($id);
 
         $request->validate([
@@ -185,7 +163,7 @@ class ObatController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('obat.index')->with('success', 'Data obat berhasil diperbarui.');
+            return redirect()->route('admin.obat.index')->with('success', 'Data obat berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal memperbarui data obat: ' . $e->getMessage());
@@ -193,7 +171,6 @@ class ObatController extends Controller
     }
 
     // Hapus data obat
-
     public function destroy($id)
     {
         $obat = Obat::findOrFail($id);
@@ -202,20 +179,11 @@ class ObatController extends Controller
         try {
             $obat->delete();
             DB::commit();
-            return redirect()->route('obat.index')->with('success', 'Data obat berhasil dihapus.');
+            return redirect()->route('admin.obat.index')->with('success', 'Data obat berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menghapus data obat: ' . $e->getMessage());
         }
-    }
-
-    public function createForKaryawan()
-    {
-    $kategori = KategoriObat::all();
-    $satuan = SatuanObat::all();
-    $kandungan = KandunganObat::all();
-
-    return view('karyawan.inventory.tambah', compact('kategori', 'satuan', 'kandungan'));
     }
     
 }

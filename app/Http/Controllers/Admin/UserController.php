@@ -28,7 +28,7 @@ class UserController extends Controller
             ->select('id', 'uuid', 'nama_lengkap', 'email', 'role_id', 'is_active')
             ->get();
 
-        return view('users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -37,7 +37,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::select('id', 'nama_role')->get();
-        return view('users.create', compact('roles'));
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -67,7 +67,7 @@ class UserController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('users.index')
+                ->route('admin.users.index')
                 ->with('success', 'User berhasil dibuat.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -87,7 +87,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $roles = Role::select('id', 'nama_role')->get();
 
-        return view('users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -122,7 +122,7 @@ class UserController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('users.index')
+                ->route('admin.users.index')
                 ->with('success', 'User berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -143,7 +143,7 @@ class UserController extends Controller
 
         if ($user->id === Auth::id()) {
             return redirect()
-                ->route('users.index')
+                ->route('admin.users.index')
                 ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
 
@@ -153,13 +153,13 @@ class UserController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('users.index')
+                ->route('admin.users.index')
                 ->with('success', 'User berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
 
             return redirect()
-                ->route('users.index')
+                ->route('admin.users.index')
                 ->with('error', 'Gagal menghapus user: ' . $e->getMessage());
         }
     }

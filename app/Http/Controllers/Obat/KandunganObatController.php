@@ -18,12 +18,12 @@ class KandunganObatController extends Controller
     public function index()
     {
         $data = KandunganObat::latest()->paginate(10);
-        return view('obat.kandungan.index', compact('data'));
+        return view('admin.kandungan.index', compact('data'));
     }
 
     public function create()
     {
-        return view('obat.kandungan.create');
+        return view('admin.kandungan.create');
     }
 
     public function store(Request $request)
@@ -42,7 +42,7 @@ class KandunganObatController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('kandungan.index')->with('success', 'Kandungan obat berhasil ditambahkan.');
+            return redirect()->route('admin.kandungan.index')->with('success', 'Kandungan obat berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menambah kandungan: ' . $e->getMessage());
@@ -52,7 +52,7 @@ class KandunganObatController extends Controller
     public function edit($id)
     {
         $kandungan = KandunganObat::findOrFail($id);
-        return view('obat.kandungan.edit', compact('kandungan'));
+        return view('admin.kandungan.edit', compact('kandungan'));
     }
 
     public function update(Request $request, $id)
@@ -65,7 +65,7 @@ class KandunganObatController extends Controller
         $kandungan = KandunganObat::findOrFail($id);
         $kandungan->update($validated);
 
-        return redirect()->route('kandungan.index')->with('success', 'Kandungan obat berhasil diperbarui.');
+        return redirect()->route('admin.kandungan.index')->with('success', 'Kandungan obat berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -73,6 +73,6 @@ class KandunganObatController extends Controller
         $kandungan = KandunganObat::findOrFail($id);
         $kandungan->delete();
 
-        return redirect()->route('kandungan.index')->with('success', 'Kandungan obat berhasil dihapus.');
+        return redirect()->route('admin.kandungan.index')->with('success', 'Kandungan obat berhasil dihapus.');
     }
 }

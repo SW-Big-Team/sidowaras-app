@@ -22,51 +22,29 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
       {{-- Manajemen Obat --}}
       <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Stok</h6>
       </li>
-
-      {{-- Obat --}}
       <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('obat.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('obat.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Obat</span>
+          <a class="nav-link {{ request()->routeIs('stok.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('stok.index') }}">
+              <i class="material-symbols-rounded">inventory_2</i>
+              <span class="nav-link-text ms-1">Daftar Stok</span>
+          </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('pembelian.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
+              <i class="material-symbols-rounded">shopping_cart</i>
+              <span class="nav-link-text ms-1">Pembelian Obat</span>
           </a>
       </li>
 
-      {{-- Kandungan Obat --}}
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('kandungan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kandungan.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Kandungan Obat</span>
-          </a>
-      </li>
-
-      {{-- Kategori Obat --}}
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('kategori.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kategori.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Kategori Obat</span>
-          </a>
-      </li>
-
-      {{-- Satuan Obat --}}
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('satuan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('satuan.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Satuan Obat</span>
-          </a>
-      </li>
-
-      {{-- Transaksi --}}
+      <!-- Transaksi -->
       <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Transaksi</h6>
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Transaksi</h6>
       </li>
-
-      {{-- Pembelian --}}
       <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Pembelian</span>
+          <a class="nav-link {{ request()->routeIs('kasir.cart.approval') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.cart.approval') }}">
+              <i class="material-symbols-rounded">shopping_cart</i>
+              <span class="nav-link-text ms-1">Approval Cart</span>
           </a>
       </li>
 

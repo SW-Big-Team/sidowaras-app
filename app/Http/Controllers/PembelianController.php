@@ -34,13 +34,13 @@ class PembelianController extends Controller
     public function index()
     {
         $pembelian = Pembelian::with('user')->orderByDesc('created_at')->paginate(15);
-        return view('pembelian.index', compact('pembelian'));
+        return view('shared.pembelian.index', compact('pembelian'));
     }
 
     public function create()
     {
         $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
-        return view('pembelian.create', compact('obatList'));
+        return view('shared.pembelian.create', compact('obatList'));
     }
 
     public function store(Request $request)
@@ -117,13 +117,13 @@ class PembelianController extends Controller
     public function show(Pembelian $pembelian)
     {
         $pembelian->load(['user', 'stokBatches.obat']);
-        return view('pembelian.show', compact('pembelian'));
+        return view('shared.pembelian.show', compact('pembelian'));
     }
 
     public function edit(Pembelian $pembelian)
     {
         $obatList = Obat::select('id', 'nama_obat')->orderBy('nama_obat')->get();
-        return view('pembelian.edit', compact('pembelian', 'obatList'));
+        return view('shared.pembelian.edit', compact('pembelian', 'obatList'));
     }
 
     public function update(Request $request, $id)

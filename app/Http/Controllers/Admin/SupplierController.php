@@ -20,7 +20,7 @@ class SupplierController extends Controller
             $editingSupplier = Supplier::find($request->integer('edit'));
         }
 
-        return view('supplier.index', [
+        return view('admin.supplier.index', [
             'suppliers' => $suppliers,
             'editingSupplier' => $editingSupplier,
         ]);
@@ -53,7 +53,7 @@ class SupplierController extends Controller
             $trashed->save();
 
             return redirect()
-                ->route('admin.suppliers.index')
+                ->route('admin.supplier.index')
                 ->with('success', 'Supplier restored and updated successfully.');
         }
 
@@ -63,7 +63,7 @@ class SupplierController extends Controller
         $supplier->save();
 
         return redirect()
-            ->route('admin.suppliers.index')
+            ->route('admin.supplier.index')
             ->with('success', 'Supplier created successfully.');
     }
 
@@ -89,7 +89,7 @@ class SupplierController extends Controller
         $supplier->save();
 
         return redirect()
-            ->route('admin.suppliers.index')
+            ->route('admin.supplier.index')
             ->with('success', 'Supplier updated successfully.');
     }
 
@@ -100,7 +100,7 @@ class SupplierController extends Controller
         $supplier->delete();
 
         return redirect()
-            ->route('admin.suppliers.index')
+            ->route('admin.supplier.index')
             ->with('success', 'Supplier deleted (soft) successfully.');
     }
 }
