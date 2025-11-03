@@ -26,6 +26,6 @@ class TransaksiController extends Controller
     public function show(Transaksi $transaksi)
     {
         $detail = $transaksi->detail()->with('batch.obat')->get();
-        return view('kasir.transaksi.detail', compact('transaksi', 'detail'));
+        return view('kasir.transaksi.show', compact('transaksi', 'detail'));
     }
 }

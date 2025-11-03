@@ -17,10 +17,11 @@
                     <h6 class="text-dark font-weight-bold mb-0">Tambah Obat ke Keranjang</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('karyawan.cart.add') }}" method="POST">
+                <form action="{{ route('karyawan.cart.add') }}" method="POST">
                         @csrf
-                        <div class="mb-3">
-                            <label class="form-label text-sm">Pilih Obat</label>
+                    <div class="mb-3">
+                        <label class="form-label text-sm">Pilih Obat</label>
+                        <div class="input-group">
                             <select name="obat_id" class="form-control" required>
                                 <option value="">-- Cari atau pilih obat --</option>
                                 @foreach($obats as $obat)
@@ -34,13 +35,16 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <a href="{{ route('scanner') }}" class="btn btn-outline-primary" title="Scan Barcode">
+                                <i class="material-symbols-rounded">qr_code_scanner</i>
+                            </a>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label text-sm">Jumlah</label>
-                            <input type="number" name="jumlah" class="form-control" min="1" value="1" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-sm w-100">Tambah ke Keranjang</button>
-                    </form>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-sm">Jumlah</label>
+                        <input type="number" name="jumlah" class="form-control" min="1" value="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100">Tambah ke Keranjang</button>
                 </div>
             </div>
         </div>

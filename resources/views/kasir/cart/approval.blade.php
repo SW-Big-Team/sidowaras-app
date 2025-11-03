@@ -34,6 +34,10 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <form id="approvalForm" method="POST" style="display: none;">
+                                    @csrf
+                                    <input type="hidden" name="cart_id" id="cartIdForApproval">
+                                </form>
                                 @forelse($carts as $cart)
                                     <tr>
                                         <td>
@@ -67,7 +71,8 @@
                                             </button>
                                             <form action="{{ route('kasir.cart.approve', $cart) }}" method="POST" style="display:inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-success mb-0 me-1" onclick="return confirm('Setujui cart ini?')">
+                                                <button type="button" class="btn btn-sm btn-success mb-0 me-1"
+                                                        onclick="showApprovalModal({{ $cart->id }}, {{ $cart->items->sum(fn($i) => $i->jumlah * $i->harga_satuan) }}, '{{ ucfirst($cart->metode_pembayaran) }}')">
                                                     <i class="material-symbols-rounded text-sm">check</i>
                                                 </button>
                                             </form>
@@ -126,6 +131,30 @@
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
+                                                        <!-- Modal Konfirmasi Pembayaran -->
+                                                        <div class="modal fade" id="approvalModal" tabindex="-1" aria-labelledby="approvalModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="approvalModalLabel">Konfirmasi Pembayaran</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p><strong>Total Harga:</strong> <span id="modalTotal"></span></p>
+                                                                        <p><strong>Metode Pembayaran:</strong> <span id="modalMetode"></span></p>
+                                                                        <div class="mt-3">
+                                                                            <label class="form-label">Total Bayar (Opsional)</label>
+                                                                            <input type="number" id="totalBayar" class="form-control" placeholder="0" min="0">
+                                                                            <small class="text-muted">Biarkan kosong jika tidak perlu hitung kembalian</small>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                                        <button type="button" class="btn btn-success" onclick="confirmApproval()">Approve & Simpan Transaksi</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -162,4 +191,42 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    let currentCartId = null;
+    let currentTotalHarga = 0;
+
+    function showApprovalModal(cartId, totalHarga, metode) {
+        currentCartId = cartId;
+        currentTotalHarga = totalHarga;
+
+        document.getElementById('modalTotal').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(totalHarga);
+        document.getElementById('modalMetode').textContent = metode;
+        document.getElementById('totalBayar').value = '';
+        
+        const modal = new bootstrap.Modal(document.getElementById('approvalModal'));
+        modal.show();
+    }
+
+    function confirmApproval() {
+        if (!currentCartId) return;
+
+        const totalBayarInput = document.getElementById('totalBayar').value;
+        const totalBayar = totalBayarInput ? parseFloat(totalBayarInput) : 0;
+
+        if (totalBayar > 0 && totalBayar < currentTotalHarga) {
+            alert('Total bayar tidak boleh kurang dari total harga!');
+            return;
+        }
+
+        // Submit form approval
+        const form = document.getElementById('approvalForm');
+        form.action = `/kasir/cart/${currentCartId}/approve`;
+        form.querySelector('input[name="cart_id"]').value = currentCartId;
+        form.submit();
+    }
+</script>
+@endpush
+
 @endsection
