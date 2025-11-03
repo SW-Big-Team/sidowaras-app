@@ -24,9 +24,8 @@
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
       </li>
-
-      {{-- Obat --}}
       <li class="nav-item">
+<<<<<<< HEAD
           <a class="nav-link {{ request()->routeIs('obat.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('obat.index') }}">
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text">Obat</span>
@@ -76,6 +75,8 @@
       {{-- Manajemen Pengguna --}}
 >>>>>>> 1976067 (feat: update sidebar navigation to include 'Manajemen Obat' section and restore 'Pembelian' link across admin, karyawan, and kasir layouts)
       <li class="nav-item">
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         <a class="nav-link {{ request()->routeIs('admin.obat.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.obat.index') }}">
           <i class="material-symbols-rounded opacity-5">inventory</i>
           <span class="nav-link-text ms-1">Obat</span>

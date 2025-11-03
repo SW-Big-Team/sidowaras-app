@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Kasir\CartApprovalController;
 use App\Http\Controllers\Kasir\TransaksiController;
 <<<<<<< HEAD
+<<<<<<< HEAD
 use App\Http\Controllers\Shared\StokController;
 =======
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
@@ -19,6 +20,12 @@ Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')
         Route::get('/{transaksi}', [TransaksiController::class, 'show'])->name('show');
     });
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+use App\Http\Controllers\Shared\StokController;
+
+Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')->group(function () {
+    Route::get('/dashboard', fn() => view('kasir.index'))->name('dashboard');
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
 
     // Cart Approval
     Route::prefix('cart')->name('cart.')->group(function () {
@@ -44,8 +51,17 @@ Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')
         Route::post('/{cart}/reject', [CartApprovalController::class, 'reject'])->name('reject');
     });
 
+<<<<<<< HEAD
     // Pembelian Obat
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+    // Riwayat Transaksi
+    Route::prefix('transaksi')->name('transaksi.')->group(function () {
+        Route::get('/riwayat', [TransaksiController::class, 'index'])->name('riwayat');
+        Route::get('/{transaksi}', [TransaksiController::class, 'show'])->name('show');
+    });
+
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
     // Laporan
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/transaksi', fn() => view('kasir.laporan.transaksi'))->name('transaksi');

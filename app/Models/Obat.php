@@ -48,6 +48,7 @@ class Obat extends Model
     /**
      * Accessor: Mengembalikan koleksi kandungan terkait.
 <<<<<<< HEAD
+<<<<<<< HEAD
      * $obat->kandungan
      */
     public function getkandunganAttribute()
@@ -56,6 +57,11 @@ class Obat extends Model
      */
     public function getKandungansAttribute()
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+     * $obat->kandungan
+     */
+    public function getkandunganAttribute()
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
     {
         if (empty($this->kandungan_id) || !is_array($this->kandungan_id)) {
             return collect();
@@ -70,10 +76,14 @@ class Obat extends Model
     public function getDaftarKandunganAttribute()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         return $this->kandungan->flatMap(function ($k) {
 =======
         return $this->kandungans->flatMap(function ($k) {
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+        return $this->kandungan->flatMap(function ($k) {
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
             return $k->nama_kandungan ?? [];
         })->values();
     }

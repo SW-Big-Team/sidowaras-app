@@ -31,7 +31,11 @@ Route::middleware(['auth', 'role:Admin,Karyawan,Kasir'])->prefix('shared')->grou
         })->name('index');
 =======
         Route::get('/', [StokOpnameController::class, 'index'])->name('index');
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         Route::get('/create', [StokOpnameController::class, 'create'])->name('create');
         Route::post('/', [StokOpnameController::class, 'store'])->name('store');
     });

@@ -8,7 +8,11 @@
 @extends($layoutPath)
 
 @section('title', 'Riwayat Transaksi')
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
 
 @section('content')
 <div class="container-fluid py-4">
@@ -22,7 +26,11 @@
 =======
                 <div class="card-header">
                     <h5 class="mb-0">Riwayat Semua Transaksi</h5>
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                 </div>
                 <div class="card-body px-0 pb-2">
                     <div class="table-responsive">
@@ -35,7 +43,11 @@
 <<<<<<< HEAD
                                     <th>Metode</th>
 =======
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                                     <th>Tanggal</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -68,7 +80,11 @@
                                         <td>
                                             <a href="{{ route('admin.transaksi.show', $t->uuid) }}" class="btn btn-sm btn-info">
                                                 <i class="material-symbols-rounded">visibility</i>
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                                             </a>
                                         </td>
                                     </tr>
@@ -84,7 +100,11 @@
                     <div class="mt-3">
 =======
                     <div class="mt-3 px-3">
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                         {{ $transaksis->links() }}
                     </div>
                 </div>

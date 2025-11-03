@@ -11,7 +11,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\LogPerubahanStok;
 use App\Models\StokBatch;
 =======
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
 
 class StokOpnameController extends Controller
 {
@@ -38,7 +42,11 @@ class StokOpnameController extends Controller
 <<<<<<< HEAD
 =======
         // Hanya karyawan & admin yang boleh input
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         $request->validate([
             'tgl_opname' => 'required|date',
             'items' => 'required|array',
@@ -119,6 +127,10 @@ class StokOpnameController extends Controller
 
         return redirect()->route('opname.index')
                          ->with('success', 'Stok opname berhasil disimpan.');
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
     }
 }

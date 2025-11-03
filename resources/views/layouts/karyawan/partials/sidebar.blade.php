@@ -18,6 +18,7 @@
       </li>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       {{-- Manajemen Obat --}}
       <li class="nav-item mt-3">
@@ -57,6 +58,8 @@
       </li>
 
 >>>>>>> 1976067 (feat: update sidebar navigation to include 'Manajemen Obat' section and restore 'Pembelian' link across admin, karyawan, and kasir layouts)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
       {{-- Operasional --}}
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Operasional</h6>
@@ -65,16 +68,22 @@
       {{-- Cart & Scanner --}}
       <li class="nav-item">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
           <i class="material-symbols-rounded opacity-5">shopping_cart</i>
           <span class="nav-link-text ms-1">Cart / Scanner</span>
         </a>
+<<<<<<< HEAD
 =======
           <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
               <i class="material-symbols-rounded opacity-5">shopping_cart</i>
               <span class="nav-link-text ms-1">Keranjang</span>
           </a>
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
       </li>
 
       {{-- Manajemen Stok --}}
@@ -82,8 +91,8 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Stok</h6>
       </li>
 
-      {{-- Pembelian --}}
       <li class="nav-item">
+<<<<<<< HEAD
           <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text">Pembelian</span>
@@ -91,6 +100,8 @@
       </li>
 
       <li class="nav-item">
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         <a class="nav-link {{ request()->routeIs('stok.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('stok.index') }}">
           <i class="material-symbols-rounded opacity-5">inventory_2</i>
           <span class="nav-link-text ms-1">Daftar Stok</span>

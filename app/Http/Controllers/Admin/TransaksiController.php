@@ -27,7 +27,11 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::where('uuid', $uuid)->firstOrFail();
         $detail = $transaksi->detail()->with('batch.obat')->get();
 
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         return view('admin.transaksi.show', compact('transaksi', 'detail'));
     }
 }

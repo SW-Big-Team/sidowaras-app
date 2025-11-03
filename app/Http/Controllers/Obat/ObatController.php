@@ -82,7 +82,11 @@ class ObatController extends Controller
         //     'kandungan' => $kandungan,
         // ]);
 =======
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
     }
 
     // Simpan data obat
@@ -92,7 +96,11 @@ class ObatController extends Controller
         if (Auth::user()->role->nama_role !== 'Admin') {
 =======
         if (auth()->user()->role->nama_role !== 'Admin') {
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
             abort(403, 'Hanya admin yang boleh mengelola master data obat.');
         }
     
@@ -111,12 +119,6 @@ class ObatController extends Controller
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
             'deskripsi' => 'nullable|string',
-            // Input tambahan untuk stok awal
-            'harga_beli' => 'required|numeric|min:0',
-            'harga_jual' => 'required|numeric|min:0|gt:harga_beli',
-            'stok_awal' => 'required|integer|min:1',
-            'tgl_kadaluarsa' => 'required|date|after:today',
-            'nama_pengirim' => 'required|string|max:100',
         ]);
     
 <<<<<<< HEAD
@@ -126,9 +128,12 @@ class ObatController extends Controller
         DB::beginTransaction();
         try {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             // 1. Simpan obat
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
             $obat = Obat::create([
                 'uuid' => Str::uuid(),
                 'nama_obat' => $request->nama_obat,
@@ -153,6 +158,7 @@ class ObatController extends Controller
                 'deskripsi' => $request->deskripsi,
             ]);
     
+<<<<<<< HEAD
 <<<<<<< HEAD
             DB::commit();
             return redirect()->route('admin.obat.index')
@@ -186,6 +192,11 @@ class ObatController extends Controller
             return redirect()->route('karyawan.stock.index')
                              ->with('success', 'Obat dan stok awal berhasil ditambahkan.');
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+            DB::commit();
+            return redirect()->route('admin.obat.index')
+                             ->with('success', 'Obat berhasil ditambahkan.');
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -216,7 +227,11 @@ class ObatController extends Controller
         if (Auth::user()->role->nama_role !== 'Admin') {
 =======
         if (auth()->user()->role->nama_role !== 'Admin') {
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
             abort(403, 'Hanya admin yang boleh mengelola master data obat.');
         }
 
@@ -275,6 +290,7 @@ class ObatController extends Controller
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
     public function createForKaryawan()
@@ -286,5 +302,7 @@ class ObatController extends Controller
     return view('karyawan.inventory.tambah', compact('kategori', 'satuan', 'kandungan'));
     }
 >>>>>>> 5c848fc (Add Cart functionality and update Bootstrap version)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
     
 }

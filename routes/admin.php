@@ -77,7 +77,11 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
         Route::get('/{transaksi}', [TransaksiController::class, 'show'])->name('show');
 =======
         Route::get('/{uuid}', [TransaksiController::class, 'show'])->name('show');
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
     });
 
     Route::prefix('laporan')->name('laporan.')->group(function () {

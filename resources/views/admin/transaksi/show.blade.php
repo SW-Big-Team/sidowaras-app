@@ -8,7 +8,11 @@
 @extends($layoutPath)
 
 @section('title', 'Detail Transaksi')
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
 
 @section('content')
 <div class="container py-4">
@@ -37,7 +41,11 @@
 =======
                     <p><strong>Kasir:</strong> {{ $transaksi->user->nama_lengkap }}</p>
                     <p><strong>Tanggal:</strong> {{ $transaksi->tgl_transaksi->format('d M Y H:i') }}</p>
+<<<<<<< HEAD
 >>>>>>> 63e5397 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+=======
+>>>>>>> e04ebff (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
+>>>>>>> 6334068 (Add new views and controllers for Stok and Transaksi management, update relationships in models, and enhance kategori forms.)
                     <hr>
                     <h6>Daftar Item:</h6>
                     <table class="table table-sm">
