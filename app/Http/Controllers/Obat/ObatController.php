@@ -11,7 +11,9 @@ use App\Models\KandunganObat;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pembelian;   
-use App\Models\StokBatch; 
+use App\Models\StokBatch;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ObatController extends Controller
 {
@@ -64,12 +66,18 @@ class ObatController extends Controller
         $kandungan = KandunganObat::all();
 
         return view('admin.obat.create', compact('kategori', 'satuan', 'kandungan'));
+
+        // return Inertia::render('Admin/CreateObat', [
+        //     'kategori' => $kategori,
+        //     'satuan' => $satuan,
+        //     'kandungan' => $kandungan,
+        // ]);
     }
 
     // Simpan data obat
     public function store(Request $request)
     {
-        if (auth()->user()->role->nama_role !== 'Admin') {
+        if (Auth::user()->role->nama_role !== 'Admin') {
             abort(403, 'Hanya admin yang boleh mengelola master data obat.');
         }
     
@@ -127,7 +135,7 @@ class ObatController extends Controller
     public function update(Request $request, $id)
     {
 
-        if (auth()->user()->role->nama_role !== 'Admin') {
+        if (Auth::user()->role->nama_role !== 'Admin') {
             abort(403, 'Hanya admin yang boleh mengelola master data obat.');
         }
 
