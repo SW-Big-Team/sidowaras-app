@@ -40,7 +40,7 @@
                                         </td>
                                         <td>{{ $t->tgl_transaksi->format('d M Y H:i') }}</td>
                                         <td>
-                                            <a href="{{ route('kasir.transaksi.show', $t->uuid) }}" class="btn btn-sm btn-info">
+                                            <a href="{{ route('kasir.transaksi.show', $t->id) }}" class="btn btn-sm btn-info">
                                                 <i class="material-symbols-rounded text-sm">visibility</i>
                                             </a>
                                         </td>
