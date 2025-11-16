@@ -22,146 +22,231 @@
         </a>
     </x-content-header>
 
-    @if($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show">
-            <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
-            <span class="alert-text">
-                <strong>Error!</strong> Terdapat kesalahan dalam pengisian form:
-                <ul class="mb-0 mt-2">
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    <form action="{{ route('pembelian.store') }}" method="POST" id="formPembelian">
-        @csrf
-
-        <div class="card shadow-sm mb-3">
-            <div class="card-header bg-primary text-white py-2">
-                <h6 class="mb-0"><i class="fas fa-file-invoice"></i> Informasi Pembelian</h6>
-            </div>
-            <div class="card-body p-3">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="input-group input-group-static mb-3">
-                            <label>No Faktur</label>
-                            <input type="text" name="no_faktur" class="form-control" value="{{ old('no_faktur') }}" placeholder="Auto generate">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-4">
+                    @if($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
+                            <span class="alert-text">
+                                <strong>Terdapat kesalahan:</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach($errors->all() as $err)
+                                        <li>{{ $err }}</li>
+                                    @endforeach
+                                </ul>
+                            </span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="input-group input-group-static mb-3">
-                            <label>Tanggal <span class="text-danger">*</span></label>
-                            <input type="datetime-local" name="tgl_pembelian" class="form-control" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">Pembayaran <span class="text-danger">*</span></label>
-                        <select name="metode_pembayaran" id="metode_pembayaran" class="form-select form-select-sm" required>
-                            <option value="tunai" @selected(old('metode_pembayaran', 'tunai') === 'tunai')>Tunai</option>
-                            <option value="non tunai" @selected(old('metode_pembayaran') === 'non tunai')>Non Tunai</option>
-                            <option value="termin" @selected(old('metode_pembayaran') === 'termin')>Termin</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="input-group input-group-static mb-3">
-                            <label>Total Harga</label>
-                            <input type="text" id="total_harga_display" class="form-control fw-bold text-success" value="Rp 0" readonly>
-                            <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group input-group-static mb-3">
-                            <label>Nama Pengirim <span class="text-danger">*</span></label>
-                            <input type="text" name="nama_pengirim" class="form-control" value="{{ old('nama_pengirim') }}" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group input-group-static mb-3">
-                            <label>No Telepon Pengirim</label>
-                            <input type="text" name="no_telepon_pengirim" class="form-control" value="{{ old('no_telepon_pengirim') }}" placeholder="Opsional">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card shadow-sm mb-3">
-            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-2">
-                <h6 class="mb-0"><i class="fas fa-pills"></i> Detail Obat</h6>
-                <button type="button" class="btn btn-sm btn-light" id="btnTambahObat">
-                    <i class="fas fa-plus"></i> Tambah Obat
-                </button>
-            </div>
-            <div class="card-body p-3">
-                <div class="row g-3" id="containerObat">
-                    @if(old('obat'))
-                        @foreach(old('obat') as $i => $obat)
-                            <script>
-                                window.oldObat = window.oldObat || [];
-                                window.oldObat.push(@json($obat));
-                            </script>
-                        @endforeach
                     @endif
+
+                    <form action="{{ route('pembelian.store') }}" method="POST" id="formPembelian">
+                        @csrf
+
+                        <!-- Informasi Pembelian -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md me-3">
+                                        <i class="material-symbols-rounded opacity-10">receipt_long</i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Informasi Pembelian</h6>
+                                        <p class="text-sm text-secondary mb-0">Data faktur dan pembayaran</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>No Faktur</label>
+                                    <input type="text" name="no_faktur" class="form-control" value="{{ old('no_faktur') }}" placeholder="Auto generate">
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>Tanggal <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" name="tgl_pembelian" class="form-control" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>Metode Pembayaran <span class="text-danger">*</span></label>
+                                    <select name="metode_pembayaran" id="metode_pembayaran" class="form-control" required>
+                                        <option value="tunai" @selected(old('metode_pembayaran', 'tunai') === 'tunai')>Tunai</option>
+                                        <option value="non tunai" @selected(old('metode_pembayaran') === 'non tunai')>Non Tunai</option>
+                                        <option value="termin" @selected(old('metode_pembayaran') === 'termin')>Termin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>Total Harga</label>
+                                    <input type="text" id="total_harga_display" class="form-control fw-bold text-success" value="Rp 0" readonly>
+                                    <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Pengirim -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md me-3">
+                                        <i class="material-symbols-rounded opacity-10">local_shipping</i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">Data Pengirim</h6>
+                                        <p class="text-sm text-secondary mb-0">Informasi pengirim barang</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>Nama Pengirim <span class="text-danger">*</span></label>
+                                    <input type="text" name="nama_pengirim" class="form-control" value="{{ old('nama_pengirim') }}" placeholder="Masukkan nama pengirim" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>No Telepon Pengirim</label>
+                                    <input type="text" name="no_telepon_pengirim" class="form-control" value="{{ old('no_telepon_pengirim') }}" placeholder="Nomor telepon (opsional)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detail Obat -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md me-3">
+                                            <i class="material-symbols-rounded opacity-10">medication</i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Detail Obat</h6>
+                                            <p class="text-sm text-secondary mb-0">Daftar obat yang dibeli</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm bg-gradient-success mb-0" id="btnTambahObat">
+                                        <i class="material-symbols-rounded text-sm me-1">add</i> Tambah Obat
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row g-3" id="containerObat">
+                                    @if(old('obat'))
+                                        @foreach(old('obat') as $i => $obat)
+                                            <script>
+                                                window.oldObat = window.oldObat || [];
+                                                window.oldObat.push(@json($obat));
+                                            </script>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Detail Termin -->
+                        <div class="row mb-4" id="cardTermin" style="display: none;">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-md me-3">
+                                            <i class="material-symbols-rounded opacity-10">event</i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Detail Termin Pembayaran</h6>
+                                            <p class="text-sm text-secondary mb-0">Jadwal pembayaran bertahap</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm bg-gradient-warning mb-0" id="btnTambahTermin">
+                                        <i class="material-symbols-rounded text-sm me-1">add</i> Tambah Termin
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div id="containerTermin" class="mb-3">
+                                    @if(old('termin_list'))
+                                        @foreach(old('termin_list') as $i => $termin)
+                                            <script>
+                                                window.oldTermin = window.oldTermin || [];
+                                                window.oldTermin.push(@json($termin));
+                                            </script>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row">
+                            <div class="col-12">
+                                <hr class="horizontal dark my-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{{ route('pembelian.index') }}" class="btn btn-outline-secondary mb-0">
+                                        <i class="material-symbols-rounded text-sm me-1">close</i> Batal
+                                    </a>
+                                    <button type="submit" class="btn bg-gradient-primary mb-0">
+                                        <i class="material-symbols-rounded text-sm me-1">save</i> Simpan Pembelian
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        
-        <div class="card shadow-sm mb-3" id="cardTermin" style="display: none;">
-            <div class="card-header bg-warning d-flex justify-content-between align-items-center py-2">
-                <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> Detail Termin Pembayaran</h6>
-                <button type="button" class="btn btn-sm btn-dark" id="btnTambahTermin">
-                    <i class="fas fa-plus"></i> Tambah Termin
-                </button>
-            </div>
-            <div class="card-body p-3">
-                <div id="containerTermin" class="mb-3">
-                     @if(old('termin_list'))
-                        @foreach(old('termin_list') as $i => $termin)
-                            <script>
-                                window.oldTermin = window.oldTermin || [];
-                                window.oldTermin.push(@json($termin));
-                            </script>
-                        @endforeach
-                    @endif
-                </div>
-                </div>
-        </div>
-
-
-        <div class="text-end mb-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Simpan Pembelian
-            </button>
-        </div>
-    </form>
+    </div>
 </div>
 
 <style>
-    .obat-card { transition: all 0.3s ease; }
-    .obat-card .card { height: 100%; border: 2px solid #e9ecef; }
-    .obat-card:hover .card { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); }
-    .obat-card .card-header { background: #764ba2; padding: 0.5rem 0.75rem; }
-    .form-label.small { font-size: 0.8rem; font-weight: 600; color: #495057; }
-    .form-control-sm, .form-select-sm { font-size: 0.85rem; }
-    .badge-number { font-size: 0.9rem; padding: 0.35rem 0.65rem; }
+    .obat-card { 
+        transition: all 0.3s ease; 
+    }
+    .obat-card .card { 
+        height: 100%; 
+        border: 1px solid #e9ecef;
+        border-radius: 0.75rem;
+    }
+    .obat-card:hover .card { 
+        box-shadow: 0 4px 20px 0 rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    .obat-card .card-header { 
+        background: linear-gradient(195deg, #667eea 0%, #764ba2 100%);
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem 0.75rem 0 0;
+    }
+    .form-label.small { 
+        font-size: 0.875rem; 
+        font-weight: 600; 
+        color: #344767;
+        margin-bottom: 0.5rem;
+    }
+    .badge-number { 
+        font-size: 0.875rem; 
+        padding: 0.4rem 0.75rem;
+        font-weight: 600;
+    }
     .termin-row {
         transition: all 0.3s ease;
-        border-bottom: 1px dashed #ccc;
-        padding-bottom: 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 0.5rem;
+        padding: 1rem;
         margin-bottom: 1rem;
+        background: #f8f9fa;
+    }
+    .termin-row:hover {
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.05);
     }
     .termin-row:last-child {
-        border-bottom: 0;
-        padding-bottom: 0;
         margin-bottom: 0;
+    }
+    .gap-2 {
+        gap: 0.5rem !important;
     }
 </style>
 
@@ -176,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let obatCounter = 0;
     let terminCounter = 0;
 
-    const obatList = @json($obatList);
+    const obatList = @json($obatList ?? []);
     
     const metodePembayaranSelect = document.getElementById('metode_pembayaran');
     const cardTermin = document.getElementById('cardTermin');
@@ -228,11 +313,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         col.innerHTML = `
-            <div class="card">
-                <div class="card-header text-white d-flex justify-content-between align-items-center" style="background: #764ba2;">
+            <div class="card shadow-sm">
+                <div class="card-header text-white d-flex justify-content-between align-items-center">
                     <span class="badge bg-white text-dark badge-number">Obat #${index + 1}</span>
-                    <button type="button" class="btn btn-sm btn-danger btn-remove" onclick="removeObatCard(this)" style="padding: 0.15rem 0.4rem;">
-                        Hapus
+                    <button type="button" class="btn btn-sm btn-danger btn-remove" onclick="removeObatCard(this)" style="padding: 0.25rem 0.5rem;">
+                        <i class="material-symbols-rounded text-sm">delete</i>
                     </button>
                 </div>
                 <div class="card-body p-3">
@@ -244,26 +329,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     
                     <div class="row">
-                        <div class="col-6">
-                            <label class="form-label small mb-1">Harga Beli <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-sm harga-beli-display" required placeholder="Rp 0">
-                            <input type="hidden" name="obat[${index}][harga_beli]" class="harga-beli" value="${data.harga_beli || 0}">
+                        <div class="col-6 mb-3">
+                            <div class="input-group input-group-static">
+                                <label>Harga Beli <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control harga-beli-display" required placeholder="Rp 0">
+                                <input type="hidden" name="obat[${index}][harga_beli]" class="harga-beli" value="${data.harga_beli || 0}">
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label small mb-1">Harga Jual <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-sm harga-jual-display" required placeholder="Rp 0">
-                            <input type="hidden" name="obat[${index}][harga_jual]" class="harga-jual" value="${data.harga_jual || 0}">
+                        <div class="col-6 mb-3">
+                            <div class="input-group input-group-static">
+                                <label>Harga Jual <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control harga-jual-display" required placeholder="Rp 0">
+                                <input type="hidden" name="obat[${index}][harga_jual]" class="harga-jual" value="${data.harga_jual || 0}">
+                            </div>
                         </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col-6">
-                            <label class="form-label small mb-1">Jumlah <span class="text-danger">*</span></label>
-                            <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control form-control-sm jumlah-masuk" required min="1" value="${data.jumlah_masuk || 1}">
+                        <div class="col-6 mb-3">
+                            <div class="input-group input-group-static">
+                                <label>Jumlah <span class="text-danger">*</span></label>
+                                <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control jumlah-masuk" required min="1" value="${data.jumlah_masuk || 1}">
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label small mb-1">Kadaluarsa <span class="text-danger">*</span></label>
-                            <input type="date" name="obat[${index}][tgl_kadaluarsa]" class="form-control form-control-sm" value="${data.tgl_kadaluarsa || ''}" required>
+                        <div class="col-6 mb-3">
+                            <div class="input-group input-group-static">
+                                <label>Kadaluarsa <span class="text-danger">*</span></label>
+                                <input type="date" name="obat[${index}][tgl_kadaluarsa]" class="form-control" value="${data.tgl_kadaluarsa || ''}" required>
+                            </div>
                         </div>
                     </div>
                     
@@ -337,26 +430,32 @@ document.addEventListener('DOMContentLoaded', function() {
     function createTerminCard(data = {}) {
         const index = terminCounter++;
         const row = document.createElement('div');
-        row.className = 'row g-2 align-items-center termin-row';
+        row.className = 'termin-row';
         row.setAttribute('data-index', index);
         
         row.innerHTML = `
-            <div class="col-1">
-                <span class="badge bg-dark badge-number">#${index + 1}</span>
-            </div>
-            <div class="col-5">
-                <label class="form-label small mb-1">Jumlah Bayar</label>
-                <input type="text" class="form-control form-control-sm termin-jumlah-display" placeholder="Rp 0 (Boleh kosong)">
-                <input type="hidden" name="termin_list[${index}][jumlah_bayar]" class="termin-jumlah-bayar" value="${data.jumlah_bayar || 0}">
-            </div>
-            <div class="col-5">
-                <label class="form-label small mb-1">Tgl. Jatuh Tempo <span class="text-danger">*</span></label>
-                <input type="date" name="termin_list[${index}][tgl_jatuh_tempo]" class="form-control form-control-sm" value="${data.tgl_jatuh_tempo || ''}" required>
-            </div>
-            <div class="col-1 text-end">
-                <button type="button" class="btn btn-sm btn-outline-danger btn-remove-termin" style="padding: 0.15rem 0.4rem;">
-                    &times;
-                </button>
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <span class="badge bg-gradient-dark badge-number">#${index + 1}</span>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group input-group-static">
+                        <label>Jumlah Bayar</label>
+                        <input type="text" class="form-control termin-jumlah-display" placeholder="Rp 0 (Boleh kosong)">
+                        <input type="hidden" name="termin_list[${index}][jumlah_bayar]" class="termin-jumlah-bayar" value="${data.jumlah_bayar || 0}">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group input-group-static">
+                        <label>Tgl. Jatuh Tempo <span class="text-danger">*</span></label>
+                        <input type="date" name="termin_list[${index}][tgl_jatuh_tempo]" class="form-control" value="${data.tgl_jatuh_tempo || ''}" required>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-remove-termin" style="padding: 0.5rem;">
+                        <i class="material-symbols-rounded text-sm">delete</i>
+                    </button>
+                </div>
             </div>
         `;
         
@@ -395,4 +494,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function validasiForm(e) {
         if (metodePembayaranSelect.value === 'termin') {
-            if (containerTermin.querySelectorAll('.
+            if (containerTermin.querySelectorAll('.            if (containerTermin.querySelectorAll('.termin-row').length === 0) {
+                e.preventDefault();
+                alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan baris termin.');
+                cardTermin.scrollIntoView({ behavior: 'smooth' });
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // === EVENT LISTENERS ===
+    
+    btnTambahObat.addEventListener('click', function() {
+        createObatCard();
+    });
+
+    metodePembayaranSelect.addEventListener('change', toggleTerminCard);
+    btnTambahTermin.addEventListener('click', function() {
+        createTerminCard();
+    });
+    formPembelian.addEventListener('submit', validasiForm);
+
+    // === INISIALISASI ===
+    
+    if (window.oldObat && window.oldObat.length > 0) {
+        window.oldObat.forEach(data => {
+            createObatCard(data);
+        });
+    } else {
+        createObatCard();
+    }
+    
+    if (window.oldTermin && window.oldTermin.length > 0) {
+        window.oldTermin.forEach(data => {
+            createTerminCard(data);
+        });
+    }
+
+    hitungTotal();
+    toggleTerminCard();
+});
+</script>
+@endsection
