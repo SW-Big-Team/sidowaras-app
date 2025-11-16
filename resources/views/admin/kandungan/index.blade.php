@@ -26,7 +26,7 @@
             @foreach ($data as $item)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $item->nama_kandungan }}</td>
+                <td>{{ $item->nama_kandungan_text }}</td>
                 <td>{{ $item->dosis_kandungan }}</td>
                 <td>
                     <a href="{{ route('admin.kandungan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>

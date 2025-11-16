@@ -71,11 +71,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!metodeSelect || !bayarField) return;
 
     function toggleBayarField() {
+        const inputBayar = bayarField.querySelector('input[name="total_bayar"]');
+        
         if (metodeSelect.value === 'tunai') {
             bayarField.style.display = 'block';
             kembalianField.style.display = 'block';
 
-            const inputBayar = bayarField.querySelector('input[name="total_bayar"]');
+            inputBayar.setAttribute('required', 'required');
             inputBayar.setAttribute('min', totalHarga);
             inputBayar.value = '';
 
@@ -90,6 +92,10 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             bayarField.style.display = 'none';
             kembalianField.style.display = 'none';
+            
+            // Hapus atribut required agar form bisa disubmit untuk non tunai
+            inputBayar.removeAttribute('required');
+            inputBayar.value = '';
         }
     }
 

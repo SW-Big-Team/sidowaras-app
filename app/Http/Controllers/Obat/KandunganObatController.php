@@ -29,15 +29,31 @@ class KandunganObatController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_kandungan' => 'required|string|max:255|unique:kandungan_obat,nama_kandungan',
+            'nama_kandungan' => 'required|string|max:255',
             'dosis_kandungan' => 'required|string|max:100',
         ]);
 
         DB::beginTransaction();
         try {
+            // Parse Tagify output (JSON array dari tags)
+            $namaKandungan = $validated['nama_kandungan'];
+            
+            // Jika dari Tagify, format: [{"value":"Paracetamol"},{"value":"Caffeine"}]
+            // Jika sudah berupa JSON array dari Tagify
+            $decoded = json_decode($namaKandungan, true);
+            if (is_array($decoded)) {
+                // Extract values dari Tagify format
+                $kandunganArray = array_map(function($item) {
+                    return is_array($item) && isset($item['value']) ? $item['value'] : $item;
+                }, $decoded);
+            } else {
+                // Jika plain text, split by comma
+                $kandunganArray = array_map('trim', explode(',', $namaKandungan));
+            }
+
             KandunganObat::create([
                 'uuid' => Str::uuid(),
-                'nama_kandungan' => $validated['nama_kandungan'],
+                'nama_kandungan' => $kandunganArray,
                 'dosis_kandungan' => $validated['dosis_kandungan'],
             ]);
 
@@ -58,12 +74,30 @@ class KandunganObatController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nama_kandungan' => 'required|string|max:255|unique:kandungan_obat,nama_kandungan,' . $id,
+            'nama_kandungan' => 'required|string|max:255',
             'dosis_kandungan' => 'required|string|max:100',
         ]);
 
         $kandungan = KandunganObat::findOrFail($id);
-        $kandungan->update($validated);
+        
+        // Parse Tagify output
+        $namaKandungan = $validated['nama_kandungan'];
+        
+        $decoded = json_decode($namaKandungan, true);
+        if (is_array($decoded)) {
+            // Extract values dari Tagify format
+            $kandunganArray = array_map(function($item) {
+                return is_array($item) && isset($item['value']) ? $item['value'] : $item;
+            }, $decoded);
+        } else {
+            // Jika plain text, split by comma
+            $kandunganArray = array_map('trim', explode(',', $namaKandungan));
+        }
+
+        $kandungan->update([
+            'nama_kandungan' => $kandunganArray,
+            'dosis_kandungan' => $validated['dosis_kandungan'],
+        ]);
 
         return redirect()->route('admin.kandungan.index')->with('success', 'Kandungan obat berhasil diperbarui.');
     }

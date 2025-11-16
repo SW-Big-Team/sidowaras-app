@@ -12,17 +12,32 @@
     <form action="{{ route('admin.kandungan.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="nama_kandungan" class="form-label">Nama Kandungan</label>
-            <input type="text" name="nama_kandungan" class="form-control" required>
+            <label for="nama_kandungan" class="form-label">Nama Kandungan <small class="text-muted">(pisahkan dengan koma jika lebih dari satu)</small></label>
+            <input type="text" name="nama_kandungan" id="nama_kandungan" class="form-control" placeholder="Contoh: Paracetamol" required>
+            <small class="text-muted">Biasanya satu nama kandungan saja, tapi bisa lebih jika kombinasi.</small>
         </div>
 
         <div class="mb-3">
             <label for="dosis_kandungan" class="form-label">Dosis Kandungan</label>
-            <input type="text" name="dosis_kandungan" class="form-control" required>
+            <input type="text" name="dosis_kandungan" class="form-control" placeholder="Contoh: 500mg" required>
         </div>
 
         <button type="submit" class="btn btn-success">Simpan</button>
         <a href="{{ route('admin.kandungan.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+
+<script>
+var input = document.querySelector('#nama_kandungan');
+var tagify = new Tagify(input, {
+    delimiters: ",",
+    placeholder: "Ketik nama kandungan",
+    dropdown: {
+        enabled: 0
+    }
+});
+</script>
 @endsection

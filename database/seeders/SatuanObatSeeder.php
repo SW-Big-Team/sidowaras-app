@@ -13,12 +13,21 @@ class SatuanObatSeeder extends Seeder
      */
     public function run(): void
     {
-        SatuanObat::create(['uuid' => Str::uuid(), 'nama_satuan' => 'Tablet']);
-        SatuanObat::create(['uuid' => Str::uuid(), 'nama_satuan' => 'Kapsul']);
-        SatuanObat::create(['uuid' => Str::uuid(), 'nama_satuan' => 'Strip']);
-        SatuanObat::create(['uuid' => Str::uuid(), 'nama_satuan' => 'Botol']);
-        SatuanObat::create(['uuid' => Str::uuid(), 'nama_satuan' => 'Box']);
-        SatuanObat::create(['uuid' => Str::uuid(), 'nama_satuan' => 'Tube']);
-        SatuanObat::create(['uuid' => Str::uuid(), 'nama_satuan' => 'Pcs']);
+        $satuans = [
+            'Tablet',
+            'Kapsul',
+            'Strip',
+            'Botol',
+            'Box',
+            'Tube',
+            'Pcs',
+        ];
+
+        foreach ($satuans as $nama) {
+            SatuanObat::firstOrCreate(
+                ['nama_satuan' => $nama],
+                ['uuid' => Str::uuid()]
+            );
+        }
     }
 }

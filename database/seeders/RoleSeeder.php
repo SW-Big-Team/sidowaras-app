@@ -13,8 +13,13 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create(['uuid' => Str::uuid(), 'nama_role' => 'Admin']);
-        Role::create(['uuid' => Str::uuid(), 'nama_role' => 'Karyawan']);
-        Role::create(['uuid' => Str::uuid(), 'nama_role' => 'Kasir']);
+        $roles = ['Admin', 'Karyawan', 'Kasir'];
+
+        foreach ($roles as $nama) {
+            Role::firstOrCreate(
+                ['nama_role' => $nama],
+                ['uuid' => Str::uuid()]
+            );
+        }
     }
 }
