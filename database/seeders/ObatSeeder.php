@@ -58,11 +58,11 @@ class ObatSeeder extends Seeder
         $pcs = SatuanObat::where('nama_satuan', 'Pcs')->first();
 
         // Ambil referensi kandungan
-        $paracetamol = KandunganObat::whereJsonContains('nama_kandungan', 'Paracetamol')->first();
-        $ibuprofen = KandunganObat::whereJsonContains('nama_kandungan', 'Ibuprofen')->first();
-        $amoxicillin = KandunganObat::whereJsonContains('nama_kandungan', 'Amoxicillin')->first();
-        $cetirizine = KandunganObat::whereJsonContains('nama_kandungan', 'Cetirizine')->first();
-        $loratadine = KandunganObat::whereJsonContains('nama_kandungan', 'Loratadine')->first();
+        $paracetamol = KandunganObat::where('nama_kandungan', 'Paracetamol')->first();
+        $ibuprofen = KandunganObat::where('nama_kandungan', 'Ibuprofen')->first();
+        $amoxicillin = KandunganObat::where('nama_kandungan', 'Amoxicillin')->first();
+        $cetirizine = KandunganObat::where('nama_kandungan', 'Cetirizine')->first();
+        $loratadine = KandunganObat::where('nama_kandungan', 'Loratadine')->first();
 
         $obatData = [
             [

@@ -36,7 +36,7 @@
                 </div>
             @endif
 
-            <x-data-table :headers="['#', 'Nama Kandungan', 'Dosis', 'Dibuat', 'Aksi']">
+            <x-data-table :headers="['#', 'Nama Kandungan', 'Dosis', 'Dibuat']">
                 @forelse ($data as $item)
                     <tr>
                         <td class="ps-4">
@@ -45,7 +45,7 @@
                         <td>
                             <div class="d-flex px-2 py-1">
                                 <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">{{ $item->nama_kandungan }}</h6>
+                                    <h6 class="mb-0 text-sm">{{ $item->nama_kandungan_text }}</h6>
                                 </div>
                             </div>
                         </td>
@@ -63,12 +63,12 @@
                                     data-bs-target="#kandunganModal"
                                     data-mode="edit"
                                     data-id="{{ $item->id }}"
-                                    data-nama="{{ $item->nama_kandungan }}"
+                                    data-nama="{{ $item->nama_kandungan_text }}"
                                     data-dosis="{{ $item->dosis_kandungan }}"
                                     title="Edit">
                                     <i class="material-symbols-rounded text-sm">edit</i>
                                 </button>
-                                <form action="{{ route('admin.kandungan.destroy', $item->id) }}" method="POST" class="d-inline m-0" onsubmit="return confirm('Yakin ingin menghapus kandungan {{ $item->nama_kandungan }}?')">
+                                <form action="{{ route('admin.kandungan.destroy', $item->id) }}" method="POST" class="d-inline m-0" onsubmit="return confirm('Yakin ingin menghapus kandungan {{ $item->nama_kandungan_text }}?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 

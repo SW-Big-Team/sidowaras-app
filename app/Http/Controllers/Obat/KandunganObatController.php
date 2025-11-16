@@ -35,20 +35,22 @@ class KandunganObatController extends Controller
 
         DB::beginTransaction();
         try {
-            // Parse Tagify output (JSON array dari tags)
-            $namaKandungan = $validated['nama_kandungan'];
             
-            // Jika dari Tagify, format: [{"value":"Paracetamol"},{"value":"Caffeine"}]
-            // Jika sudah berupa JSON array dari Tagify
+            $namaKandungan = trim($validated['nama_kandungan']);
+            
             $decoded = json_decode($namaKandungan, true);
-            if (is_array($decoded)) {
-                // Extract values dari Tagify format
+            if (is_array($decoded) && json_last_error() === JSON_ERROR_NONE) {
                 $kandunganArray = array_map(function($item) {
-                    return is_array($item) && isset($item['value']) ? $item['value'] : $item;
+                    return is_array($item) && isset($item['value']) ? trim($item['value']) : trim($item);
                 }, $decoded);
             } else {
-                // Jika plain text, split by comma
-                $kandunganArray = array_map('trim', explode(',', $namaKandungan));
+                if (strpos($namaKandungan, ',') !== false) {
+
+                    $kandunganArray = array_map('trim', explode(',', $namaKandungan));
+                } else {
+                    // Single value
+                    $kandunganArray = [$namaKandungan];
+                }
             }
 
             KandunganObat::create([
@@ -80,18 +82,25 @@ class KandunganObatController extends Controller
 
         $kandungan = KandunganObat::findOrFail($id);
         
-        // Parse Tagify output
-        $namaKandungan = $validated['nama_kandungan'];
+        // Parse input nama kandungan
+        $namaKandungan = trim($validated['nama_kandungan']);
         
+        // Cek apakah input berupa JSON dari Tagify
         $decoded = json_decode($namaKandungan, true);
-        if (is_array($decoded)) {
-            // Extract values dari Tagify format
+        if (is_array($decoded) && json_last_error() === JSON_ERROR_NONE) {
+            // Format dari Tagify: [{"value":"Paracetamol"},{"value":"Caffeine"}]
             $kandunganArray = array_map(function($item) {
-                return is_array($item) && isset($item['value']) ? $item['value'] : $item;
+                return is_array($item) && isset($item['value']) ? trim($item['value']) : trim($item);
             }, $decoded);
         } else {
-            // Jika plain text, split by comma
-            $kandunganArray = array_map('trim', explode(',', $namaKandungan));
+            // Plain text, bisa comma-separated atau single value
+            if (strpos($namaKandungan, ',') !== false) {
+                // Multiple values separated by comma
+                $kandunganArray = array_map('trim', explode(',', $namaKandungan));
+            } else {
+                // Single value
+                $kandunganArray = [$namaKandungan];
+            }
         }
 
         $kandungan->update([

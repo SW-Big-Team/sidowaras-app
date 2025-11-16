@@ -170,63 +170,62 @@
                                 </div>
                             </div>
 
-                <div class="row g-3 mt-1">
-                    <div class="col-md-8">
-                        <label class="form-label small mb-1">Kandungan (bisa pilih lebih dari satu)</label>
-                        <select name="kandungan_id[]" class="form-select form-select-sm" multiple>
-                            @foreach($kandungan as $k)
-                                @php
-                                    $decoded = json_decode($k->nama_kandungan, true);
-                                    $nama = is_array($decoded) ? implode(', ', $decoded) : $k->nama_kandungan;
-                                @endphp
-                                <option value="{{ $k->id }}" {{ (is_array(old('kandungan_id')) && in_array($k->id, old('kandungan_id'))) ? 'selected' : '' }}>
-                                    {{ $nama }} ({{ $k->dosis_kandungan }})
-                                </option>
-                            @endforeach
-                        </select>
-                        <small class="text-muted">Gunakan Ctrl/Cmd + klik untuk memilih lebih dari satu.</small>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small mb-1">Barcode</label>
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="barcode" id="barcodeInput" class="form-control" value="{{ old('barcode') }}" maxlength="100" placeholder="Scan atau ketik barcode">
-                            <button class="btn btn-outline-secondary" type="button" id="btnOpenQr">
-                                <i class="material-symbols-rounded">qr_code_scanner</i>
-                            </button>
-                        </div>
-
-                        <!-- Deskripsi -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md me-3">
-                                        <i class="material-symbols-rounded opacity-10">description</i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">Keterangan Tambahan</h6>
-                                        <p class="text-sm text-secondary mb-0">Informasi detail obat</p>
-                                    </div>
+                            <div class="col-md-8 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>Kandungan Obat <small class="text-muted">(bisa pilih lebih dari satu)</small></label>
+                                    <select name="kandungan_id[]" id="kandunganSelect" class="form-control" multiple>
+                                        @foreach($kandungan as $k)
+                                            <option value="{{ $k->id }}" {{ (is_array(old('kandungan_id')) && in_array($k->id, old('kandungan_id'))) ? 'selected' : '' }}>
+                                                {{ $k->nama_kandungan_text }} ({{ $k->dosis_kandungan }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">Ketik untuk mencari kandungan, lalu pilih satu atau lebih.</small>
                                 </div>
                             </div>
 
-                            <div class="col-12">
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group input-group-static">
+                                    <label>Barcode</label>
+                                    <div class="input-group">
+                                        <input type="text" 
+                                               name="barcode" 
+                                               id="barcodeInput" 
+                                               class="form-control" 
+                                               value="{{ old('barcode') }}" 
+                                               maxlength="100" 
+                                               placeholder="Scan atau ketik barcode">
+                                        <button class="btn btn-outline-secondary mb-0" type="button" id="btnOpenQr">
+                                            <i class="material-symbols-rounded">qr_code_scanner</i>
+                                        </button>
+                                    </div>
+                                    <small class="text-muted">Klik ikon untuk membuka pemindai.</small>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3">
                                 <div class="input-group input-group-static">
                                     <label>Deskripsi</label>
                                     <textarea name="deskripsi" 
                                               class="form-control" 
-                                              rows="4" 
-                                              placeholder="Masukkan deskripsi, indikasi, atau keterangan tambahan obat">{{ old('deskripsi') }}</textarea>
+                                              rows="3" 
+                                              placeholder="Masukkan deskripsi obat atau keterangan tambahan">{{ old('deskripsi') }}</textarea>
                                 </div>
                             </div>
-                        </div>
-
-                <div class="mt-2">
-                    <label class="form-label small mb-1">Deskripsi</label>
-                    <textarea name="deskripsi" class="form-control form-control-sm" rows="3">{{ old('deskripsi') }}</textarea>
-                </div>
             </div>
         </div>
-    </div>
+
+        <div class="row mb-4">
+            <div class="col-12 text-end">
+                <button type="reset" class="btn btn-outline-secondary mb-0">
+                    <i class="material-symbols-rounded me-1">refresh</i> Reset
+                </button>
+                <button type="submit" class="btn bg-gradient-primary mb-0">
+                    <i class="material-symbols-rounded me-1">save</i> Simpan Data Obat
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <!-- Modal: QR Code Scanner -->
@@ -322,6 +321,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-@endpush
-
 @endsection
