@@ -122,10 +122,6 @@
                             <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">shopping_cart</i>
                             <div class="text-sm">Input Cart Pelanggan</div>
                         </a>
-                        <a href="{{ route('scanner') }}" class="btn btn-lg bg-gradient-success text-white mb-0">
-                            <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">qr_code_scanner</i>
-                            <div class="text-sm">Scan Barcode Obat</div>
-                        </a>
                         <a href="{{ route('stok.index') }}" class="btn btn-lg bg-gradient-warning text-white mb-0">
                             <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">inventory_2</i>
                             <div class="text-sm">Stok Opname</div>

@@ -48,6 +48,19 @@
   <script src="{{ asset('assets/js/material-dashboard.min.js?v=3.2.0') }}"></script>
   
   @stack('scripts')
+  <script>
+    setInterval(() => {
+        fetch("/session/check")
+            .then(res => res.json())
+            .then(data => {
+                if (!data.authenticated) {
+                    alert("Your session has expired or logged in elsewhere.");
+                    window.location.href = "/login";
+                }
+            })
+            .catch(() => {});
+    }, 10000);
+  </script>
 </body>
 
 </html>

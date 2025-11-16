@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -19,6 +18,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/karyawan.php';
 require __DIR__ . '/kasir.php';
@@ -30,7 +30,3 @@ Auth::routes([
     'confirm' => false,
     'register' => false
 ]);
-
-Route::get('/karyawan/scanner', function () {
-    return Inertia::render('Karyawan/Scanner');
-})->name('scanner');
