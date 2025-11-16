@@ -8,11 +8,11 @@ use App\Models\Obat;
 use App\Models\KategoriObat;
 use App\Models\SatuanObat;
 use App\Models\KandunganObat;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pembelian;   
 use App\Models\StokBatch;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ObatController extends Controller
@@ -92,6 +92,12 @@ class ObatController extends Controller
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
             'deskripsi' => 'nullable|string',
+            // Input tambahan untuk stok awal
+            'harga_beli' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|min:0|gt:harga_beli',
+            'stok_awal' => 'required|integer|min:1',
+            'tgl_kadaluarsa' => 'required|date|after:today',
+            'nama_pengirim' => 'required|string|max:100',
         ]);
     
         DB::beginTransaction();

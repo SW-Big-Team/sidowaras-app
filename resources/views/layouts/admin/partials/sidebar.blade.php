@@ -47,6 +47,31 @@
           <span class="nav-link-text ms-1">Kategori</span>
         </a>
       </li>
+
+      {{-- Satuan Obat --}}
+        <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('admin.satuan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.satuan.index') }}">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text">Satuan Obat</span>
+          </a>
+        </li>
+
+      {{-- Manajemen Obat --}}
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.obat.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.obat.index') }}">
+          <i class="material-symbols-rounded opacity-5">inventory</i>
+          <span class="nav-link-text ms-1">Obat</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('admin.kategori.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.kategori.index') }}">
+          <i class="material-symbols-rounded opacity-5">category</i>
+          <span class="nav-link-text ms-1">Kategori</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('admin.satuan.*') ? 'active bg-gradient-primary text-white' : 'text-dark' }}" href="{{ route('admin.satuan.index') }}">
           <div class="text-center me-2 d-flex align-items-center justify-content-center">

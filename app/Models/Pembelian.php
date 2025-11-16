@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pembelian extends Model
 {
@@ -55,5 +56,10 @@ class Pembelian extends Model
     public function stokBatches()
     {
         return $this->hasMany(StokBatch::class, 'pembelian_id', 'id');
+    }
+
+    public function pembayaranTermin(): HasMany
+    {
+        return $this->hasMany(PembayaranTermin::class);
     }
 }

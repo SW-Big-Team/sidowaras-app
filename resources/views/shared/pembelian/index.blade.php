@@ -14,69 +14,107 @@
 @endsection
 
 @section('content')
-<div class="container-fluid py-4">
-    <x-content-header title="Daftar Pembelian Obat" subtitle="Kelola transaksi pembelian dan penerimaan obat">
-        <x-button-add 
-            :href="route('pembelian.create')" 
-            icon="shopping_cart" 
-            text="Tambah Pembelian"
-        />
-    </x-content-header>
+<div class="container-fluid mt-4 px-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0"><i class="fas fa-list-alt"></i> Daftar Pembelian</h4>
+        <a href="{{ route('pembelian.create') }}" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus"></i> Tambah Pembelian
+        </a>
+    </div>
 
-    <div class="row">
-        <div class="col-12">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <span class="alert-icon"><i class="material-symbols-rounded">check_circle</i></span>
-                    <span class="alert-text">{{ session('success') }}</span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <ul class="mb-0">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-            <x-data-table :headers="['#', 'No Faktur', 'Pengirim', 'Total Harga', 'User', 'Tanggal', 'Aksi']">
-                @forelse($pembelian as $p)
-                    <tr>
-                        <td class="ps-4">
-                            <p class="text-xs font-weight-bold mb-0">{{ $pembelian->firstItem() + $loop->index }}</p>
-                        </td>
-                        <td>
-                            <div class="d-flex px-2 py-1">
-                                <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">{{ $p->no_faktur }}</h6>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <p class="text-xs font-weight-bold mb-0">{{ $p->nama_pengirim }}</p>
-                        </td>
-                        <td>
-                            <span class="badge badge-sm bg-gradient-warning">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</span>
-                        </td>
-                        <td>
-                            <p class="text-xs text-secondary mb-0">{{ $p->user->nama_lengkap ?? '-' }}</p>
-                        </td>
-                        <td>
-                            <p class="text-xs text-secondary mb-0">{{ $p->tgl_pembelian->format('d M Y H:i') }}</p>
-                        </td>
-                        <td>
-                            <x-action-buttons 
-                                :viewUrl="route('pembelian.show', $p->uuid)"
-                                :editUrl="route('pembelian.edit', $p->uuid)"
-                                :deleteUrl="route('pembelian.destroy', $p->uuid)"
-                                deleteMessage="Yakin ingin menghapus pembelian {{ $p->no_faktur }}?"
-                            />
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center py-4">
-                            <i class="material-symbols-rounded text-secondary" style="font-size: 3rem;">shopping_cart</i>
-                            <p class="text-secondary mb-0">Belum ada data pembelian obat</p>
-                        </td>
-                    </tr>
-                @endforelse
-            </x-data-table>
 
+    <div class="card shadow-sm">
+        <div class="card-body p-3">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover small">
+                    <thead class="table-dark">
+                        <tr class="text-center">
+                            <th>#</th>
+                            <th>No Faktur</th>
+                            <th>Pengirim</th>
+                            <th>Total Harga</th>
+                            <th>Metode Bayar</th>
+                            <th>User</th>
+                            <th>Tanggal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pembelian as $p)
+                            <tr>
+                                <td class="text-center">{{ $loop->iteration + ($pembelian->firstItem() - 1) }}</td>
+                                <td>{{ $p->no_faktur }}</td>
+                                <td>{{ $p->nama_pengirim }}</td>
+                                <td class="text-end">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</td>
+                                
+                                <td class="text-center">
+                                    @if($p->metode_pembayaran == 'tunai')
+                                        <span class="badge bg-success">{{ ucfirst($p->metode_pembayaran) }}</span>
+                                    @elseif($p->metode_pembayaran == 'non tunai')
+                                        <span class="badge bg-primary">{{ ucfirst($p->metode_pembayaran) }}</span>
+                                    @else
+                                        <span class="badge bg-warning text-dark">{{ ucfirst($p->metode_pembayaran) }}</span>
+                                    @endif
+                                </td>
+                                
+                                <td>{{ $p->user->nama_lengkap ?? $p->user->name ?? '-' }}</td>
+                                <td class="text-center">{{ $p->tgl_pembelian->format('Y-m-d H:i') }}</td>
+                                <td class="text-center">
+                                    {{-- PERBAIKAN: Gunakan $p->uuid --}}
+                                    <form action="{{ route('pembelian.destroy', $p->uuid) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
+                                        
+                                        @if($p->metode_pembayaran == 'termin')
+                                            @php
+                                                $belum_lunas = $p->pembayaranTermin->where('status', 'belum_lunas')->isNotEmpty();
+                                            @endphp
+                                            @if($belum_lunas)
+                                                {{-- PERBAIKAN: Arahkan ke halaman show (detail) --}}
+                                                <a href="{{ route('pembelian.show', $p->uuid) }}" class="btn btn-sm btn-success" title="Bayar Termin">
+                                                    <i class="fas fa-dollar-sign"></i>
+                                                </a>
+                                            @endif
+                                        @endif
+
+                                        {{-- PERBAIKAN: Gunakan $p->uuid --}}
+                                        <a href="{{ route('pembelian.show', $p->uuid) }}" class="btn btn-sm btn-info" title="Detail"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('pembelian.edit', $p->uuid) }}" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                                        
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="8" class="text-center">Tidak ada data pembelian.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-3">
+                {{ $pembelian->links() }}
+            </div>
+        </div>
+    </div>
             <div class="mt-3">
                 {{ $pembelian->links() }}
             </div>
