@@ -36,12 +36,12 @@
       </li>
 
       {{-- Satuan Obat --}}
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('admin.satuan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('satuan.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Satuan Obat</span>
+        <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('admin.satuan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.satuan.index') }}">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text">Satuan Obat</span>
           </a>
-      </li>
+        </li>
 
       {{-- Manajemen Obat --}}
       <li class="nav-item mt-3">

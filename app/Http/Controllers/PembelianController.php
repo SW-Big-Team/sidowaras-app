@@ -31,26 +31,11 @@ class PembelianController extends Controller
             'store',
             'destroy'
         ]);
-        $this->middleware('auth');
-
-        $this->middleware('role:Admin,Karyawan,Kasir')->only([
-            'index',
-            'show',
-            'edit',
-            'update'
-        ]);
-
-        $this->middleware('role:Admin')->only([
-            'create',
-            'store',
-            'destroy'
-        ]);
     }
 
     public function index()
     {
         $pembelian = Pembelian::with('user')->orderByDesc('created_at')->paginate(15);
-        return view('shared.pembelian.index', compact('pembelian'));
         return view('shared.pembelian.index', compact('pembelian'));
     }
 
@@ -58,13 +43,11 @@ class PembelianController extends Controller
     {
         $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
         return view('shared.pembelian.create', compact('obatList'));
-        return view('shared.pembelian.create', compact('obatList'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur',
             'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur',
             'nama_pengirim' => 'required|string|max:100',
             'no_telepon_pengirim' => 'nullable|string|max:20',
@@ -78,13 +61,16 @@ class PembelianController extends Controller
             'obat.*.jumlah_masuk' => 'required|integer|min:1',
             'obat.*.tgl_kadaluarsa' => 'required|date|after:today',
 
+            // BARU: Validasi untuk termin
             'termin_list' => 'nullable|required_if:metode_pembayaran,termin|array|min:1',
             'termin_list.*.jumlah_bayar' => 'required_if:metode_pembayaran,termin|numeric|min:1',
             'termin_list.*.tgl_jatuh_tempo' => 'required_if:metode_pembayaran,termin|date|after_or_equal:tgl_pembelian',
         ]);
 
+        // BARU: Validasi kustom untuk memastikan total termin = total harga
         if ($request->metode_pembayaran == 'termin') {
             $totalTermin = collect($request->termin_list)->sum('jumlah_bayar');
+            // Gunakan perbandingan float dengan toleransi
             if (abs((float)$totalTermin - (float)$request->total_harga) > 0.001) {
                  return back()->withErrors(['termin_list' => 'Total dari cicilan termin (Rp ' . number_format($totalTermin, 2) . ') tidak sama dengan Total Harga Pembelian (Rp ' . number_format($request->total_harga, 2) . ').'])->withInput();
             }
@@ -98,16 +84,15 @@ class PembelianController extends Controller
             $pembelian = Pembelian::create([
                 'uuid' => (string) Str::uuid(),
                 'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
-                'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
                 'nama_pengirim' => $request->nama_pengirim,
                 'no_telepon_pengirim' => $request->no_telepon_pengirim,
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,
                 'total_harga' => $request->total_harga,
-                'total_harga' => $request->total_harga,
                 'user_id' => Auth::id(),
             ]);
 
+            // Create batch and log for each obat
             foreach ($request->obat as $obatData) {
                 $obat = Obat::findOrFail($obatData['obat_id']);
                 if (!$obat) {
@@ -137,30 +122,30 @@ class PembelianController extends Controller
                 ]);
             }
 
+            // BARU: Simpan data termin jika metode pembayaran adalah 'termin'
             if ($pembelian->metode_pembayaran == 'termin') {
                 foreach ($request->termin_list as $index => $terminData) {
                     PembayaranTermin::create([
                         'pembelian_id' => $pembelian->id,
-                        'termin_ke' => $index + 1, 
+                        'termin_ke' => $index + 1, // 'termin_ke' dimulai dari 1
                         'jumlah_bayar' => $terminData['jumlah_bayar'],
                         'tgl_jatuh_tempo' => $terminData['tgl_jatuh_tempo'],
-                        'status' => 'belum_lunas', 
+                        'status' => 'belum_lunas', // Status default
                     ]);
                 }
             }
 
             DB::commit();
             return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dengan ' . count($request->obat) . ' item obat berhasil disimpan!');
-            return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dengan ' . count($request->obat) . ' item obat berhasil disimpan!');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()])->withInput();
             return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()])->withInput();
         }
     }
 
     public function show(Pembelian $pembelian)
     {
+        // MODIFIKASI: Load juga relasi 'pembayaranTermin'
         $pembelian->load(['user', 'stokBatches.obat', 'pembayaranTermin']);
         return view('shared.pembelian.show', compact('pembelian'));
     }
@@ -168,6 +153,7 @@ class PembelianController extends Controller
     public function edit(Pembelian $pembelian)
     {
         $obatList = Obat::select('id', 'nama_obat')->orderBy('nama_obat')->get();
+        // MODIFIKASI: Load data pembelian beserta termin untuk ditampilkan di form edit
         $pembelian->load('stokBatches', 'pembayaranTermin');
         return view('shared.pembelian.edit', compact('pembelian', 'obatList'));
     }
@@ -265,6 +251,9 @@ class PembelianController extends Controller
                 $batch->delete();
             }
 
+            // Tidak perlu menghapus PembayaranTermin secara manual
+            // karena kita sudah setting onDelete('cascade') di migrasi.
+            // Saat $pembelian->delete() dieksekusi, data termin akan ikut terhapus.
             $pembelian->delete();
 
             DB::commit();
