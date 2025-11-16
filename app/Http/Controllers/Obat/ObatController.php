@@ -8,6 +8,7 @@ use App\Models\Obat;
 use App\Models\KategoriObat;
 use App\Models\SatuanObat;
 use App\Models\KandunganObat;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pembelian;   

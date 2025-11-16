@@ -34,16 +34,10 @@
           <span class="nav-link-text ms-1">Kategori</span>
         </a>
       </li>
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('kategori.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kategori.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Kategori Obat</span>
-          </a>
-      </li>
 
       {{-- Satuan Obat --}}
       <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('satuan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('satuan.index') }}">
+          <a class="nav-link {{ request()->routeIs('admin.satuan.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('satuan.index') }}">
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text">Satuan Obat</span>
           </a>
@@ -56,7 +50,7 @@
 
       {{-- Pembelian --}}
       <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
+          <a class="nav-link {{ request()->routeIs('admin.pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text">Pembelian</span>
           </a>
