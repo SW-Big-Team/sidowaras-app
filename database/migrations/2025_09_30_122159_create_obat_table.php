@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('obat', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
-            $table->foreignId('kandungan_id')->nullable()->constrained('kandungan_obat');
+            $table->json('kandungan_id')->nullable();
             $table->string('kode_obat', 50)->unique()->nullable();
             $table->string('nama_obat');
             $table->text('deskripsi')->nullable();

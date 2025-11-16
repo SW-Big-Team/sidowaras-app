@@ -118,7 +118,7 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="{{ route('karyawan.keranjang') }}" class="btn btn-lg bg-gradient-primary text-white mb-0">
+                        <a href="{{ route('karyawan.cart.index') }}" class="btn btn-lg bg-gradient-primary text-white mb-0">
                             <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">shopping_cart</i>
                             <div class="text-sm">Input Cart Pelanggan</div>
                         </a>
@@ -126,13 +126,9 @@
                             <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">qr_code_scanner</i>
                             <div class="text-sm">Scan Barcode Obat</div>
                         </a>
-                        <a href="{{ route('karyawan.stock.index') }}" class="btn btn-lg bg-gradient-warning text-white mb-0">
+                        <a href="{{ route('stok.index') }}" class="btn btn-lg bg-gradient-warning text-white mb-0">
                             <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">inventory_2</i>
                             <div class="text-sm">Stok Opname</div>
-                        </a>
-                        <a href="{{ route('karyawan.stock.tambah') }}" class="btn btn-lg bg-gradient-info text-white mb-0">
-                            <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">add_box</i>
-                            <div class="text-sm">Tambah Obat Baru</div>
                         </a>
                     </div>
                 </div>

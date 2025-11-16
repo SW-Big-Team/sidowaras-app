@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('log_perubahan_stok', function (Blueprint $table) {
             $table->id();
-            $table->uuid()->unique();
-            $table->foreignId('batch_id')->constrained('stok_batch');
-            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->uuid('uuid')->unique();
+            $table->foreignId('batch_id')->constrained('stok_batch')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->integer('stok_sebelum');
             $table->integer('stok_sesudah');
             $table->text('keterangan')->nullable();

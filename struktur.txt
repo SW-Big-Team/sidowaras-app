@@ -1,0 +1,639 @@
+├── sidowaras-app/
+│   ├── .editorconfig
+│   ├── .env
+│   ├── .env.example
+│   ├── .gitattributes
+│   ├── .gitignore
+│   ├── .npmrc
+│   ├── artisan
+│   ├── composer.json
+│   ├── composer.lock
+│   ├── generate_tree.py
+│   ├── jsconfig.json
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── phpunit.xml
+│   ├── postcss.config.js
+│   ├── README.md
+│   ├── struktur.txt
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   ├── vite.config.js
+│   ├── app/
+│   │   ├── Enums/
+│   │   │   ├── MetodePembayaran.php
+│   │   ├── Http/
+│   │   │   ├── Controllers/
+│   │   │   │   ├── Controller.php
+│   │   │   │   ├── HomeController.php
+│   │   │   │   ├── PembelianController.php
+│   │   │   │   ├── Admin/
+│   │   │   │   │   ├── UserController.php
+│   │   │   │   ├── Auth/
+│   │   │   │   │   ├── ConfirmPasswordController.php
+│   │   │   │   │   ├── ForgotPasswordController.php
+│   │   │   │   │   ├── LoginController.php
+│   │   │   │   │   ├── RegisterController.php
+│   │   │   │   │   ├── ResetPasswordController.php
+│   │   │   │   │   ├── VerificationController.php
+│   │   │   │   ├── Karyawan/
+│   │   │   │   │   ├── QrController.php
+│   │   │   │   ├── Obat/
+│   │   │   │   │   ├── KandunganObatController.php
+│   │   │   │   │   ├── KategoriObatController.php
+│   │   │   │   │   ├── ObatController.php
+│   │   │   │   │   ├── SatuanObatController.php
+│   │   │   ├── Middleware/
+│   │   │   │   ├── ForceJsonResponse.php
+│   │   │   │   ├── HandleInertiaRequests.php
+│   │   │   │   ├── RoleMiddleware.php
+│   │   ├── Models/
+│   │   │   ├── DetailStockOpname.php
+│   │   │   ├── DetailTransaksi.php
+│   │   │   ├── KandunganObat.php
+│   │   │   ├── KategoriObat.php
+│   │   │   ├── LaporanStok.php
+│   │   │   ├── LaporanStokDetail.php
+│   │   │   ├── LogPerubahanStok.php
+│   │   │   ├── Obat.php
+│   │   │   ├── Pembelian.php
+│   │   │   ├── ResepRacikan.php
+│   │   │   ├── Role.php
+│   │   │   ├── SatuanObat.php
+│   │   │   ├── StockOpname.php
+│   │   │   ├── StokBatch.php
+│   │   │   ├── Transaksi.php
+│   │   │   ├── User.php
+│   │   ├── Providers/
+│   │   │   ├── AppServiceProvider.php
+│   ├── bootstrap/
+│   │   ├── app.php
+│   │   ├── providers.php
+│   │   ├── cache/
+│   │   │   ├── .gitignore
+│   │   │   ├── packages.php
+│   │   │   ├── services.php
+│   ├── config/
+│   │   ├── app.php
+│   │   ├── auth.php
+│   │   ├── cache.php
+│   │   ├── database.php
+│   │   ├── filesystems.php
+│   │   ├── logging.php
+│   │   ├── mail.php
+│   │   ├── queue.php
+│   │   ├── services.php
+│   │   ├── session.php
+│   ├── database/
+│   │   ├── .gitignore
+│   │   ├── factories/
+│   │   │   ├── UserFactory.php
+│   │   ├── migrations/
+│   │   │   ├── 0001_01_01_000001_create_cache_table.php
+│   │   │   ├── 0001_01_01_000002_create_jobs_table.php
+│   │   │   ├── 2014_10_12_100000_create_password_resets_table.php
+│   │   │   ├── 2025_09_30_122148_create_roles_table.php
+│   │   │   ├── 2025_09_30_122149_create_users_table.php
+│   │   │   ├── 2025_09_30_122150_create_pembelian_table.php
+│   │   │   ├── 2025_09_30_122158_create_kategori_obat_table.php
+│   │   │   ├── 2025_09_30_122158_create_satuan_obat_table.php
+│   │   │   ├── 2025_09_30_122159_create_kandungan_obat_table.php
+│   │   │   ├── 2025_09_30_122159_create_obat_table.php
+│   │   │   ├── 2025_09_30_122201_create_resep_racikan_table.php
+│   │   │   ├── 2025_09_30_122244_create_transaksi_table.php
+│   │   │   ├── 2025_09_30_122246_create_stok_batch_table.php
+│   │   │   ├── 2025_09_30_122247_create_detail_transaksi_table.php
+│   │   │   ├── 2025_09_30_122247_create_log_perubahan_stok_table.php
+│   │   │   ├── 2025_09_30_122255_create_stock_opname_table.php
+│   │   │   ├── 2025_09_30_122256_create_laporan_stok_table.php
+│   │   │   ├── 2025_09_30_122257_create_laporan_stok_detail_table.php
+│   │   │   ├── 2025_09_30_124337_create_detail_stock_opname_table.php
+│   │   ├── seeders/
+│   │   │   ├── DatabaseSeeder.php
+│   │   │   ├── KategoriObatSeeder.php
+│   │   │   ├── RoleSeeder.php
+│   │   │   ├── SatuanObatSeeder.php
+│   │   │   ├── UserSeeder.php
+│   ├── public/
+│   │   ├── .htaccess
+│   │   ├── favicon.ico
+│   │   ├── index.php
+│   │   ├── robots.txt
+│   │   ├── assets/
+│   │   │   ├── css/
+│   │   │   │   ├── material-dashboard.css
+│   │   │   │   ├── material-dashboard.css.map
+│   │   │   │   ├── material-dashboard.min.css
+│   │   │   │   ├── nucleo-icons.css
+│   │   │   │   ├── nucleo-svg.css
+│   │   │   ├── fonts/
+│   │   │   │   ├── nucleo-icons.eot
+│   │   │   │   ├── nucleo-icons.svg
+│   │   │   │   ├── nucleo-icons.ttf
+│   │   │   │   ├── nucleo-icons.woff
+│   │   │   │   ├── nucleo-icons.woff2
+│   │   │   │   ├── nucleo.eot
+│   │   │   │   ├── nucleo.ttf
+│   │   │   │   ├── nucleo.woff
+│   │   │   │   ├── nucleo.woff2
+│   │   │   ├── img/
+│   │   │   │   ├── apple-icon.png
+│   │   │   │   ├── bg-pricing.jpg
+│   │   │   │   ├── bg-smart-home-1.jpg
+│   │   │   │   ├── bg-smart-home-2.jpg
+│   │   │   │   ├── bruce-mars.jpg
+│   │   │   │   ├── down-arrow-dark.svg
+│   │   │   │   ├── down-arrow-white.svg
+│   │   │   │   ├── down-arrow.svg
+│   │   │   │   ├── drake.jpg
+│   │   │   │   ├── favicon.png
+│   │   │   │   ├── home-decor-1.jpg
+│   │   │   │   ├── home-decor-2.jpg
+│   │   │   │   ├── home-decor-3.jpg
+│   │   │   │   ├── ivana-square.jpg
+│   │   │   │   ├── ivana-squares.jpg
+│   │   │   │   ├── ivancik.jpg
+│   │   │   │   ├── kal-visuals-square.jpg
+│   │   │   │   ├── logo-ct-dark.png
+│   │   │   │   ├── logo-ct.png
+│   │   │   │   ├── marie.jpg
+│   │   │   │   ├── meeting.jpg
+│   │   │   │   ├── office-dark.jpg
+│   │   │   │   ├── product-12.jpg
+│   │   │   │   ├── team-1.jpg
+│   │   │   │   ├── team-2.jpg
+│   │   │   │   ├── team-3.jpg
+│   │   │   │   ├── team-4.jpg
+│   │   │   │   ├── team-5.jpg
+│   │   │   │   ├── vr-bg.jpg
+│   │   │   │   ├── icons/
+│   │   │   │   │   ├── flags/
+│   │   │   │   │   │   ├── AU.png
+│   │   │   │   │   │   ├── BR.png
+│   │   │   │   │   │   ├── DE.png
+│   │   │   │   │   │   ├── GB.png
+│   │   │   │   │   │   ├── US.png
+│   │   │   │   ├── illustrations/
+│   │   │   │   │   ├── chat.png
+│   │   │   │   │   ├── danger-chat-ill.png
+│   │   │   │   │   ├── dark-lock-ill.png
+│   │   │   │   │   ├── error-404.png
+│   │   │   │   │   ├── error-500.png
+│   │   │   │   │   ├── illustration-lock.jpg
+│   │   │   │   │   ├── illustration-reset.jpg
+│   │   │   │   │   ├── illustration-signin.jpg
+│   │   │   │   │   ├── illustration-signup.jpg
+│   │   │   │   │   ├── illustration-verification.jpg
+│   │   │   │   │   ├── lock.png
+│   │   │   │   │   ├── pattern-tree.svg
+│   │   │   │   │   ├── rocket-white.png
+│   │   │   │   ├── logos/
+│   │   │   │   │   ├── gray-logos/
+│   │   │   │   │   │   ├── logo-coinbase.svg
+│   │   │   │   │   │   ├── logo-nasa.svg
+│   │   │   │   │   │   ├── logo-netflix.svg
+│   │   │   │   │   │   ├── logo-pinterest.svg
+│   │   │   │   │   │   ├── logo-spotify.svg
+│   │   │   │   │   │   ├── logo-vodafone.svg
+│   │   │   │   ├── small-logos/
+│   │   │   │   │   ├── bootstrap.svg
+│   │   │   │   │   ├── creative-tim.svg
+│   │   │   │   │   ├── devto.svg
+│   │   │   │   │   ├── github.svg
+│   │   │   │   │   ├── google-webdev.svg
+│   │   │   │   │   ├── icon-bulb.svg
+│   │   │   │   │   ├── icon-sun-cloud.png
+│   │   │   │   │   ├── logo-asana.svg
+│   │   │   │   │   ├── logo-atlassian.svg
+│   │   │   │   │   ├── logo-invision.svg
+│   │   │   │   │   ├── logo-jira.svg
+│   │   │   │   │   ├── logo-slack.svg
+│   │   │   │   │   ├── logo-spotify.svg
+│   │   │   │   │   ├── logo-xd.svg
+│   │   │   ├── js/
+│   │   │   │   ├── material-dashboard.js
+│   │   │   │   ├── material-dashboard.js.map
+│   │   │   │   ├── material-dashboard.min.js
+│   │   │   │   ├── core/
+│   │   │   │   │   ├── bootstrap.bundle.min.js
+│   │   │   │   │   ├── bootstrap.min.js
+│   │   │   │   │   ├── popper.min.js
+│   │   │   │   ├── plugins/
+│   │   │   │   │   ├── bootstrap-notify.js
+│   │   │   │   │   ├── Chart.extension.js
+│   │   │   │   │   ├── chartjs.min.js
+│   │   │   │   │   ├── countup.min.js
+│   │   │   │   │   ├── perfect-scrollbar.min.js
+│   │   │   │   │   ├── smooth-scrollbar.min.js
+│   │   │   │   │   ├── world.js
+│   │   │   ├── scss/
+│   │   │   │   ├── material-dashboard.scss
+│   │   │   │   ├── material-dashboard/
+│   │   │   │   │   ├── theme-pro.scss
+│   │   │   │   │   ├── theme.scss
+│   │   │   │   │   ├── _accordion.scss
+│   │   │   │   │   ├── _alert.scss
+│   │   │   │   │   ├── _avatars.scss
+│   │   │   │   │   ├── _backgrounds.scss
+│   │   │   │   │   ├── _badge.scss
+│   │   │   │   │   ├── _breadcrumbs.scss
+│   │   │   │   │   ├── _buttons.scss
+│   │   │   │   │   ├── _cards-extend.scss
+│   │   │   │   │   ├── _cards.scss
+│   │   │   │   │   ├── _components.scss
+│   │   │   │   │   ├── _dark-version.scss
+│   │   │   │   │   ├── _dropdown-extend.scss
+│   │   │   │   │   ├── _dropdown.scss
+│   │   │   │   │   ├── _dropup.scss
+│   │   │   │   │   ├── _fixed-plugin.scss
+│   │   │   │   │   ├── _floating-elements.scss
+│   │   │   │   │   ├── _footer.scss
+│   │   │   │   │   ├── _forms.scss
+│   │   │   │   │   ├── _gradients.scss
+│   │   │   │   │   ├── _header.scss
+│   │   │   │   │   ├── _icons.scss
+│   │   │   │   │   ├── _info-areas.scss
+│   │   │   │   │   ├── _list-check.scss
+│   │   │   │   │   ├── _misc-extend.scss
+│   │   │   │   │   ├── _misc.scss
+│   │   │   │   │   ├── _nav.scss
+│   │   │   │   │   ├── _navbar-vertical.scss
+│   │   │   │   │   ├── _navbar.scss
+│   │   │   │   │   ├── _pagination.scss
+│   │   │   │   │   ├── _popovers.scss
+│   │   │   │   │   ├── _progress.scss
+│   │   │   │   │   ├── _ripple.scss
+│   │   │   │   │   ├── _rtl-extend.scss
+│   │   │   │   │   ├── _rtl.scss
+│   │   │   │   │   ├── _social-buttons.scss
+│   │   │   │   │   ├── _tables.scss
+│   │   │   │   │   ├── _tilt.scss
+│   │   │   │   │   ├── _timeline.scss
+│   │   │   │   │   ├── _tooltips.scss
+│   │   │   │   │   ├── _typography.scss
+│   │   │   │   │   ├── _utilities-extend.scss
+│   │   │   │   │   ├── _utilities.scss
+│   │   │   │   │   ├── _variables.scss
+│   │   │   │   │   ├── badges/
+│   │   │   │   │   │   ├── _badge-circle.scss
+│   │   │   │   │   │   ├── _badge-dot.scss
+│   │   │   │   │   │   ├── _badge-floating.scss
+│   │   │   │   │   │   ├── _badge.scss
+│   │   │   │   │   ├── bootstrap/
+│   │   │   │   │   │   ├── bootstrap-grid.scss
+│   │   │   │   │   │   ├── bootstrap-reboot.scss
+│   │   │   │   │   │   ├── bootstrap-utilities.scss
+│   │   │   │   │   │   ├── bootstrap.scss
+│   │   │   │   │   │   ├── _accordion.scss
+│   │   │   │   │   │   ├── _alert.scss
+│   │   │   │   │   │   ├── _badge.scss
+│   │   │   │   │   │   ├── _breadcrumb.scss
+│   │   │   │   │   │   ├── _button-group.scss
+│   │   │   │   │   │   ├── _buttons.scss
+│   │   │   │   │   │   ├── _card.scss
+│   │   │   │   │   │   ├── _carousel.scss
+│   │   │   │   │   │   ├── _close.scss
+│   │   │   │   │   │   ├── _containers.scss
+│   │   │   │   │   │   ├── _dropdown.scss
+│   │   │   │   │   │   ├── _forms.scss
+│   │   │   │   │   │   ├── _functions.scss
+│   │   │   │   │   │   ├── _grid.scss
+│   │   │   │   │   │   ├── _helpers.scss
+│   │   │   │   │   │   ├── _images.scss
+│   │   │   │   │   │   ├── _list-group.scss
+│   │   │   │   │   │   ├── _maps.scss
+│   │   │   │   │   │   ├── _mixins.scss
+│   │   │   │   │   │   ├── _modal.scss
+│   │   │   │   │   │   ├── _nav.scss
+│   │   │   │   │   │   ├── _navbar.scss
+│   │   │   │   │   │   ├── _offcanvas.scss
+│   │   │   │   │   │   ├── _pagination.scss
+│   │   │   │   │   │   ├── _placeholders.scss
+│   │   │   │   │   │   ├── _popover.scss
+│   │   │   │   │   │   ├── _progress.scss
+│   │   │   │   │   │   ├── _reboot.scss
+│   │   │   │   │   │   ├── _root.scss
+│   │   │   │   │   │   ├── _spinners.scss
+│   │   │   │   │   │   ├── _tables.scss
+│   │   │   │   │   │   ├── _toasts.scss
+│   │   │   │   │   │   ├── _tooltip.scss
+│   │   │   │   │   │   ├── _transitions.scss
+│   │   │   │   │   │   ├── _type.scss
+│   │   │   │   │   │   ├── _utilities.scss
+│   │   │   │   │   │   ├── _variables-dark.scss
+│   │   │   │   │   │   ├── _variables.scss
+│   │   │   │   │   │   ├── forms/
+│   │   │   │   │   │   │   ├── _floating-labels.scss
+│   │   │   │   │   │   │   ├── _form-check.scss
+│   │   │   │   │   │   │   ├── _form-control.scss
+│   │   │   │   │   │   │   ├── _form-range.scss
+│   │   │   │   │   │   │   ├── _form-select.scss
+│   │   │   │   │   │   │   ├── _form-text.scss
+│   │   │   │   │   │   │   ├── _input-group.scss
+│   │   │   │   │   │   │   ├── _labels.scss
+│   │   │   │   │   │   │   ├── _validation.scss
+│   │   │   │   │   │   ├── helpers/
+│   │   │   │   │   │   │   ├── _clearfix.scss
+│   │   │   │   │   │   │   ├── _color-bg.scss
+│   │   │   │   │   │   │   ├── _colored-links.scss
+│   │   │   │   │   │   │   ├── _focus-ring.scss
+│   │   │   │   │   │   │   ├── _icon-link.scss
+│   │   │   │   │   │   │   ├── _position.scss
+│   │   │   │   │   │   │   ├── _ratio.scss
+│   │   │   │   │   │   │   ├── _stacks.scss
+│   │   │   │   │   │   │   ├── _stretched-link.scss
+│   │   │   │   │   │   │   ├── _text-truncation.scss
+│   │   │   │   │   │   │   ├── _visually-hidden.scss
+│   │   │   │   │   │   │   ├── _vr.scss
+│   │   │   │   │   │   ├── mixins/
+│   │   │   │   │   │   │   ├── _alert.scss
+│   │   │   │   │   │   │   ├── _backdrop.scss
+│   │   │   │   │   │   │   ├── _banner.scss
+│   │   │   │   │   │   │   ├── _border-radius.scss
+│   │   │   │   │   │   │   ├── _box-shadow.scss
+│   │   │   │   │   │   │   ├── _breakpoints.scss
+│   │   │   │   │   │   │   ├── _buttons.scss
+│   │   │   │   │   │   │   ├── _caret.scss
+│   │   │   │   │   │   │   ├── _clearfix.scss
+│   │   │   │   │   │   │   ├── _color-mode.scss
+│   │   │   │   │   │   │   ├── _color-scheme.scss
+│   │   │   │   │   │   │   ├── _container.scss
+│   │   │   │   │   │   │   ├── _deprecate.scss
+│   │   │   │   │   │   │   ├── _forms.scss
+│   │   │   │   │   │   │   ├── _gradients.scss
+│   │   │   │   │   │   │   ├── _grid.scss
+│   │   │   │   │   │   │   ├── _image.scss
+│   │   │   │   │   │   │   ├── _list-group.scss
+│   │   │   │   │   │   │   ├── _lists.scss
+│   │   │   │   │   │   │   ├── _pagination.scss
+│   │   │   │   │   │   │   ├── _reset-text.scss
+│   │   │   │   │   │   │   ├── _resize.scss
+│   │   │   │   │   │   │   ├── _table-variants.scss
+│   │   │   │   │   │   │   ├── _text-truncate.scss
+│   │   │   │   │   │   │   ├── _transition.scss
+│   │   │   │   │   │   │   ├── _utilities.scss
+│   │   │   │   │   │   │   ├── _visually-hidden.scss
+│   │   │   │   │   │   ├── tests/
+│   │   │   │   │   │   │   ├── jasmine.js
+│   │   │   │   │   │   │   ├── mixins/
+│   │   │   │   │   │   │   │   ├── _auto-import-of-variables-dark.test.scss
+│   │   │   │   │   │   │   │   ├── _color-modes.test.scss
+│   │   │   │   │   │   │   │   ├── _media-query-color-mode-full.test.scss
+│   │   │   │   │   │   │   │   ├── _utilities.test.scss
+│   │   │   │   │   │   │   ├── sass-true/
+│   │   │   │   │   │   │   │   ├── register.js
+│   │   │   │   │   │   │   │   ├── runner.js
+│   │   │   │   │   │   │   ├── utilities/
+│   │   │   │   │   │   │   │   ├── _api.test.scss
+│   │   │   │   │   │   ├── utilities/
+│   │   │   │   │   │   │   ├── _api.scss
+│   │   │   │   │   ├── cards/
+│   │   │   │   │   │   ├── card-background.scss
+│   │   │   │   │   │   ├── card-blog.scss
+│   │   │   │   │   │   ├── card-horizontal.scss
+│   │   │   │   │   │   ├── card-pricing.scss
+│   │   │   │   │   │   ├── card-profile.scss
+│   │   │   │   │   │   ├── card-rotate.scss
+│   │   │   │   │   ├── custom/
+│   │   │   │   │   │   ├── _styles.scss
+│   │   │   │   │   │   ├── _variables.scss
+│   │   │   │   │   ├── forms/
+│   │   │   │   │   │   ├── _form-check.scss
+│   │   │   │   │   │   ├── _form-select.scss
+│   │   │   │   │   │   ├── _form-switch.scss
+│   │   │   │   │   │   ├── _forms.scss
+│   │   │   │   │   │   ├── _input-group.scss
+│   │   │   │   │   │   ├── _inputs.scss
+│   │   │   │   │   │   ├── _labels.scss
+│   │   │   │   │   ├── mixins/
+│   │   │   │   │   │   ├── mixins.scss
+│   │   │   │   │   │   ├── _badge.scss
+│   │   │   │   │   │   ├── _buttons.scss
+│   │   │   │   │   │   ├── _colored-shadows.scss
+│   │   │   │   │   │   ├── _hover.scss
+│   │   │   │   │   │   ├── _social-buttons.scss
+│   │   │   │   │   │   ├── _vendor.scss
+│   │   │   │   │   ├── plugins/
+│   │   │   │   │   │   ├── free/
+│   │   │   │   │   │   │   ├── plugins.scss
+│   │   │   │   │   │   │   ├── _flatpickr.scss
+│   │   │   │   │   │   │   ├── _nouislider.scss
+│   │   │   │   │   │   │   ├── _perfect-scrollbar.scss
+│   │   │   │   │   │   │   ├── _prism.scss
+│   │   │   │   │   │   ├── pro/
+│   │   │   │   │   │   │   ├── multi-step.scss
+│   │   │   │   │   │   │   ├── plugins-extend.scss
+│   │   │   │   │   │   │   ├── _carousel-slick.scss
+│   │   │   │   │   │   │   ├── _choices.scss
+│   │   │   │   │   │   │   ├── _datatable-extend.scss
+│   │   │   │   │   │   │   ├── _datatable.scss
+│   │   │   │   │   │   │   ├── _dragula.scss
+│   │   │   │   │   │   │   ├── _dropzone.scss
+│   │   │   │   │   │   │   ├── _fullcalendar-extend.scss
+│   │   │   │   │   │   │   ├── _fullcalendar.scss
+│   │   │   │   │   │   │   ├── _glidejs.scss
+│   │   │   │   │   │   │   ├── _highlight.scss
+│   │   │   │   │   │   │   ├── _kanban.scss
+│   │   │   │   │   │   │   ├── _leaflet.scss
+│   │   │   │   │   │   │   ├── _list-check.scss
+│   │   │   │   │   │   │   ├── _photoswipe.scss
+│   │   │   │   │   │   │   ├── _quill.scss
+│   │   │   │   │   │   │   ├── _rating-widget.scss
+│   │   │   │   │   │   │   ├── _sweetalert2-extend.scss
+│   │   │   │   │   │   │   ├── _sweetalert2.scss
+│   │   │   │   │   │   │   ├── _vector-map.scss
+│   │   │   │   │   ├── variables/
+│   │   │   │   │   │   ├── _animations.scss
+│   │   │   │   │   │   ├── _avatars.scss
+│   │   │   │   │   │   ├── _badge.scss
+│   │   │   │   │   │   ├── _breadcrumb.scss
+│   │   │   │   │   │   ├── _cards-extend.scss
+│   │   │   │   │   │   ├── _cards.scss
+│   │   │   │   │   │   ├── _choices.scss
+│   │   │   │   │   │   ├── _dark-version.scss
+│   │   │   │   │   │   ├── _dropdowns.scss
+│   │   │   │   │   │   ├── _fixed-plugin.scss
+│   │   │   │   │   │   ├── _form-switch.scss
+│   │   │   │   │   │   ├── _full-calendar.scss
+│   │   │   │   │   │   ├── _header.scss
+│   │   │   │   │   │   ├── _info-areas.scss
+│   │   │   │   │   │   ├── _misc-extend.scss
+│   │   │   │   │   │   ├── _misc.scss
+│   │   │   │   │   │   ├── _navbar-vertical.scss
+│   │   │   │   │   │   ├── _navbar.scss
+│   │   │   │   │   │   ├── _pagination.scss
+│   │   │   │   │   │   ├── _ripple.scss
+│   │   │   │   │   │   ├── _rtl.scss
+│   │   │   │   │   │   ├── _social-buttons.scss
+│   │   │   │   │   │   ├── _table.scss
+│   │   │   │   │   │   ├── _timeline.scss
+│   │   │   │   │   │   ├── _utilities-extend.scss
+│   │   │   │   │   │   ├── _utilities.scss
+│   │   │   │   │   │   ├── _virtual-reality.scss
+│   ├── resources/
+│   │   ├── css/
+│   │   │   ├── app.css
+│   │   ├── js/
+│   │   │   ├── app.tsx
+│   │   │   ├── bootstrap.js
+│   │   │   ├── Components/
+│   │   │   │   ├── Navbar.tsx
+│   │   │   ├── Pages/
+│   │   │   │   ├── Welcome.tsx
+│   │   │   │   ├── Karyawan/
+│   │   │   │   │   ├── Scanner.tsx
+│   │   ├── sass/
+│   │   │   ├── app.scss
+│   │   │   ├── _variables.scss
+│   │   ├── views/
+│   │   │   ├── app.blade.php
+│   │   │   ├── home.blade.php
+│   │   │   ├── admin/
+│   │   │   │   ├── index.blade.php
+│   │   │   ├── auth/
+│   │   │   │   ├── login.blade.php
+│   │   │   │   ├── register.blade.php
+│   │   │   │   ├── verify.blade.php
+│   │   │   │   ├── passwords/
+│   │   │   │   │   ├── confirm.blade.php
+│   │   │   │   │   ├── email.blade.php
+│   │   │   │   │   ├── reset.blade.php
+│   │   │   ├── karyawan/
+│   │   │   │   ├── index.blade.php
+│   │   │   │   ├── inventory/
+│   │   │   │   │   ├── index.blade.php
+│   │   │   │   │   ├── tambah.blade.php
+│   │   │   ├── kasir/
+│   │   │   │   ├── index.blade.php
+│   │   │   │   ├── cart/
+│   │   │   │   │   ├── approval.blade.php
+│   │   │   │   ├── laporan/
+│   │   │   │   │   ├── transaksi.blade.php
+│   │   │   │   ├── transaksi/
+│   │   │   │   │   ├── pos.blade.php
+│   │   │   ├── layouts/
+│   │   │   │   ├── app.blade.php
+│   │   │   │   ├── admin/
+│   │   │   │   │   ├── app.blade.php
+│   │   │   │   │   ├── partials/
+│   │   │   │   │   │   ├── configurator.blade.php
+│   │   │   │   │   │   ├── footer.blade.php
+│   │   │   │   │   │   ├── navbar.blade.php
+│   │   │   │   │   │   ├── sidebar.blade.php
+│   │   │   │   ├── karyawan/
+│   │   │   │   │   ├── app.blade.php
+│   │   │   │   │   ├── partials/
+│   │   │   │   │   │   ├── configurator.blade.php
+│   │   │   │   │   │   ├── footer.blade.php
+│   │   │   │   │   │   ├── navbar.blade.php
+│   │   │   │   │   │   ├── sidebar.blade.php
+│   │   │   │   ├── kasir/
+│   │   │   │   │   ├── app.blade.php
+│   │   │   │   │   ├── partials/
+│   │   │   │   │   │   ├── configurator.blade.php
+│   │   │   │   │   │   ├── footer.blade.php
+│   │   │   │   │   │   ├── navbar.blade.php
+│   │   │   │   │   │   ├── sidebar.blade.php
+│   │   │   ├── obat/
+│   │   │   │   ├── create.blade.php
+│   │   │   │   ├── edit.blade.php
+│   │   │   │   ├── index.blade.php
+│   │   │   │   ├── kandungan/
+│   │   │   │   │   ├── create.blade.php
+│   │   │   │   │   ├── edit.blade.php
+│   │   │   │   │   ├── index.blade.php
+│   │   │   │   ├── kategori/
+│   │   │   │   │   ├── create.blade.php
+│   │   │   │   │   ├── edit.blade.php
+│   │   │   │   │   ├── index.blade.php
+│   │   │   │   ├── satuan/
+│   │   │   │   │   ├── create.blade.php
+│   │   │   │   │   ├── edit.blade.php
+│   │   │   │   │   ├── index.blade.php
+│   │   │   ├── pembelian/
+│   │   │   │   ├── create.blade.php
+│   │   │   │   ├── edit.blade.php
+│   │   │   │   ├── index.blade.php
+│   │   │   │   ├── show.blade.php
+│   │   │   ├── users/
+│   │   │   │   ├── create.blade.php
+│   │   │   │   ├── edit.blade.php
+│   │   │   │   ├── index.blade.php
+│   ├── routes/
+│   │   ├── admin.php
+│   │   ├── console.php
+│   │   ├── karyawan.php
+│   │   ├── kasir.php
+│   │   ├── shared.php
+│   │   ├── web.php
+│   ├── storage/
+│   │   ├── app/
+│   │   │   ├── .gitignore
+│   │   │   ├── private/
+│   │   │   │   ├── .gitignore
+│   │   │   ├── public/
+│   │   │   │   ├── .gitignore
+│   │   ├── framework/
+│   │   │   ├── .gitignore
+│   │   │   ├── cache/
+│   │   │   │   ├── .gitignore
+│   │   │   │   ├── data/
+│   │   │   │   │   ├── .gitignore
+│   │   │   ├── sessions/
+│   │   │   │   ├── .gitignore
+│   │   │   ├── testing/
+│   │   │   │   ├── .gitignore
+│   │   │   ├── views/
+│   │   │   │   ├── .gitignore
+│   │   │   │   ├── 0ba6b6925f74c27ab0dd9014328377da.php
+│   │   │   │   ├── 0bc187cc79cc3fddd14b55a2372c4736.php
+│   │   │   │   ├── 0c74c3b2f5dd294e224e1b2647255b0c.php
+│   │   │   │   ├── 0cdd03ca7c786d8dc4bff6793a06346e.php
+│   │   │   │   ├── 0dfc3e298d559f3851b2506fee9bebff.php
+│   │   │   │   ├── 1b62154500a471e247d640adc949e29f.php
+│   │   │   │   ├── 25353edd61aad8b54e87ae6ef0e240cc.php
+│   │   │   │   ├── 2ab34f5b760f1cb64751c217975020c8.php
+│   │   │   │   ├── 2e4dc3fd40b2473c793c4282ce471bff.php
+│   │   │   │   ├── 37fc3f69e840cbe992a3211b393bca19.php
+│   │   │   │   ├── 38a7af6fe0efcc0698395d98e018a7ca.php
+│   │   │   │   ├── 4fdde6950bd1db558c05ae16d99f861a.php
+│   │   │   │   ├── 4ffa214523d8b9a348ea17c88a106973.php
+│   │   │   │   ├── 59e5039c34eb590f462a6085720ff3d3.php
+│   │   │   │   ├── 5aa95aea8689bc54416de2826b0af9b3.php
+│   │   │   │   ├── 5cbb73d9ffc9e2bffa40e79cd3d54064.php
+│   │   │   │   ├── 6401b966ae1ae9b98d4ee85aa8fd2f41.php
+│   │   │   │   ├── 77b2c414ae4ab3414a826a2df3b2868d.php
+│   │   │   │   ├── 85f42583b7cedf826f6d3cbf1e4a0ec5.php
+│   │   │   │   ├── 89372bce0e0b8328f4b0db1cb1c5528b.php
+│   │   │   │   ├── 900a34c79e824833be6958b1cfdfb8f9.php
+│   │   │   │   ├── 90ea971f51e58b253f6660e9be429919.php
+│   │   │   │   ├── a0a5aa0e392eabcc3aa82d093d95a23d.php
+│   │   │   │   ├── a0af47903bb3915ff4ac3f878fcb9fa8.php
+│   │   │   │   ├── a1c048f4ff8a2e947fe135227813a3e3.php
+│   │   │   │   ├── aeb58d290276cbb329142770b4772365.php
+│   │   │   │   ├── b35612657cbb72288b9195aee0befcc2.php
+│   │   │   │   ├── b58799f12e12c1956860dc5b1bf31fb0.php
+│   │   │   │   ├── b888270120681d84f5801f4b74b84366.php
+│   │   │   │   ├── b8e92717accf594a19e8389409f7dcba.php
+│   │   │   │   ├── c8422b85c00bd77d1ac8a6f47cb54a99.php
+│   │   │   │   ├── c8f17081510de7c1bb71e1091e4f4b16.php
+│   │   │   │   ├── cb13e185756ef5917a072eb2d35b2ffd.php
+│   │   │   │   ├── d76415a482e628cbc00fe710359ab792.php
+│   │   │   │   ├── e32fb0a947146fbae5591baea0ff6e4b.php
+│   │   │   │   ├── eff1b84212b4dee77d0ceb8f2e8df5ca.php
+│   │   │   │   ├── f023e7590a3f5d7fa764d721788709e9.php
+│   │   │   │   ├── f785dcd725362c8456cea6c853df268e.php
+│   │   │   │   ├── fc0a58f6109531b55efb51c2ec729e68.php
+│   │   │   │   ├── fcd80de0ebba2f99ee0a11fdb635188a.php
+│   │   │   │   ├── fcf815c7461d5923d6ae6106a11b5e36.php
+│   │   ├── logs/
+│   │   │   ├── .gitignore
+│   │   │   ├── laravel.log
+│   ├── tests/
+│   │   ├── Pest.php
+│   │   ├── TestCase.php
+│   │   ├── Feature/
+│   │   │   ├── AuthTest.php
+│   │   │   ├── ExampleTest.php
+│   │   ├── Unit/
+│   │   │   ├── ExampleTest.php

@@ -22,30 +22,37 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Operasional</h6>
       </li>
 
-      {{-- Keranjang --}}
+      {{-- Cart & Scanner --}}
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('karyawan.keranjang') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.keranjang') }}">
+        <a class="nav-link {{ request()->routeIs('karyawan.cart.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.cart.index') }}">
           <i class="material-symbols-rounded opacity-5">shopping_cart</i>
-          <span class="nav-link-text ms-1">Keranjang</span>
+          <span class="nav-link-text ms-1">Cart / Scanner</span>
         </a>
       </li>
 
-      {{-- Stock Barang --}}
+      {{-- Manajemen Stok --}}
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Stok</h6>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('karyawan.stock.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.stock.index') }}">
+        <a class="nav-link {{ request()->routeIs('stok.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('stok.index') }}">
           <i class="material-symbols-rounded opacity-5">inventory_2</i>
           <span class="nav-link-text ms-1">Daftar Stok</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('karyawan.stock.tambah') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('karyawan.stock.tambah') }}">
-          <i class="material-symbols-rounded opacity-5">add_box</i>
-          <span class="nav-link-text ms-1">Tambah Obat Baru</span>
+        <a class="nav-link {{ request()->routeIs('pembelian.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
+          <i class="material-symbols-rounded opacity-5">shopping_cart</i>
+          <span class="nav-link-text ms-1">Pembelian Obat</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="{{ route('opname.index') }}">
+          <i class="material-symbols-rounded opacity-5">fact_check</i>
+          <span class="nav-link-text ms-1">Stok Opname</span>
         </a>
       </li>
 

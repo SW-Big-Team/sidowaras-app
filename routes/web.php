@@ -4,27 +4,33 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
-// Halaman public
 Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('welcome');
-
-
+    if (Auth::check()) {
+        $user = Auth::user();
+        switch ($user->role->nama_role) {
+            case 'Admin':
+                return redirect()->route('admin.dashboard');
+            case 'Karyawan':
+                return redirect()->route('karyawan.dashboard');
+            case 'Kasir':
+                return redirect()->route('kasir.dashboard');
+        }
+    }
+    return redirect()->route('login');
+});
 
 require __DIR__ . '/admin.php';
 require __DIR__ . '/karyawan.php';
 require __DIR__ . '/kasir.php';
-Auth::routes();
+require __DIR__ . '/shared.php';
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes([
+    'verify' => false,
+    'reset' => false,
+    'confirm' => false,
+    'register' => false
+]);
 
 Route::get('/karyawan/scanner', function () {
     return Inertia::render('Karyawan/Scanner');
 })->name('scanner');
-
-// // Profil pengguna yang sedang login
-// Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth')->name('profile');
-
-// Route::get('/login', function () {
-//         return view('auth.login');
-//     })->name('login');

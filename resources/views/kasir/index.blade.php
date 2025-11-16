@@ -118,12 +118,6 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-6">
-                            <a href="{{ route('kasir.transaksi.pos') }}" class="btn btn-lg w-100 bg-gradient-success text-white mb-0">
-                                <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">point_of_sale</i>
-                                <div class="text-sm">Transaksi Baru</div>
-                            </a>
-                        </div>
-                        <div class="col-6">
                             <a href="{{ route('kasir.cart.approval') }}" class="btn btn-lg w-100 bg-gradient-warning text-white mb-0">
                                 <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">approval</i>
                                 <div class="text-sm">Approval Cart</div>

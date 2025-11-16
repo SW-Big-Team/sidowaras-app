@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Transaksi;
+use Illuminate\Http\Request;
+
+class TransaksiController extends Controller
+{
+    public function riwayat()
+    {
+        $transaksis = Transaksi::with('user')
+                               ->latest()
+                               ->paginate(15);
+
+        return view('admin.transaksi.riwayat', compact('transaksis'));
+    }
+
+    public function show(Transaksi $transaksi) // Laravel otomatis cari by id
+    {
+        $detail = $transaksi->detail()->with('batch.obat')->get();
+        return view('admin.transaksi.show', compact('transaksi', 'detail'));
+    }
+}
