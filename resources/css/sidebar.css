@@ -1,0 +1,164 @@
+/**
+ * Sidebar Styles
+ * Enhanced UI/UX for admin sidebar navigation
+ */
+
+/* Sidebar Container */
+#sidenav-main {
+    transition: all 0.2s ease-in-out;
+    max-height: calc(100vh - 1rem);
+    overflow: hidden;
+}
+
+/* Scrollbar Styling */
+#sidenav-scrollbar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 180px);
+    padding-right: 0.5rem;
+}
+
+#sidenav-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidenav-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#sidenav-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+#sidenav-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation Links */
+.navbar-nav .nav-link {
+    border-radius: 0.5rem;
+    margin: 0.125rem 0.75rem;
+    padding: 0.625rem 1rem;
+    transition: all 0.15s ease-in-out;
+    position: relative;
+}
+
+.navbar-nav .nav-link:not(.active):hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transform: translateX(4px);
+}
+
+.navbar-nav .nav-link.active {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-nav .nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
+    border-radius: 0 4px 4px 0;
+}
+
+/* Icons */
+.navbar-nav .nav-link i {
+    font-size: 1.25rem;
+    transition: transform 0.15s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover i {
+    transform: scale(1.1);
+}
+
+/* Section Headers */
+.navbar-nav h6 {
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.05em;
+}
+
+/* Logout Button */
+.nav-link.text-danger {
+    background-color: rgba(244, 67, 54, 0.05);
+    border: 1px solid rgba(244, 67, 54, 0.1);
+}
+
+.nav-link.text-danger:hover {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-color: rgba(244, 67, 54, 0.2);
+    transform: translateX(4px);
+}
+
+/* Brand Logo */
+.sidenav-header .navbar-brand {
+    transition: all 0.2s ease;
+}
+
+.sidenav-header .navbar-brand:hover {
+    transform: scale(1.02);
+}
+
+.sidenav-header .icon-shape {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.sidenav-header .navbar-brand:hover .icon-shape {
+    transform: rotate(5deg);
+}
+
+/* Responsive Improvements */
+@media (max-width: 1199.98px) {
+    #sidenav-main {
+        transform: translateX(-100%);
+    }
+    
+    #sidenav-main.show {
+        transform: translateX(0);
+    }
+}
+
+/* Focus States for Accessibility */
+.navbar-nav .nav-link:focus {
+    outline: 2px solid rgba(66, 133, 244, 0.5);
+    outline-offset: 2px;
+}
+
+#iconSidenav:focus {
+    outline: 2px solid rgba(66, 133, 244, 0.5);
+    outline-offset: 2px;
+}
+
+/* Animation for nav items */
+.navbar-nav .nav-item {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation for nav items */
+.navbar-nav .nav-item:nth-child(1) { animation-delay: 0.05s; }
+.navbar-nav .nav-item:nth-child(2) { animation-delay: 0.1s; }
+.navbar-nav .nav-item:nth-child(3) { animation-delay: 0.15s; }
+.navbar-nav .nav-item:nth-child(4) { animation-delay: 0.2s; }
+.navbar-nav .nav-item:nth-child(5) { animation-delay: 0.25s; }

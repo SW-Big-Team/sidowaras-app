@@ -14,17 +14,16 @@
 @endsection
 
 @section('content')
-<div class="container-fluid py-4">
-    <x-content-header title="Daftar Obat" subtitle="Kelola data obat dan informasi farmasi">
-        <x-button-add 
-            :href="route('admin.obat.create')" 
-            icon="medication" 
-            text="Tambah Obat"
-        />
-    </x-content-header>
+<x-content-header title="Daftar Obat" subtitle="Kelola data obat dan informasi farmasi">
+    <x-button-add 
+        :href="route('admin.obat.create')" 
+        icon="medication" 
+        text="Tambah Obat"
+    />
+</x-content-header>
 
-    <div class="row">
-        <div class="col-12">
+<div class="row">
+    <div class="col-12">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <span class="alert-icon"><i class="material-symbols-rounded">check_circle</i></span>
@@ -78,28 +77,28 @@
                             </div>
                         </form>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table mb-0">
-                            <thead>
+                    <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                        <table class="table table-hover mb-0" style="min-width: 1400px;">
+                            <thead class="thead-light">
                                 <tr>
-                                    <th>No</th>
-                                    <th>Nama Obat</th>
-                                    <th>Kode</th>
-                                    <th>Kategori</th>
-                                    <th>Satuan</th>
-                                    <th>Kandungan</th>
-                                    <th>Stok Minimum</th>
-                                    <th>Racikan</th>
-                                    <th>Lokasi Rak</th>
-                                    <th>Barcode</th>
-                                    <th>Deskripsi</th>
-                                    <th class="text-end">Aksi</th>
+                                    <th class="text-center" style="min-width: 50px;">No</th>
+                                    <th style="min-width: 200px;">Nama Obat</th>
+                                    <th style="min-width: 120px;">Kode</th>
+                                    <th style="min-width: 150px;">Kategori</th>
+                                    <th style="min-width: 100px;">Satuan</th>
+                                    <th style="min-width: 180px;">Kandungan</th>
+                                    <th class="text-center" style="min-width: 100px;">Stok Min</th>
+                                    <th class="text-center" style="min-width: 80px;">Racikan</th>
+                                    <th style="min-width: 120px;">Lokasi Rak</th>
+                                    <th style="min-width: 120px;">Barcode</th>
+                                    <th style="min-width: 200px;">Deskripsi</th>
+                                    <th class="text-end" style="min-width: 150px; position: sticky; right: 0; background: white; box-shadow: -2px 0 5px rgba(0,0,0,0.05);">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($obats as $index => $obat)
                                 @php
-                                    $kandunganList = $obat->kandungan->pluck('nama_kandungan_text')->toArray();
+                                    $kandunganList = $obat->kandungan->pluck('nama_kandungan')->toArray();
                                 @endphp
                                     <tr>
                                         <td class="text-center">{{ $obats->firstItem() + $index }}</td>
@@ -113,12 +112,16 @@
                                         <td>{{ $obat->lokasi_rak ?? '-' }}</td>
                                         <td>{{ $obat->barcode ?? '-' }}</td>
                                         <td>{{ $obat->deskripsi ?? '-' }}</td>
-                                        <td class="text-end">
-                                            <a href="{{ route('admin.obat.edit', $obat->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                        <td class="text-end" style="position: sticky; right: 0; background: white; white-space: nowrap;">
+                                            <a href="{{ route('admin.obat.edit', $obat->id) }}" class="btn btn-sm btn-warning mb-0">
+                                                <i class="material-symbols-rounded" style="font-size: 18px;">edit</i>
+                                            </a>
                                             <form action="{{ route('admin.obat.destroy', $obat->id) }}" method="post" class="d-inline" onsubmit="return confirm('Hapus obat ini?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                                <button type="submit" class="btn btn-sm btn-danger mb-0">
+                                                    <i class="material-symbols-rounded" style="font-size: 18px;">delete</i>
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>

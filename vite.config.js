@@ -7,8 +7,10 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/sass/app.scss',
+                'resources/css/sidebar.css',
                 'resources/js/app.tsx',
                 'resources/js/bootstrap.js',
+                'resources/js/sidebar.js',
             ],
             refresh: true,
         }),
