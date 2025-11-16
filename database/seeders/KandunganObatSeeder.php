@@ -13,22 +13,31 @@ class KandunganObatSeeder extends Seeder
      */
     public function run(): void
     {
-        $kandungans = [
-            ['nama_kandungan' => ['Paracetamol'], 'dosis_kandungan' => '500mg'],
-            ['nama_kandungan' => ['Ibuprofen'], 'dosis_kandungan' => '200mg'],
-            ['nama_kandungan' => ['Amoxicillin'], 'dosis_kandungan' => '500mg'],
-            ['nama_kandungan' => ['Cetirizine'], 'dosis_kandungan' => '10mg'],
-            ['nama_kandungan' => ['Loratadine'], 'dosis_kandungan' => '10mg'],
-            ['nama_kandungan' => ['Omeprazole'], 'dosis_kandungan' => '20mg'],
-            ['nama_kandungan' => ['Metformin'], 'dosis_kandungan' => '500mg'],
-            ['nama_kandungan' => ['Amlodipine'], 'dosis_kandungan' => '5mg'],
+        $nama_kandungans = [
+            'Paracetamol',
+            'Ibuprofen',
+            'Amoxicillin',
+            'Cetirizine',
+            'Loratadine',
+            'Omeprazole',
+            'Metformin',
+            'Amlodipine',
         ];
-
-        foreach ($kandungans as $data) {
+        $dosis_kandungans = [
+            '500mg',
+            '200mg',
+            '500mg',
+            '10mg',
+            '10mg',
+            '20mg',
+            '500mg',
+            '5mg',
+        ];
+        for ($i = 0; $i < count($nama_kandungans); $i++) {
             KandunganObat::firstOrCreate(
                 [
-                    'nama_kandungan' => $data['nama_kandungan'], // Langsung array, tidak perlu json_encode
-                    'dosis_kandungan' => $data['dosis_kandungan'],
+                    'nama_kandungan' => [$nama_kandungans[$i]], 
+                    'dosis_kandungan' => $dosis_kandungans[$i],
                 ],
                 [
                     'uuid' => Str::uuid(),

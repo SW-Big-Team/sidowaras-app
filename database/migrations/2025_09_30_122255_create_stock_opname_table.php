@@ -6,18 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::create('stock_opname', function (Blueprint $table) {
-            $table->id();
-            $table->uuid()->unique();
-            $table->foreignId('user_id')->constrained('users');
-            $table->dateTime('tgl_opname')->useCurrent();
-            $table->string('status', 50)->default('SELESAI');
-            $table->text('keterangan')->nullable();
-            $table->timestamps();
-        });
-    }
+public function up()
+{
+    Schema::create('stock_opname', function (Blueprint $table) {
+        $table->id();
+        $table->date('tanggal'); // Tanggal opname
+        $table->enum('status', ['draft', 'pending', 'approved', 'rejected'])->default('draft');
+        $table->foreignId('created_by')->constrained('users'); // Karyawan yang input
+        $table->foreignId('approved_by')->nullable()->constrained('users'); // Admin yang approve
+        $table->timestamps();
+    });
+}
 
     public function down(): void
     {
