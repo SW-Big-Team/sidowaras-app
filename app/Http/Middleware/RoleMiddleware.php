@@ -42,7 +42,7 @@ class RoleMiddleware
         }
 
         // Admin bypass SHIFT CHECK
-        if ($user->role->nama_role === 'Admin') {
+        if ($user->role->nama_role === 'Admin' || $user->role->nama_role === 'Kasir') {
             return $next($request);
         }
 
