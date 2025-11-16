@@ -17,7 +17,7 @@ return new class extends Migration
                   ->constrained('pembelian')
                   ->onDelete('cascade');
             $table->tinyInteger('termin_ke'); 
-            $table->decimal('jumlah_bayar', 15, 2);
+            $table->decimal('jumlah_bayar', 15, 2)->nullable()->default(0);
             $table->date('tgl_jatuh_tempo');
             $table->enum('status', ['belum_lunas', 'lunas'])->default('belum_lunas');
             $table->date('tgl_bayar')->nullable();

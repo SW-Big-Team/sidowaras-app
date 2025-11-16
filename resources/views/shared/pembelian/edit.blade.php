@@ -28,8 +28,8 @@
         </div>
     @endif
 
-    {{-- MODIFIKASI: Ganti route dan tambah method PUT --}}
-    <form action="{{ route('pembelian.update', $pembelian->id) }}" method="POST" id="formPembelian">
+    {{-- PERBAIKAN: Gunakan $pembelian->uuid --}}
+    <form action="{{ route('pembelian.update', $pembelian->uuid) }}" method="POST" id="formPembelian">
         @csrf
         @method('PUT')
 
@@ -41,17 +41,14 @@
                 <div class="row g-2">
                     <div class="col-md-3 col-6">
                         <label class="form-label small mb-1">No Faktur</label>
-                        {{-- MODIFIKASI: Isi value --}}
                         <input type="text" name="no_faktur" class="form-control form-control-sm" value="{{ old('no_faktur', $pembelian->no_faktur) }}" placeholder="Auto">
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small mb-1">Tanggal <span class="text-danger">*</span></label>
-                        {{-- MODIFIKASI: Isi value --}}
                         <input type="datetime-local" name="tgl_pembelian" class="form-control form-control-sm" value="{{ old('tgl_pembelian', $pembelian->tgl_pembelian->format('Y-m-d\TH:i')) }}" required>
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small mb-1">Pembayaran <span class="text-danger">*</span></label>
-                        {{-- MODIFIKASI: Isi value dan tambah 'termin' --}}
                         <select name="metode_pembayaran" id="metode_pembayaran" class="form-select form-select-sm" required>
                             <option value="tunai" @selected(old('metode_pembayaran', $pembelian->metode_pembayaran) === 'tunai')>Tunai</option>
                             <option value="non tunai" @selected(old('metode_pembayaran', $pembelian->metode_pembayaran) === 'non tunai')>Non Tunai</option>
@@ -61,19 +58,16 @@
                     <div class="col-md-3 col-6">
                         <label class="form-label small mb-1">Total Harga</label>
                         <input type="text" id="total_harga_display" class="form-control form-control-sm bg-light fw-bold text-success" value="Rp 0" readonly>
-                        {{-- MODIFIKASI: Isi value --}}
                         <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', $pembelian->total_harga) }}">
                     </div>
                 </div>
                 <div class="row g-2 mt-1">
                     <div class="col-md-6 col-12">
                         <label class="form-label small mb-1">Nama Pengirim <span class="text-danger">*</span></label>
-                        {{-- MODIFIKASI: Isi value --}}
                         <input type="text" name="nama_pengirim" class="form-control form-control-sm" value="{{ old('nama_pengirim', $pembelian->nama_pengirim) }}" required>
                     </div>
                     <div class="col-md-6 col-12">
                         <label class="form-label small mb-1">No Telepon Pengirim</label>
-                        {{-- MODIFIKASI: Isi value --}}
                         <input type="text" name="no_telepon_pengirim" class="form-control form-control-sm" value="{{ old('no_telepon_pengirim', $pembelian->no_telepon_pengirim) }}">
                     </div>
                 </div>
@@ -89,7 +83,6 @@
             </div>
             <div class="card-body p-3">
                 <div class="row g-3" id="containerObat">
-                    {{-- Data obat akan di-load oleh script di bawah --}}
                 </div>
             </div>
         </div>
@@ -103,23 +96,6 @@
             </div>
             <div class="card-body p-3">
                 <div id="containerTermin" class="mb-3">
-                    {{-- Data termin akan di-load oleh script di bawah --}}
-                </div>
-                <div class="p-3 bg-light rounded border">
-                    <div class="row">
-                        <div class="col-4">
-                            <label class="form-label small mb-1">Total Pembelian</label>
-                            <input type="text" id="termin_total_harga" class="form-control form-control-sm bg-white" readonly value="Rp 0">
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label small mb-1">Total Termin Dialokasikan</label>
-                            <input type="text" id="termin_total_dialokasikan" class="form-control form-control-sm bg-white text-primary fw-bold" readonly value="Rp 0">
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label small mb-1">Sisa Alokasi</label>
-                            <input type="text" id="termin_sisa_alokasi" class="form-control form-control-sm bg-white text-danger fw-bold" readonly value="Rp 0">
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -134,14 +110,27 @@
 </div>
 
 <style>
-    /* ... (Style yang sama dengan create.blade.php) ... */
-    .termin-row { border-bottom: 1px dashed #ccc; padding-bottom: 1rem; margin-bottom: 1rem; }
-    .termin-row:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+    .obat-card { transition: all 0.3s ease; }
+    .obat-card .card { height: 100%; border: 2px solid #e9ecef; }
+    .obat-card:hover .card { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); }
+    .obat-card .card-header { background: #764ba2; padding: 0.5rem 0.75rem; }
+    .form-label.small { font-size: 0.8rem; font-weight: 600; color: #495057; }
+    .form-control-sm, .form-select-sm { font-size: 0.85rem; }
+    .badge-number { font-size: 0.9rem; padding: 0.35rem 0.65rem; }
+    .termin-row {
+        transition: all 0.3s ease;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    .termin-row:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
 </style>
 
 <script>
-// NOTE: Script ini 95% SAMA DENGAN create.blade.php
-// Perbedaan utamanya ada di bagian 'INISIALISASI' (paling bawah)
 document.addEventListener('DOMContentLoaded', function() {
     // === DEKLARASI ELEMEN ===
     const containerObat = document.getElementById('containerObat');
@@ -154,14 +143,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const obatList = @json($obatList);
     
-    // BARU: Elemen Termin
     const metodePembayaranSelect = document.getElementById('metode_pembayaran');
     const cardTermin = document.getElementById('cardTermin');
     const containerTermin = document.getElementById('containerTermin');
     const btnTambahTermin = document.getElementById('btnTambahTermin');
-    const terminTotalHarga = document.getElementById('termin_total_harga');
-    const terminTotalDialokasikan = document.getElementById('termin_total_dialokasikan');
-    const terminSisaAlokasi = document.getElementById('termin_sisa_alokasi');
 
     // === FUNGSI UTAMA ===
 
@@ -182,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Format nilai awal saat load
         let initialValue = hiddenInput.value;
          if (initialValue && parseFloat(initialValue) > 0) {
             let numericValue = parseFloat(initialValue);
@@ -195,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- FUNGSI OBAT ---
-    // (Fungsi createObatCard, removeObatCard, updateObatNumbers, hitungTotal SAMA PERSIS dengan create.blade.php)
+
     function createObatCard(data = {}) {
         const index = obatCounter++;
         const col = document.createElement('div');
@@ -204,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let optionsHtml = '<option value="">-- Pilih Obat --</option>';
         obatList.forEach(obat => {
-            // MODIFIKASI: Cek data.obat_id
             const selected = (data.obat_id && data.obat_id == obat.id) ? 'selected' : '';
             optionsHtml += `<option value="${obat.id}" ${selected}>${obat.nama_obat}${obat.barcode ? ' (' + obat.barcode + ')' : ''}</option>`;
         });
@@ -228,25 +211,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-6">
                             <label class="form-label small mb-1">Harga Beli <span class="text-danger">*</span></label>
                             <input type="text" class="form-control form-control-sm harga-beli-display" required placeholder="Rp 0">
-                            {{-- MODIFIKASI: Isi value dari data --}}
                             <input type="hidden" name="obat[${index}][harga_beli]" class="harga-beli" value="${data.harga_beli || 0}">
                         </div>
                         <div class="col-6">
                             <label class="form-label small mb-1">Harga Jual <span class="text-danger">*</span></label>
                             <input type="text" class="form-control form-control-sm harga-jual-display" required placeholder="Rp 0">
-                            {{-- MODIFIKASI: Isi value dari data --}}
                             <input type="hidden" name="obat[${index}][harga_jual]" class="harga-jual" value="${data.harga_jual || 0}">
                         </div>
                     </div>
                     <div class="row g-2 mt-1">
                         <div class="col-6">
                             <label class="form-label small mb-1">Jumlah <span class="text-danger">*</span></label>
-                            {{-- MODIFIKASI: Isi value dari data (gunakan jumlah_masuk) --}}
                             <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control form-control-sm jumlah-masuk" required min="1" value="${data.jumlah_masuk || 1}">
                         </div>
                         <div class="col-6">
                             <label class="form-label small mb-1">Kadaluarsa <span class="text-danger">*</span></label>
-                            {{-- MODIFIKASI: Isi value dari data --}}
                             <input type="date" name="obat[${index}][tgl_kadaluarsa]" class="form-control form-control-sm" value="${data.tgl_kadaluarsa ? data.tgl_kadaluarsa.split('T')[0] : ''}" required>
                         </div>
                     </div>
@@ -299,41 +278,32 @@ document.addEventListener('DOMContentLoaded', function() {
             total += subtotal;
         });
         
-        // PENTING: Saat edit, jangan update total_harga dari subtotal
-        // karena controller lama Anda menghitungnya secara manual.
-        // Biarkan total_harga diisi dari $pembelian->total_harga.
-        // totalHargaInput.value = total.toFixed(2);
-        // totalHargaDisplay.value = formatRupiah(total);
-        
-        // Cek jika controller Anda sudah diupdate untuk multi-item,
-        // Hapus komentar di 2 baris atas dan hapus 2 baris di bawah ini.
-        let currentTotal = parseFloat(totalHargaInput.value) || 0;
-        totalHargaDisplay.value = formatRupiah(currentTotal);
-
-
-        hitungTotalTermin(); // Update summary termin
+        totalHargaInput.value = total.toFixed(2);
+        totalHargaDisplay.value = formatRupiah(total);
     };
 
-    // --- BARU: FUNGSI TERMIN ---
-    // (Fungsi createTerminCard, removeTerminCard, updateTerminNumbers, hitungTotalTermin, toggleTerminCard, validasiForm SAMA PERSIS dengan create.blade.php)
+    // --- FUNGSI TERMIN ---
+
     function createTerminCard(data = {}) {
         const index = terminCounter++;
         const row = document.createElement('div');
         row.className = 'row g-2 align-items-center termin-row';
         row.setAttribute('data-index', index);
         
+        const tglJatuhTempo = data.tgl_jatuh_tempo ? data.tgl_jatuh_tempo.split('T')[0] : '';
+
         row.innerHTML = `
             <div class="col-1">
                 <span class="badge bg-dark badge-number">#${index + 1}</span>
             </div>
             <div class="col-5">
-                <label class="form-label small mb-1">Jumlah Bayar <span class="text-danger">*</span></label>
-                <input type="text" class="form-control form-control-sm termin-jumlah-display" required placeholder="Rp 0">
+                <label class="form-label small mb-1">Jumlah Bayar</label>
+                <input type="text" class="form-control form-control-sm termin-jumlah-display" placeholder="Rp 0 (Boleh kosong)">
                 <input type="hidden" name="termin_list[${index}][jumlah_bayar]" class="termin-jumlah-bayar" value="${data.jumlah_bayar || 0}">
             </div>
             <div class="col-5">
                 <label class="form-label small mb-1">Tgl. Jatuh Tempo <span class="text-danger">*</span></label>
-                <input type="date" name="termin_list[${index}][tgl_jatuh_tempo]" class="form-control form-control-sm" value="${data.tgl_jatuh_tempo ? data.tgl_jatuh_tempo.split('T')[0] : ''}" required>
+                <input type="date" name="termin_list[${index}][tgl_jatuh_tempo]" class="form-control form-control-sm" value="${tglJatuhTempo}" required>
             </div>
             <div class="col-1 text-end">
                 <button type="button" class="btn btn-sm btn-outline-danger btn-remove-termin" style="padding: 0.15rem 0.4rem;">
@@ -346,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const jumlahDisplay = row.querySelector('.termin-jumlah-display');
         const jumlahHidden = row.querySelector('.termin-jumlah-bayar');
-        formatInputRupiah(jumlahDisplay, jumlahHidden, hitungTotalTermin);
+        formatInputRupiah(jumlahDisplay, jumlahHidden);
         
         row.querySelector('.btn-remove-termin').addEventListener('click', function() {
             removeTerminCard(this);
@@ -356,37 +326,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function removeTerminCard(btn) {
         btn.closest('.termin-row').remove();
         updateTerminNumbers();
-        hitungTotalTermin();
     }
 
     function updateTerminNumbers() {
         containerTermin.querySelectorAll('.termin-row').forEach((row, idx) => {
             row.querySelector('.badge-number').textContent = `#${idx + 1}`;
         });
-    }
-
-    function hitungTotalTermin() {
-        let totalAlokasi = 0;
-        containerTermin.querySelectorAll('.termin-row').forEach(row => {
-            totalAlokasi += parseFloat(row.querySelector('.termin-jumlah-bayar').value) || 0;
-        });
-
-        const totalPembelian = parseFloat(totalHargaInput.value) || 0;
-        const sisaAlokasi = totalPembelian - totalAlokasi;
-
-        terminTotalHarga.value = formatRupiah(totalPembelian);
-        terminTotalDialokasikan.value = formatRupiah(totalAlokasi);
-        terminSisaAlokasi.value = formatRupiah(sisaAlokasi);
-
-        if (Math.abs(sisaAlokasi) < 0.01) {
-            terminSisaAlokasi.classList.remove('text-danger');
-            terminSisaAlokasi.classList.add('text-success');
-        } else {
-            terminSisaAlokasi.classList.add('text-danger');
-            terminSisaAlokasi.classList.remove('text-success');
-        }
-        
-        return totalAlokasi;
     }
 
     function toggleTerminCard() {
@@ -398,27 +343,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validasiForm(e) {
-        // Peringatan: Logika update Anda saat ini masih single item.
-        // Jika Anda update controller-nya, aktifkan validasi ini.
-        /*
         if (metodePembayaranSelect.value === 'termin') {
-            const totalPembelian = parseFloat(totalHargaInput.value) || 0;
-            const totalAlokasi = hitungTotalTermin();
-            
-            if (Math.abs(totalPembelian - totalAlokasi) > 0.01) {
-                e.preventDefault(); 
-                alert('Validasi Gagal!\nTotal alokasi termin tidak sama dengan Total Harga Pembelian.');
-                cardTermin.scrollIntoView({ behavior: 'smooth' });
-                return false;
-            }
-             if (containerTermin.querySelectorAll('.termin-row').length === 0) {
-                 e.preventDefault();
-                alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan detail termin.');
+            if (containerTermin.querySelectorAll('.termin-row').length === 0) {
+                 e.preventDefault(); 
+                alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan baris termin.');
                 cardTermin.scrollIntoView({ behavior: 'smooth' });
                 return false;
             }
         }
-        */
         return true;
     }
 
@@ -435,30 +367,26 @@ document.addEventListener('DOMContentLoaded', function() {
     formPembelian.addEventListener('submit', validasiForm);
 
 
-    // === MODIFIKASI: INISIALISASI (LOAD DATA) ===
+    // === INISIALISASI (LOAD DATA) ===
     
-    // Ambil data pembelian dari Blade
     const pembelian = @json($pembelian);
     
-    // 1. Load data obat (stokBatches)
     if (pembelian.stok_batches && pembelian.stok_batches.length > 0) {
         pembelian.stok_batches.forEach(batchData => {
             createObatCard(batchData);
         });
     } else {
-         createObatCard(); // Tetap buat 1 card kosong jika tidak ada data
+         createObatCard(); 
     }
     
-    // 2. Load data termin (pembayaranTermin)
      if (pembelian.pembayaran_termin && pembelian.pembayaran_termin.length > 0) {
         pembelian.pembayaran_termin.forEach(terminData => {
             createTerminCard(terminData);
         });
     }
 
-    // 3. Panggil kalkulasi & toggle saat halaman dimuat
-    hitungTotal(); // Akan menghitung subtotal & total
-    toggleTerminCard(); // Tampilkan/sembunyikan card termin
+    hitungTotal();
+    toggleTerminCard();
 });
 </script>
 @endsection

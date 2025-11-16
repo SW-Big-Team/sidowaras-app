@@ -20,6 +20,7 @@ Route::middleware(['auth', 'role:Admin,Karyawan,Kasir'])->prefix('shared')->grou
         Route::get('/{pembelian}/edit', [PembelianController::class, 'edit'])->name('edit');
         Route::put('/{pembelian}', [PembelianController::class, 'update'])->name('update');
         Route::delete('/{pembelian}', [PembelianController::class, 'destroy'])->name('destroy');
+        Route::post('/bayar-termin/{pembelian}', [PembelianController::class, 'bayarTermin'])->name('bayarTermin');
     });
 
     // Stok (read-only untuk semua role)

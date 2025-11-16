@@ -16,6 +16,26 @@
         </a>
     </div>
 
+    {{-- Notifikasi Sukses/Error dari Aksi Pembayaran --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            {{ session('success') }}
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>Error!</strong>
+            <ul class="mb-0">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Card Informasi Utama --}}
     <div class="card shadow-sm mb-3">
         <div class="card-header bg-primary text-white py-2">
             <h6 class="mb-0">Informasi Utama</h6>
@@ -36,7 +56,6 @@
                 </tr>
                 <tr>
                     <th>Metode Pembayaran</th>
-                    {{-- MODIFIKASI: Beri badge --}}
                     <td>
                         @if($pembelian->metode_pembayaran == 'tunai')
                             <span class="badge bg-success">{{ ucfirst($pembelian->metode_pembayaran) }}</span>
@@ -63,7 +82,7 @@
         </div>
     </div>
     
-    {{-- BARU: Tampilkan Detail Obat (stokBatches) --}}
+    {{-- Card Detail Item Obat --}}
     <div class="card shadow-sm mb-3">
          <div class="card-header bg-success text-white py-2">
             <h6 class="mb-0"><i class="fas fa-pills"></i> Detail Item Obat</h6>
@@ -98,11 +117,22 @@
         </div>
     </div>
 
-    {{-- BARU: Tampilkan Detail Termin --}}
+    {{-- PERBAIKAN: Tampilkan Detail Termin & Form Pembayaran --}}
     @if($pembelian->metode_pembayaran == 'termin')
+    @php
+        $total_terbayar = $pembelian->pembayaranTermin->sum('jumlah_bayar');
+        $sisa_utang = $pembelian->total_harga - $total_terbayar;
+    @endphp
     <div class="card shadow-sm mb-3">
-         <div class="card-header bg-warning py-2">
+         <div class="card-header bg-warning py-2 d-flex justify-content-between align-items-center">
             <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> Detail Pembayaran Termin</h6>
+            
+            {{-- Tombol untuk memicu Modal Pembayaran --}}
+            @if($sisa_utang > 0.01)
+                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalBayarTermin">
+                    <i class="fas fa-dollar-sign"></i> Bayar Cicilan
+                </button>
+            @endif
         </div>
         <div class="card-body p-0">
             @if($pembelian->pembayaranTermin->isNotEmpty())
@@ -110,17 +140,20 @@
                     <thead>
                         <tr class="text-center small">
                             <th>Termin Ke-</th>
-                            <th>Jumlah Bayar</th>
+                            <th>Total Dibayar</th>
                             <th>Tgl. Jatuh Tempo</th>
+                            <th>Tgl. Bayar Terakhir</th>
                             <th>Status</th>
+                            <th>Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pembelian->pembayaranTermin as $termin)
+                        @foreach($pembelian->pembayaranTermin->sortBy('termin_ke') as $termin)
                             <tr class="small">
                                 <td class="text-center">{{ $termin->termin_ke }}</td>
                                 <td class="text-end">Rp {{ number_format($termin->jumlah_bayar, 0, ',', '.') }}</td>
                                 <td class="text-center">{{ $termin->tgl_jatuh_tempo->format('d M Y') }}</td>
+                                <td class="text-center">{{ $termin->tgl_bayar ? \Carbon\Carbon::parse($termin->tgl_bayar)->format('d M Y') : '-' }}</td>
                                 <td class="text-center">
                                     @if($termin->status == 'lunas')
                                         <span class="badge bg-success">Lunas</span>
@@ -128,8 +161,22 @@
                                         <span class="badge bg-danger">Belum Lunas</span>
                                     @endif
                                 </td>
+                                <td>
+                                    {{-- Tampilkan riwayat pembayaran --}}
+                                    <pre style="font-size: 0.8em; white-space: pre-wrap; margin-bottom: 0;">{{ $termin->keterangan }}</pre>
+                                </td>
                             </tr>
                         @endforeach
+                        
+                        {{-- Ringkasan Total --}}
+                        <tr class="table-group-divider">
+                            <td colspan="1" class="text-end fw-bold">TOTAL DIBAYAR:</td>
+                            <td colspan="5" class="text-end fw-bold text-success">Rp {{ number_format($total_terbayar, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" class="text-end fw-bold">SISA UTANG:</td>
+                            <td colspan="5" class="text-end fw-bold text-danger">Rp {{ number_format($sisa_utang, 0, ',', '.') }}</td>
+                        </tr>
                     </tbody>
                 </table>
             @else
@@ -140,6 +187,48 @@
         </div>
     </div>
     @endif
-
 </div>
+
+{{-- BARU: Modal untuk Pembayaran Termin --}}
+@if($pembelian->metode_pembayaran == 'termin' && $sisa_utang > 0.01)
+<div class="modal fade" id="modalBayarTermin" tabindex="-1" aria-labelledby="modalBayarTerminLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalBayarTerminLabel">Bayar Cicilan Termin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{-- Form menunjuk ke route baru 'pembelian.bayarTermin' --}}
+            <form action="{{ route('pembelian.bayarTermin', $pembelian->uuid) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Sisa Utang</label>
+                        <input type="text" class="form-control" value="Rp {{ number_format($sisa_utang, 0, ',', '.') }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Bayar</label>
+                        <input type="date" name="tgl_bayar" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah Bayar</label>
+                        <input type="number" name="jumlah_bayar" class="form-control" 
+                            placeholder="Maks: Rp {{ number_format($sisa_utang, 0, ',', '.') }}" 
+                            max="{{ $sisa_utang }}" 
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Keterangan (Opsional)</label>
+                        <input type="text" name="keterangan" class="form-control" placeholder="Misal: Transfer Bank ABC">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Pembayaran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
 @endsection

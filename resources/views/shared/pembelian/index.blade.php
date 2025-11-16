@@ -22,6 +22,18 @@
             {{ session('success') }}
         </div>
     @endif
+    
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <ul class="mb-0">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
 
     <div class="card shadow-sm">
         <div class="card-body p-3">
@@ -33,7 +45,7 @@
                             <th>No Faktur</th>
                             <th>Pengirim</th>
                             <th>Total Harga</th>
-                            <th>Metode Bayar</th> {{-- BARU --}}
+                            <th>Metode Bayar</th>
                             <th>User</th>
                             <th>Tanggal</th>
                             <th>Aksi</th>
@@ -47,7 +59,6 @@
                                 <td>{{ $p->nama_pengirim }}</td>
                                 <td class="text-end">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</td>
                                 
-                                {{-- BARU: Kolom Metode Pembayaran --}}
                                 <td class="text-center">
                                     @if($p->metode_pembayaran == 'tunai')
                                         <span class="badge bg-success">{{ ucfirst($p->metode_pembayaran) }}</span>
@@ -61,9 +72,25 @@
                                 <td>{{ $p->user->nama_lengkap ?? $p->user->name ?? '-' }}</td>
                                 <td class="text-center">{{ $p->tgl_pembelian->format('Y-m-d H:i') }}</td>
                                 <td class="text-center">
-                                    <form action="{{ route('pembelian.destroy', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
-                                        <a href="{{ route('pembelian.show', $p->id) }}" class="btn btn-sm btn-info" title="Detail"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('pembelian.edit', $p->id) }}" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                                    {{-- PERBAIKAN: Gunakan $p->uuid --}}
+                                    <form action="{{ route('pembelian.destroy', $p->uuid) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
+                                        
+                                        @if($p->metode_pembayaran == 'termin')
+                                            @php
+                                                $belum_lunas = $p->pembayaranTermin->where('status', 'belum_lunas')->isNotEmpty();
+                                            @endphp
+                                            @if($belum_lunas)
+                                                {{-- PERBAIKAN: Arahkan ke halaman show (detail) --}}
+                                                <a href="{{ route('pembelian.show', $p->uuid) }}" class="btn btn-sm btn-success" title="Bayar Termin">
+                                                    <i class="fas fa-dollar-sign"></i>
+                                                </a>
+                                            @endif
+                                        @endif
+
+                                        {{-- PERBAIKAN: Gunakan $p->uuid --}}
+                                        <a href="{{ route('pembelian.show', $p->uuid) }}" class="btn btn-sm btn-info" title="Detail"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('pembelian.edit', $p->uuid) }}" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                                        
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
@@ -71,7 +98,6 @@
                                 </td>
                             </tr>
                         @empty
-                            {{-- MODIFIKASI: Update colspan --}}
                             <tr><td colspan="8" class="text-center">Tidak ada data pembelian.</td></tr>
                         @endforelse
                     </tbody>

@@ -47,7 +47,6 @@
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small mb-1">Pembayaran <span class="text-danger">*</span></label>
-                        {{-- MODIFIKASI: Tambah event listener dan opsi 'termin' --}}
                         <select name="metode_pembayaran" id="metode_pembayaran" class="form-select form-select-sm" required>
                             <option value="tunai" @selected(old('metode_pembayaran', 'tunai') === 'tunai')>Tunai</option>
                             <option value="non tunai" @selected(old('metode_pembayaran') === 'non tunai')>Non Tunai</option>
@@ -83,10 +82,8 @@
             <div class="card-body p-3">
                 <div class="row g-3" id="containerObat">
                     @if(old('obat'))
-                        {{-- BARU: Handle old input for obat --}}
                         @foreach(old('obat') as $i => $obat)
                             <script>
-                                // We'll store this to add after DOM load
                                 window.oldObat = window.oldObat || [];
                                 window.oldObat.push(@json($obat));
                             </script>
@@ -105,34 +102,16 @@
             </div>
             <div class="card-body p-3">
                 <div id="containerTermin" class="mb-3">
-                    @if(old('termin_list'))
-                        {{-- BARU: Handle old input for termin --}}
+                     @if(old('termin_list'))
                         @foreach(old('termin_list') as $i => $termin)
                             <script>
-                                // We'll store this to add after DOM load
                                 window.oldTermin = window.oldTermin || [];
                                 window.oldTermin.push(@json($termin));
                             </script>
                         @endforeach
                     @endif
                 </div>
-                <div class="p-3 bg-light rounded border">
-                    <div class="row">
-                        <div class="col-4">
-                            <label class="form-label small mb-1">Total Pembelian</label>
-                            <input type="text" id="termin_total_harga" class="form-control form-control-sm bg-white" readonly value="Rp 0">
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label small mb-1">Total Termin Dialokasikan</label>
-                            <input type="text" id="termin_total_dialokasikan" class="form-control form-control-sm bg-white text-primary fw-bold" readonly value="Rp 0">
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label small mb-1">Sisa Alokasi</label>
-                            <input type="text" id="termin_sisa_alokasi" class="form-control form-control-sm bg-white text-danger fw-bold" readonly value="Rp 0">
-                        </div>
-                    </div>
                 </div>
-            </div>
         </div>
 
 
@@ -145,7 +124,13 @@
 </div>
 
 <style>
-    /* ... (Style Anda yang sudah ada) ... */
+    .obat-card { transition: all 0.3s ease; }
+    .obat-card .card { height: 100%; border: 2px solid #e9ecef; }
+    .obat-card:hover .card { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); }
+    .obat-card .card-header { background: #764ba2; padding: 0.5rem 0.75rem; }
+    .form-label.small { font-size: 0.8rem; font-weight: 600; color: #495057; }
+    .form-control-sm, .form-select-sm { font-size: 0.85rem; }
+    .badge-number { font-size: 0.9rem; padding: 0.35rem 0.65rem; }
     .termin-row {
         transition: all 0.3s ease;
         border-bottom: 1px dashed #ccc;
@@ -172,18 +157,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const obatList = @json($obatList);
     
-    // BARU: Elemen Termin
     const metodePembayaranSelect = document.getElementById('metode_pembayaran');
     const cardTermin = document.getElementById('cardTermin');
     const containerTermin = document.getElementById('containerTermin');
     const btnTambahTermin = document.getElementById('btnTambahTermin');
-    const terminTotalHarga = document.getElementById('termin_total_harga');
-    const terminTotalDialokasikan = document.getElementById('termin_total_dialokasikan');
-    const terminSisaAlokasi = document.getElementById('termin_sisa_alokasi');
 
     // === FUNGSI UTAMA ===
 
-    // Format input as Rupiah while typing
     function formatInputRupiah(displayInput, hiddenInput, callbackOnInput = null) {
         displayInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
@@ -196,13 +176,11 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 e.target.value = 'Rp ' + numericValue.toLocaleString('id-ID');
             }
-            // Panggil callback jika ada (misal: hitungTotal)
             if (callbackOnInput) {
                 callbackOnInput();
             }
         });
         
-        // Format nilai awal jika ada (penting untuk old data)
         let initialValue = hiddenInput.value;
          if (initialValue && parseInt(initialValue) > 0) {
             let numericValue = parseInt(initialValue);
@@ -278,7 +256,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         containerObat.appendChild(col);
         
-        // Add event listeners for Rupiah formatting & recalculation
         const hargaBeliDisplay = col.querySelector('.harga-beli-display');
         const hargaBeliHidden = col.querySelector('.harga-beli');
         formatInputRupiah(hargaBeliDisplay, hargaBeliHidden, hitungTotal);
@@ -320,12 +297,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         totalHargaInput.value = total.toFixed(2);
         totalHargaDisplay.value = formatRupiah(total);
-
-        // BARU: Update summary termin
-        hitungTotalTermin();
     };
 
-    // --- BARU: FUNGSI TERMIN ---
+    // --- FUNGSI TERMIN ---
 
     function createTerminCard(data = {}) {
         const index = terminCounter++;
@@ -338,8 +312,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="badge bg-dark badge-number">#${index + 1}</span>
             </div>
             <div class="col-5">
-                <label class="form-label small mb-1">Jumlah Bayar <span class="text-danger">*</span></label>
-                <input type="text" class="form-control form-control-sm termin-jumlah-display" required placeholder="Rp 0">
+                <label class="form-label small mb-1">Jumlah Bayar</label>
+                <input type="text" class="form-control form-control-sm termin-jumlah-display" placeholder="Rp 0 (Boleh kosong)">
                 <input type="hidden" name="termin_list[${index}][jumlah_bayar]" class="termin-jumlah-bayar" value="${data.jumlah_bayar || 0}">
             </div>
             <div class="col-5">
@@ -355,10 +329,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         containerTermin.appendChild(row);
         
-        // Add listeners for new row
         const jumlahDisplay = row.querySelector('.termin-jumlah-display');
         const jumlahHidden = row.querySelector('.termin-jumlah-bayar');
-        formatInputRupiah(jumlahDisplay, jumlahHidden, hitungTotalTermin);
+        formatInputRupiah(jumlahDisplay, jumlahHidden);
         
         row.querySelector('.btn-remove-termin').addEventListener('click', function() {
             removeTerminCard(this);
@@ -368,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function removeTerminCard(btn) {
         btn.closest('.termin-row').remove();
         updateTerminNumbers();
-        hitungTotalTermin();
     }
 
     function updateTerminNumbers() {
@@ -377,36 +349,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function hitungTotalTermin() {
-        let totalAlokasi = 0;
-        containerTermin.querySelectorAll('.termin-row').forEach(row => {
-            totalAlokasi += parseFloat(row.querySelector('.termin-jumlah-bayar').value) || 0;
-        });
-
-        const totalPembelian = parseFloat(totalHargaInput.value) || 0;
-        const sisaAlokasi = totalPembelian - totalAlokasi;
-
-        terminTotalHarga.value = formatRupiah(totalPembelian);
-        terminTotalDialokasikan.value = formatRupiah(totalAlokasi);
-        terminSisaAlokasi.value = formatRupiah(sisaAlokasi);
-
-        // Ganti warna jika sisa alokasi tidak nol
-        if (Math.abs(sisaAlokasi) < 0.01) {
-            terminSisaAlokasi.classList.remove('text-danger');
-            terminSisaAlokasi.classList.add('text-success');
-        } else {
-            terminSisaAlokasi.classList.add('text-danger');
-            terminSisaAlokasi.classList.remove('text-success');
-        }
-        
-        return totalAlokasi; // Kembalikan nilai untuk validasi
-    }
-
     function toggleTerminCard() {
         if (metodePembayaranSelect.value === 'termin') {
             cardTermin.style.display = 'block';
-            if (containerTermin.querySelectorAll('.termin-row').length === 0) {
-                 createTerminCard(); // Tambah satu termin default
+            if (containerTermin.querySelectorAll('.termin-row').length === 0 && !window.oldTermin) {
+                 createTerminCard(); 
             }
         } else {
             cardTermin.style.display = 'none';
@@ -415,57 +362,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function validasiForm(e) {
         if (metodePembayaranSelect.value === 'termin') {
-            const totalPembelian = parseFloat(totalHargaInput.value) || 0;
-            const totalAlokasi = hitungTotalTermin();
-            
-            if (Math.abs(totalPembelian - totalAlokasi) > 0.01) {
-                e.preventDefault(); // Hentikan submit
-                alert('Validasi Gagal!\nTotal alokasi termin ( ' + formatRupiah(totalAlokasi) + ' ) tidak sama dengan Total Harga Pembelian ( ' + formatRupiah(totalPembelian) + ' ).\nPastikan Sisa Alokasi adalah Rp 0.');
-                cardTermin.scrollIntoView({ behavior: 'smooth' });
-                return false;
-            }
-
-            if (containerTermin.querySelectorAll('.termin-row').length === 0) {
-                 e.preventDefault(); // Hentikan submit
-                alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan detail termin.');
-                cardTermin.scrollIntoView({ behavior: 'smooth' });
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // === EVENT LISTENERS ===
-    
-    btnTambahObat.addEventListener('click', function() {
-        createObatCard();
-    });
-
-    // BARU: Listeners untuk Termin
-    metodePembayaranSelect.addEventListener('change', toggleTerminCard);
-    btnTambahTermin.addEventListener('click', function() {
-        createTerminCard();
-    });
-    formPembelian.addEventListener('submit', validasiForm);
-
-
-    // === INISIALISASI (LOAD DATA) ===
-    
-    // BARU: Inisialisasi old data obat
-    if (window.oldObat && window.oldObat.length > 0) {
-        window.oldObat.forEach(obatData => createObatCard(obatData));
-    } else {
-        createObatCard(); // Tambah card obat pertama jika tidak ada old data
-    }
-    
-    // BARU: Inisialisasi old data termin
-     if (window.oldTermin && window.oldTermin.length > 0) {
-        window.oldTermin.forEach(terminData => createTerminCard(terminData));
-    }
-
-    // Panggil kalkulasi & toggle saat halaman dimuat
-    hitungTotal();
-    toggleTerminCard(); // Tampilkan/sembunyikan card termin berdasarkan old data
-});
-</script>
-@endsection
+            if (containerTermin.querySelectorAll('.
