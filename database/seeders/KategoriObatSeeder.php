@@ -13,10 +13,19 @@ class KategoriObatSeeder extends Seeder
      */
     public function run(): void
     {
-        KategoriObat::create(['uuid' => Str::uuid(), 'nama_kategori' => 'Obat Keras']);
-        KategoriObat::create(['uuid' => Str::uuid(), 'nama_kategori' => 'Obat Bebas']);
-        KategoriObat::create(['uuid' => Str::uuid(), 'nama_kategori' => 'Obat Bebas Terbatas']);
-        KategoriObat::create(['uuid' => Str::uuid(), 'nama_kategori' => 'Herbal']);
-        KategoriObat::create(['uuid' => Str::uuid(), 'nama_kategori' => 'Alat Kesehatan']);
+        $kategoris = [
+            'Obat Keras',
+            'Obat Bebas',
+            'Obat Bebas Terbatas',
+            'Herbal',
+            'Alat Kesehatan',
+        ];
+
+        foreach ($kategoris as $nama) {
+            KategoriObat::firstOrCreate(
+                ['nama_kategori' => $nama],
+                ['uuid' => Str::uuid()]
+            );
+        }
     }
 }

@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class, 
             KategoriObatSeeder::class,
             SatuanObatSeeder::class,
+            KandunganObatSeeder::class,
+            ObatSeeder::class,
         ]);
     }
 }

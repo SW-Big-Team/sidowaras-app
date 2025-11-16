@@ -4,41 +4,78 @@
 @endphp
 
 @extends($layoutPath)
-
 @section('title', 'Data Obat')
 
-@section('content')
-<div class="container-fluid">
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+@section('breadcrumb')
+<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Manajemen Obat</a></li>
+    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Data Obat</li>
+</ol>
+@endsection
 
-	<div class="row">
-		<div class="col-md-12">
-            <div class="card">
-				<div class="card-header d-flex justify-content-between align-items-center">
-					<strong>Data Obat</strong>
-					<a href="{{ route('admin.obat.create') }}" class="btn btn-primary">
-						Tambah Obat
-					</a>
-				</div>
-                <div class="card-body p-0">
-                    <div class="p-3 border-bottom">
-                        <form method="GET" class="d-flex gap-2">
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama obat..." class="form-control" style="max-width: 300px;">
-                            <button type="submit" class="btn btn-secondary">Cari</button>
+@section('content')
+<div class="container-fluid py-4">
+    <x-content-header title="Daftar Obat" subtitle="Kelola data obat dan informasi farmasi">
+        <x-button-add 
+            :href="route('admin.obat.create')" 
+            icon="medication" 
+            text="Tambah Obat"
+        />
+    </x-content-header>
+
+    <div class="row">
+        <div class="col-12">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span class="alert-icon"><i class="material-symbols-rounded">check_circle</i></span>
+                    <span class="alert-text">{{ session('success') }}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
+                    <span class="alert-text">{{ session('error') }}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
+                    <span class="alert-text">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-3">
+                    <div class="mb-3">
+                        <form method="GET" class="row g-3">
+                            <div class="col-md-4">
+                                <div class="input-group input-group-outline">
+                                    <input type="text" 
+                                           name="search" 
+                                           value="{{ request('search') }}" 
+                                           placeholder="Cari nama obat, kode, atau kategori..." 
+                                           class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary mb-0">
+                                    <i class="material-symbols-rounded me-1">search</i> Cari
+                                </button>
+                                @if(request('search'))
+                                    <a href="{{ route('admin.obat.index') }}" class="btn btn-outline-secondary mb-0">
+                                        <i class="material-symbols-rounded">close</i>
+                                    </a>
+                                @endif
+                            </div>
                         </form>
                     </div>
                     <div class="table-responsive">
@@ -62,7 +99,7 @@
                             <tbody>
                                 @forelse($obats as $index => $obat)
                                 @php
-                                    $kandunganList = $obat->kandungan->pluck('nama_kandungan')->toArray();
+                                    $kandunganList = $obat->kandungan->pluck('nama_kandungan_text')->toArray();
                                 @endphp
                                     <tr>
                                         <td class="text-center">{{ $obats->firstItem() + $index }}</td>
@@ -94,9 +131,6 @@
                         </table>
                     </div>
                 </div>
-                @if(method_exists($obats, 'links'))
-                    <div class="card-footer">{{ $obats->links() }}</div>
-                @endif
             </div>
         </div>
     </div>

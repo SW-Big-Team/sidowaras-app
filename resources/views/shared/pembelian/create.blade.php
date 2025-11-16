@@ -7,24 +7,35 @@
 
 @section('title', 'Tambah Pembelian')
 
+@section('breadcrumb')
+<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('pembelian.index') }}">Pembelian</a></li>
+    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tambah Pembelian</li>
+</ol>
+@endsection
+
 @section('content')
-<div class="container-fluid mt-4 px-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0"><i class="fas fa-shopping-cart"></i> Tambah Pembelian</h4>
-        <a href="{{ route('pembelian.index') }}" class="btn btn-sm btn-secondary">
-            <i class="fas fa-arrow-left"></i> Kembali
+<div class="container-fluid py-4">
+    <x-content-header title="Tambah Pembelian Baru" subtitle="Form untuk menambahkan data pembelian obat dari supplier">
+        <a href="{{ route('pembelian.index') }}" class="btn btn-outline-secondary mb-0">
+            <i class="material-symbols-rounded text-sm me-1">arrow_back</i> Kembali
         </a>
-    </div>
+    </x-content-header>
 
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show">
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            <strong>Error!</strong>
-            <ul class="mb-0 mt-2">
-                @foreach($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
+            <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
+            <span class="alert-text">
+                <strong>Error!</strong> Terdapat kesalahan dalam pengisian form:
+                <ul class="mb-0 mt-2">
+                    @foreach($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     @endif
 
@@ -36,14 +47,18 @@
                 <h6 class="mb-0"><i class="fas fa-file-invoice"></i> Informasi Pembelian</h6>
             </div>
             <div class="card-body p-3">
-                <div class="row g-2">
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">No Faktur</label>
-                        <input type="text" name="no_faktur" class="form-control form-control-sm" value="{{ old('no_faktur') }}" placeholder="Auto">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label>No Faktur</label>
+                            <input type="text" name="no_faktur" class="form-control" value="{{ old('no_faktur') }}" placeholder="Auto generate">
+                        </div>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">Tanggal <span class="text-danger">*</span></label>
-                        <input type="datetime-local" name="tgl_pembelian" class="form-control form-control-sm" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label>Tanggal <span class="text-danger">*</span></label>
+                            <input type="datetime-local" name="tgl_pembelian" class="form-control" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
+                        </div>
                     </div>
                     <div class="col-md-3 col-6">
                         <label class="form-label small mb-1">Pembayaran <span class="text-danger">*</span></label>
@@ -53,20 +68,26 @@
                             <option value="termin" @selected(old('metode_pembayaran') === 'termin')>Termin</option>
                         </select>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">Total Harga</label>
-                        <input type="text" id="total_harga_display" class="form-control form-control-sm bg-light fw-bold text-success" value="Rp 0" readonly>
-                        <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
+                    <div class="col-md-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label>Total Harga</label>
+                            <input type="text" id="total_harga_display" class="form-control fw-bold text-success" value="Rp 0" readonly>
+                            <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
+                        </div>
                     </div>
                 </div>
-                <div class="row g-2 mt-1">
-                    <div class="col-md-6 col-12">
-                        <label class="form-label small mb-1">Nama Pengirim <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_pengirim" class="form-control form-control-sm" value="{{ old('nama_pengirim') }}" required>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-static mb-3">
+                            <label>Nama Pengirim <span class="text-danger">*</span></label>
+                            <input type="text" name="nama_pengirim" class="form-control" value="{{ old('nama_pengirim') }}" required>
+                        </div>
                     </div>
-                    <div class="col-md-6 col-12">
-                        <label class="form-label small mb-1">No Telepon Pengirim</label>
-                        <input type="text" name="no_telepon_pengirim" class="form-control form-control-sm" value="{{ old('no_telepon_pengirim') }}">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-static mb-3">
+                            <label>No Telepon Pengirim</label>
+                            <input type="text" name="no_telepon_pengirim" class="form-control" value="{{ old('no_telepon_pengirim') }}" placeholder="Opsional">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,15 +235,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         Hapus
                     </button>
                 </div>
-                <div class="card-body p-2">
-                    <div class="mb-2">
-                        <label class="form-label small mb-1">Pilih Obat <span class="text-danger">*</span></label>
-                        <select name="obat[${index}][obat_id]" class="form-select form-select-sm" required>
+                <div class="card-body p-3">
+                    <div class="input-group input-group-static mb-3">
+                        <label>Pilih Obat <span class="text-danger">*</span></label>
+                        <select name="obat[${index}][obat_id]" class="form-control" required>
                             ${optionsHtml}
                         </select>
                     </div>
                     
-                    <div class="row g-2">
+                    <div class="row">
                         <div class="col-6">
                             <label class="form-label small mb-1">Harga Beli <span class="text-danger">*</span></label>
                             <input type="text" class="form-control form-control-sm harga-beli-display" required placeholder="Rp 0">
@@ -235,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     
-                    <div class="row g-2 mt-1">
+                    <div class="row">
                         <div class="col-6">
                             <label class="form-label small mb-1">Jumlah <span class="text-danger">*</span></label>
                             <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control form-control-sm jumlah-masuk" required min="1" value="${data.jumlah_masuk || 1}">
@@ -246,9 +267,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     
-                    <div class="mt-2">
-                        <label class="form-label small mb-1">Subtotal</label>
-                        <input type="text" class="form-control form-control-sm subtotal bg-light fw-bold text-success" readonly value="Rp 0">
+                    <div class="input-group input-group-static mb-0">
+                        <label>Subtotal</label>
+                        <input type="text" class="form-control subtotal fw-bold text-success" readonly value="Rp 0">
                     </div>
                 </div>
             </div>
@@ -274,7 +295,19 @@ document.addEventListener('DOMContentLoaded', function() {
             hitungTotal();
             updateObatNumbers();
         } else {
-            alert('Minimal harus ada 1 obat dalam pembelian!');
+            // Use Material Design alert
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-4';
+            alert.style.zIndex = '9999';
+            alert.innerHTML = `
+                <span class="alert-icon"><i class="material-symbols-rounded">warning</i></span>
+                <span class="alert-text">Minimal harus ada 1 obat dalam pembelian!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
         }
     };
 

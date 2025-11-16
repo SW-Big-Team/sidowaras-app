@@ -52,17 +52,18 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Kandungan (bisa lebih dari satu)</label>
-            <select name="kandungan_id[]" class="form-select" multiple>
+            <label class="form-label">Kandungan Obat <small class="text-muted">(bisa lebih dari satu)</small></label>
+            <select name="kandungan_id[]" id="kandunganSelectEdit" class="form-select" multiple>
                 @php
                     $selectedKandungan = is_array($obat->kandungan_id) ? $obat->kandungan_id : json_decode($obat->kandungan_id, true);
                 @endphp
                 @foreach($kandungan as $k)
                     <option value="{{ $k->id }}" {{ in_array($k->id, old('kandungan_id', $selectedKandungan ?? [])) ? 'selected' : '' }}>
-                        {{ $k->nama_kandungan }} ({{ $k->dosis_kandungan }})
+                        {{ $k->nama_kandungan_text }} ({{ $k->dosis_kandungan }})
                     </option>
                 @endforeach
             </select>
+            <small class="text-muted">Ketik untuk mencari kandungan.</small>
         </div>
 
         <div class="mb-3">
@@ -94,4 +95,18 @@
         <a href="{{ route('admin.obat.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#kandunganSelectEdit').select2({
+        placeholder: 'Pilih kandungan obat (bisa lebih dari satu)',
+        allowClear: true,
+        width: '100%'
+    });
+});
+</script>
 @endsection
