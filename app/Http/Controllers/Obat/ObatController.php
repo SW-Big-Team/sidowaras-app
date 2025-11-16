@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pembelian;   
-use App\Models\StokBatch; 
+use App\Models\StokBatch;
+use Inertia\Inertia;
 
 class ObatController extends Controller
 {
@@ -87,7 +88,6 @@ class ObatController extends Controller
             'kandungan_id' => 'nullable|array',
             'kandungan_id.*' => 'exists:kandungan_obat,id',
             'stok_minimum' => 'nullable|integer|min:0',
-            'stok_minimum' => 'nullable|integer|min:0',
             'is_racikan' => 'nullable|boolean',
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
@@ -100,20 +100,14 @@ class ObatController extends Controller
             'nama_pengirim' => 'required|string|max:100',
         ]);
     
-    
         DB::beginTransaction();
         try {
-            // 1. Simpan obat
             $obat = Obat::create([
                 'uuid' => Str::uuid(),
                 'nama_obat' => $request->nama_obat,
                 'kode_obat' => 'OBAT-' . strtoupper(Str::random(6)),
-                'kode_obat' => 'OBAT-' . strtoupper(Str::random(6)),
                 'kategori_id' => $request->kategori_id,
                 'satuan_obat_id' => $request->satuan_obat_id,
-                'kandungan_id' => $request->kandungan_id,
-                'stok_minimum' => $request->stok_minimum ?? 10,
-                'is_racikan' => false,
                 'kandungan_id' => $request->kandungan_id,
                 'stok_minimum' => $request->stok_minimum ?? 10,
                 'is_racikan' => false,
@@ -122,36 +116,11 @@ class ObatController extends Controller
                 'deskripsi' => $request->deskripsi,
             ]);
     
-            // 2. Simpan pembelian
-            $pembelian = Pembelian::create([
-                'uuid' => Str::uuid(),
-                'no_faktur' => 'BELI-' . now()->format('ymd') . Str::random(6),
-                'nama_pengirim' => $request->nama_pengirim,
-                'metode_pembayaran' => 'tunai',
-                'tgl_pembelian' => now(),
-                'total_harga' => $request->harga_beli * $request->stok_awal,
-                'user_id' => auth()->id(),
-            ]);
-    
-            // 3. Simpan stok batch
-            StokBatch::create([
-                'uuid' => Str::uuid(),
-                'obat_id' => $obat->id,
-                'pembelian_id' => $pembelian->uuid,
-                'no_batch' => 'BATCH-' . now()->format('ymd') . Str::random(5),
-                'harga_beli' => $request->harga_beli,
-                'harga_jual' => $request->harga_jual,
-                'jumlah_masuk' => $request->stok_awal,
-                'sisa_stok' => $request->stok_awal,
-                'tgl_kadaluarsa' => $request->tgl_kadaluarsa,
-            ]);
-    
             DB::commit();
-            return redirect()->route('karyawan.stock.index')
-                             ->with('success', 'Obat dan stok awal berhasil ditambahkan.');
+            return redirect()->route('admin.obat.index')
+                             ->with('success', 'Obat berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
     }
@@ -229,15 +198,6 @@ class ObatController extends Controller
             DB::rollBack();
             return back()->with('error', 'Gagal menghapus data obat: ' . $e->getMessage());
         }
-    }
-
-    public function createForKaryawan()
-    {
-    $kategori = KategoriObat::all();
-    $satuan = SatuanObat::all();
-    $kandungan = KandunganObat::all();
-
-    return view('karyawan.inventory.tambah', compact('kategori', 'satuan', 'kandungan'));
     }
     
 }

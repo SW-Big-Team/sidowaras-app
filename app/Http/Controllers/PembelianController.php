@@ -31,11 +31,26 @@ class PembelianController extends Controller
             'store',
             'destroy'
         ]);
+        $this->middleware('auth');
+
+        $this->middleware('role:Admin,Karyawan,Kasir')->only([
+            'index',
+            'show',
+            'edit',
+            'update'
+        ]);
+
+        $this->middleware('role:Admin')->only([
+            'create',
+            'store',
+            'destroy'
+        ]);
     }
 
     public function index()
     {
         $pembelian = Pembelian::with('user')->orderByDesc('created_at')->paginate(15);
+        return view('shared.pembelian.index', compact('pembelian'));
         return view('shared.pembelian.index', compact('pembelian'));
     }
 
@@ -43,11 +58,13 @@ class PembelianController extends Controller
     {
         $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
         return view('shared.pembelian.create', compact('obatList'));
+        return view('shared.pembelian.create', compact('obatList'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur',
             'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur',
             'nama_pengirim' => 'required|string|max:100',
             'no_telepon_pengirim' => 'nullable|string|max:20',
@@ -77,13 +94,16 @@ class PembelianController extends Controller
         try {
             $tglPembelian = date('Y-m-d H:i:s', strtotime($request->tgl_pembelian));
 
+            // Create pembelian record
             $pembelian = Pembelian::create([
                 'uuid' => (string) Str::uuid(),
+                'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
                 'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
                 'nama_pengirim' => $request->nama_pengirim,
                 'no_telepon_pengirim' => $request->no_telepon_pengirim,
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,
+                'total_harga' => $request->total_harga,
                 'total_harga' => $request->total_harga,
                 'user_id' => Auth::id(),
             ]);
@@ -131,8 +151,10 @@ class PembelianController extends Controller
 
             DB::commit();
             return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dengan ' . count($request->obat) . ' item obat berhasil disimpan!');
+            return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dengan ' . count($request->obat) . ' item obat berhasil disimpan!');
         } catch (\Throwable $e) {
             DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()])->withInput();
             return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()])->withInput();
         }
     }

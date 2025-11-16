@@ -31,8 +31,6 @@ Auth::routes([
     'register' => false
 ]);
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('/karyawan/scanner', function () {
     return Inertia::render('Karyawan/Scanner');
 })->name('scanner');

@@ -3,24 +3,25 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Kasir\CartApprovalController;
 use App\Http\Controllers\Kasir\TransaksiController;
+use App\Http\Controllers\Shared\StokController;
 
 Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')->group(function () {
     Route::get('/dashboard', fn() => view('kasir.index'))->name('dashboard');
-    
-    // Transaksi / POS
+
+    // Cart Approval
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/approval', [CartApprovalController::class, 'index'])->name('approval');
+        Route::get('/{cart}/approve', [CartApprovalController::class, 'showPayment'])->name('showPayment');
+        Route::post('/process-payment', [CartApprovalController::class, 'processPayment'])->name('processPayment');
+        Route::post('/{cart}/reject', [CartApprovalController::class, 'reject'])->name('reject');
+    });
+
+    // Riwayat Transaksi
     Route::prefix('transaksi')->name('transaksi.')->group(function () {
         Route::get('/riwayat', [TransaksiController::class, 'index'])->name('riwayat');
         Route::get('/{transaksi}', [TransaksiController::class, 'show'])->name('show');
     });
 
-    // Cart Approval
-    Route::prefix('cart')->name('cart.')->group(function () {
-        Route::get('/approval', [CartApprovalController::class, 'index'])->name('approval');
-        Route::post('/{cart}/approve', [CartApprovalController::class, 'approve'])->name('approve');
-        Route::post('/{cart}/reject', [CartApprovalController::class, 'reject'])->name('reject');
-    });
-
-    // Pembelian Obat
     // Laporan
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/transaksi', fn() => view('kasir.laporan.transaksi'))->name('transaksi');

@@ -17,9 +17,9 @@
         </a>
       </li>
 
-      {{-- Manajemen Obat --}}
+      <!-- Manajemen Stok -->
       <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Obat</h6>
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Manajemen Stok</h6>
       </li>
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('stok.index') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('stok.index') }}">
@@ -38,95 +38,17 @@
       <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Transaksi</h6>
       </li>
-
-      {{-- Pembelian --}}
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Pembelian</span>
-          </a>
-      </li>
-
-      {{-- POS / Transaksi --}}
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('kasir.cart.approval') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.cart.approval') }}">
               <i class="material-symbols-rounded">shopping_cart</i>
               <span class="nav-link-text ms-1">Approval Cart</span>
           </a>
       </li>
-
-      {{-- POS / Transaksi --}}
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('kasir.transaksi.*') ? 'active bg-gradient-success text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.pos') }}">
-          <i class="material-symbols-rounded opacity-5">point_of_sale</i>
-          <span class="nav-link-text ms-1">POS / Transaksi</span>
-        </a>
-      </li>
-      {{-- Pembelian --}}
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Pembelian</span>
-          </a>
-      </li>
-
-
-
-      {{-- Cart Approval --}}
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('kasir.cart.*') ? 'active bg-gradient-warning text-white' : 'text-dark' }}" href="{{ route('kasir.cart.approval') }}">
-          <i class="material-symbols-rounded opacity-5">approval</i>
-          <span class="nav-link-text ms-1">Cart Approval</span>
-          <span class="badge badge-sm bg-gradient-warning ms-auto">8</span>
-        </a>
-      </li>
-
-      {{-- Laporan --}}
-      <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Laporan</h6>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('kasir.laporan.transaksi') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.laporan.transaksi') }}">
-          <i class="material-symbols-rounded opacity-5">assessment</i>
-          <span class="nav-link-text ms-1">Laporan Transaksi</span>
-        </a>
-      </li>
-
       <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
-              <i class="material-symbols-rounded opacity-5">receipt_long</i>
+              <i class="material-symbols-rounded">receipt_long</i>
               <span class="nav-link-text ms-1">Riwayat Transaksi</span>
           </a>
-          <a class="nav-link {{ request()->routeIs('kasir.transaksi.riwayat') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('kasir.transaksi.riwayat') }}">
-              <i class="material-symbols-rounded opacity-5">receipt_long</i>
-              <span class="nav-link-text ms-1">Riwayat Transaksi</span>
-          </a>
-      </li>
-
-      {{-- Notifikasi --}}
-      <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Notifikasi</h6>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
-          <i class="material-symbols-rounded opacity-5">inventory</i>
-          <span class="nav-link-text ms-1">Stok Minimum</span>
-          <span class="badge badge-sm bg-gradient-danger ms-auto">12</span>
-        </a>
-      </li>
-
-      {{-- Account --}}
-      <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Akun</h6>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="#">
-          <i class="material-symbols-rounded opacity-5">person</i>
-          <span class="nav-link-text ms-1">Profil Saya</span>
-        </a>
       </li>
 
       <li class="nav-item">
