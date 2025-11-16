@@ -4,17 +4,23 @@
 @endphp
 
 @extends($layoutPath)
-
 @section('title', 'Tambah Obat')
 
+@section('breadcrumb')
+<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.obat.index') }}">Manajemen Obat</a></li>
+    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.obat.index') }}">Data Obat</a></li>
+    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tambah Obat</li>
+</ol>
+@endsection
+
 @section('content')
-<div class="container-fluid mt-4 px-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0"><i class="fas fa-pills"></i> Tambah Obat</h4>
-        <a href="{{ route('admin.obat.index') }}" class="btn btn-sm btn-secondary">
-            <i class="fas fa-arrow-left"></i> Kembali
+<div class="container-fluid py-4">
+    <x-content-header title="Tambah Data Obat Baru" subtitle="Form untuk menambahkan obat baru ke dalam sistem">
+        <a href="{{ route('admin.obat.index') }}" class="btn btn-outline-secondary mb-0">
+            <i class="material-symbols-rounded text-sm me-1">arrow_back</i> Kembali
         </a>
-    </div>
+    </x-content-header>
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show">
@@ -103,9 +109,7 @@
                                 <i class="material-symbols-rounded">qr_code_scanner</i>
                             </button>
                         </div>
-                        <small class="text-muted">Klik ikon QR untuk membuka pemindai.</small>
-                    </div>
-                </div>
+                    @endif
 
                 <div class="mt-2">
                     <label class="form-label small mb-1">Deskripsi</label>
@@ -113,33 +117,35 @@
                 </div>
             </div>
         </div>
-
-        <div class="text-end mb-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Simpan
-            </button>
-        </div>
-    </form>
+    </div>
 </div>
 
 <!-- Modal: QR Code Scanner -->
 <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-labelledby="qrScannerLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="qrScannerLabel"><i class="fas fa-qrcode"></i> Pindai QR/Barcode</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-gradient-primary">
+                <h5 class="modal-title text-white" id="qrScannerLabel">
+                    <i class="material-symbols-rounded me-2">qr_code_scanner</i>
+                    Pindai QR/Barcode
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div id="qr-reader" style="width: 100%;"></div>
-                <div class="small text-muted mt-2">Berikan izin kamera. Arahkan kamera ke QR/Barcode.</div>
+                <div id="qr-reader" style="width: 100%; border-radius: 0.5rem; overflow: hidden;"></div>
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="material-symbols-rounded me-2">info</i>
+                    <span class="text-sm">Berikan izin kamera dan arahkan ke QR/Barcode yang ingin dipindai</span>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-outline-secondary mb-0" data-bs-dismiss="modal">
+                    <i class="material-symbols-rounded me-1">close</i> Tutup
+                </button>
             </div>
         </div>
     </div>
-    </div>
+</div>
 
 <style>
     .form-label.small { font-size: 0.85rem; font-weight: 600; color: #495057; }
@@ -190,69 +196,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const barcodeInput = document.getElementById('barcodeInput');
     const btnOpenQr = document.getElementById('btnOpenQr');
-    const qrModalEl = document.getElementById('qrScannerModal');
+    const barcodeInput = document.getElementById('barcodeInput');
+    const qrScannerModal = new bootstrap.Modal(document.getElementById('qrScannerModal'));
     let html5QrCode = null;
-    let currentCameraId = null;
+
+    if (btnOpenQr) {
+        btnOpenQr.addEventListener('click', function() {
+            qrScannerModal.show();
+            startScanner();
+        });
+    }
+
+    document.getElementById('qrScannerModal').addEventListener('hidden.bs.modal', function() {
+        stopScanner();
+    });
 
     function startScanner() {
-        if (!html5QrCode) {
-            html5QrCode = new Html5Qrcode('qr-reader');
+        if (html5QrCode === null) {
+            html5QrCode = new Html5Qrcode("qr-reader");
         }
 
-        Html5Qrcode.getCameras().then(cameras => {
-            if (!cameras || cameras.length === 0) {
-                alert('Kamera tidak ditemukan.');
-                return;
+        html5QrCode.start(
+            { facingMode: "environment" },
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            },
+            (decodedText) => {
+                barcodeInput.value = decodedText;
+                stopScanner();
+                qrScannerModal.hide();
             }
-            const backCamera = cameras.find(c => /back|rear|environment/i.test(c.label));
-            currentCameraId = (backCamera ? backCamera.id : cameras[0].id);
-
-            const config = { fps: 10, qrbox: { width: 300, height: 200 } };
-            html5QrCode.start(
-                { deviceId: { exact: currentCameraId } },
-                config,
-                onScanSuccess,
-                onScanError
-            ).catch(err => {
-                console.error(err);
-                alert('Gagal memulai kamera: ' + err);
-            });
-        }).catch(err => {
-            console.error(err);
-            alert('Tidak bisa mengakses kamera: ' + err);
+        ).catch((err) => {
+            console.error('Error starting scanner:', err);
         });
     }
 
     function stopScanner() {
         if (html5QrCode && html5QrCode.isScanning) {
             html5QrCode.stop().then(() => {
-                // cleared
-            }).catch(err => console.error('Stop scan error:', err));
+                html5QrCode.clear();
+            }).catch((err) => {
+                console.error('Error stopping scanner:', err);
+            });
         }
     }
-
-    function onScanSuccess(decodedText) {
-        barcodeInput.value = decodedText;
-        const modal = bootstrap.Modal.getInstance(qrModalEl);
-        if (modal) modal.hide();
-    }
-
-    function onScanError(errorMessage) {
-        // ignore frequent scan errors to avoid noise
-    }
-
-    btnOpenQr.addEventListener('click', function() {
-        const modal = new bootstrap.Modal(qrModalEl);
-        modal.show();
-    });
-
-    qrModalEl.addEventListener('shown.bs.modal', function () {
-        startScanner();
-    });
-
-    qrModalEl.addEventListener('hidden.bs.modal', function () {
-        stopScanner();
-    });
 });
 </script>
+@endpush
 @endsection

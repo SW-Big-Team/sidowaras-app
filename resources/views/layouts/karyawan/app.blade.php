@@ -1,3 +1,9 @@
+<!--
+=========================================================
+* Sidowaras App - Professional Karyawan Dashboard
+* Modern Medical/Healthcare Theme
+=========================================================
+-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,10 +26,85 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
   
+  <style>
+    /* Custom Professional Styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    }
+    
+    /* Sidebar Toggle Styles */
+    .sidenav {
+      z-index: 1050;
+      transition: transform 0.3s ease, width 0.3s ease;
+    }
+    
+    .g-sidenav-hidden .sidenav {
+      transform: translateX(-100%);
+    }
+    
+    @media (min-width: 1200px) {
+      .g-sidenav-hidden .main-content {
+        margin-left: 0 !important;
+      }
+      
+      .g-sidenav-show .main-content {
+        margin-left: 17.125rem;
+      }
+    }
+    
+    .main-content {
+      background: transparent;
+      transition: margin-left 0.3s ease;
+    }
+    
+    .card {
+      border: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+    }
+    
+    .page-header {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      color: white;
+    }
+    
+    /* Sidebar Hover Effects */
+    .sidenav .nav-link {
+      transition: all 0.2s ease;
+      border-radius: 0.5rem;
+      margin: 0 0.5rem;
+    }
+    
+    .sidenav .nav-link:not(.active):hover {
+      background-color: #f8f9fa;
+      transform: translateX(5px);
+    }
+  </style>
+  
   @stack('styles')
 </head>
 
-<body class="g-sidenav-show bg-gray-100">
+<body class="g-sidenav-show">
   
   @include('layouts.karyawan.partials.sidebar')
   
@@ -31,7 +112,7 @@
     
     @include('layouts.karyawan.partials.navbar')
     
-    <div class="container-fluid py-2">
+    <div class="container-fluid py-4">
       @yield('content')
       
       @include('layouts.karyawan.partials.footer')
@@ -48,7 +129,16 @@
   <script src="{{ asset('assets/js/material-dashboard.min.js?v=3.2.0') }}"></script>
   
   @stack('scripts')
+  
   <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+    
     setInterval(() => {
         fetch("/session/check")
             .then(res => res.json())

@@ -7,24 +7,35 @@
 
 @section('title', 'Tambah Pembelian')
 
+@section('breadcrumb')
+<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('pembelian.index') }}">Pembelian</a></li>
+    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tambah Pembelian</li>
+</ol>
+@endsection
+
 @section('content')
-<div class="container-fluid mt-4 px-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0"><i class="fas fa-shopping-cart"></i> Tambah Pembelian</h4>
-        <a href="{{ route('pembelian.index') }}" class="btn btn-sm btn-secondary">
-            <i class="fas fa-arrow-left"></i> Kembali
+<div class="container-fluid py-4">
+    <x-content-header title="Tambah Pembelian Baru" subtitle="Form untuk menambahkan data pembelian obat dari supplier">
+        <a href="{{ route('pembelian.index') }}" class="btn btn-outline-secondary mb-0">
+            <i class="material-symbols-rounded text-sm me-1">arrow_back</i> Kembali
         </a>
-    </div>
+    </x-content-header>
 
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show">
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            <strong>Error!</strong>
-            <ul class="mb-0 mt-2">
-                @foreach($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
+            <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
+            <span class="alert-text">
+                <strong>Error!</strong> Terdapat kesalahan dalam pengisian form:
+                <ul class="mb-0 mt-2">
+                    @foreach($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     @endif
 
@@ -32,53 +43,83 @@
         @csrf
 
         <!-- SECTION 1: INFORMASI PEMBELIAN -->
-        <div class="card shadow-sm mb-3">
-            <div class="card-header bg-primary text-white py-2">
-                <h6 class="mb-0"><i class="fas fa-file-invoice"></i> Informasi Pembelian</h6>
-            </div>
-            <div class="card-body p-3">
-                <div class="row g-2">
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">No Faktur</label>
-                        <input type="text" name="no_faktur" class="form-control form-control-sm" value="{{ old('no_faktur') }}" placeholder="Auto">
+        <div class="card mb-4">
+            <div class="card-header p-3 pb-0">
+                <div class="d-flex align-items-center">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md me-3">
+                        <i class="material-symbols-rounded opacity-10 text-lg">receipt_long</i>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">Tanggal <span class="text-danger">*</span></label>
-                        <input type="datetime-local" name="tgl_pembelian" class="form-control form-control-sm" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">Pembayaran <span class="text-danger">*</span></label>
-                        <select name="metode_pembayaran" class="form-select form-select-sm" required>
-                            <option value="tunai" @selected(old('metode_pembayaran', 'tunai') === 'tunai')>Tunai</option>
-                            <option value="non tunai" @selected(old('metode_pembayaran') === 'non tunai')>Non Tunai</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label small mb-1">Total Harga</label>
-                        <input type="text" id="total_harga_display" class="form-control form-control-sm bg-light fw-bold text-success" value="Rp 0" readonly>
-                        <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
+                    <div>
+                        <h6 class="mb-0">Informasi Pembelian</h6>
+                        <p class="text-sm text-secondary mb-0">Data dasar transaksi pembelian</p>
                     </div>
                 </div>
-                <div class="row g-2 mt-1">
-                    <div class="col-md-6 col-12">
-                        <label class="form-label small mb-1">Nama Pengirim <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_pengirim" class="form-control form-control-sm" value="{{ old('nama_pengirim') }}" required>
+            </div>
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label>No Faktur</label>
+                            <input type="text" name="no_faktur" class="form-control" value="{{ old('no_faktur') }}" placeholder="Auto generate">
+                        </div>
                     </div>
-                    <div class="col-md-6 col-12">
-                        <label class="form-label small mb-1">No Telepon Pengirim</label>
-                        <input type="text" name="no_telepon_pengirim" class="form-control form-control-sm" value="{{ old('no_telepon_pengirim') }}">
+                    <div class="col-md-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label>Tanggal <span class="text-danger">*</span></label>
+                            <input type="datetime-local" name="tgl_pembelian" class="form-control" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label>Metode Pembayaran <span class="text-danger">*</span></label>
+                            <select name="metode_pembayaran" class="form-control" required>
+                                <option value="tunai" @selected(old('metode_pembayaran', 'tunai') === 'tunai')>Tunai</option>
+                                <option value="non tunai" @selected(old('metode_pembayaran') === 'non tunai')>Non Tunai</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label>Total Harga</label>
+                            <input type="text" id="total_harga_display" class="form-control fw-bold text-success" value="Rp 0" readonly>
+                            <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-static mb-3">
+                            <label>Nama Pengirim <span class="text-danger">*</span></label>
+                            <input type="text" name="nama_pengirim" class="form-control" value="{{ old('nama_pengirim') }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group input-group-static mb-3">
+                            <label>No Telepon Pengirim</label>
+                            <input type="text" name="no_telepon_pengirim" class="form-control" value="{{ old('no_telepon_pengirim') }}" placeholder="Opsional">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- SECTION 2: DETAIL OBAT -->
-        <div class="card shadow-sm mb-3">
-            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-2">
-                <h6 class="mb-0"><i class="fas fa-pills"></i> Detail Obat</h6>
-                <button type="button" class="btn btn-sm btn-light" id="btnTambahObat">
-                    <i class="fas fa-plus"></i> Tambah Obat
-                </button>
+        <div class="card mb-4">
+            <div class="card-header p-3 pb-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md me-3">
+                            <i class="material-symbols-rounded opacity-10 text-lg">medication</i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Detail Obat</h6>
+                            <p class="text-sm text-secondary mb-0">Daftar obat yang dibeli</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn bg-gradient-primary mb-0" id="btnTambahObat">
+                        <i class="material-symbols-rounded text-sm me-1">add</i> Tambah Obat
+                    </button>
+                </div>
             </div>
             <div class="card-body p-3">
                 <div class="row g-3" id="containerObat">
@@ -87,9 +128,12 @@
             </div>
         </div>
 
-        <div class="text-end mb-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Simpan Pembelian
+        <div class="d-flex justify-content-end gap-2 mb-4">
+            <a href="{{ route('pembelian.index') }}" class="btn btn-outline-secondary mb-0">
+                <i class="material-symbols-rounded text-sm me-1">close</i> Batal
+            </a>
+            <button type="submit" class="btn bg-gradient-primary mb-0">
+                <i class="material-symbols-rounded text-sm me-1">save</i> Simpan Pembelian
             </button>
         </div>
     </form>
@@ -101,26 +145,12 @@
     }
     .obat-card .card {
         height: 100%;
-        border: 2px solid #e9ecef;
+        border: 1px solid #d2d6da;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .obat-card:hover .card {
-        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
-    }
-    .obat-card .card-header {
-        background: #764ba2;
-        padding: 0.5rem 0.75rem;
-    }
-    .form-label.small {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #495057;
-    }
-    .form-control-sm, .form-select-sm {
-        font-size: 0.85rem;
-    }
-    .badge-number {
-        font-size: 0.9rem;
-        padding: 0.35rem 0.65rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
     }
 </style>
 
@@ -162,47 +192,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
         col.innerHTML = `
             <div class="card">
-                <div class="card-header text-white d-flex justify-content-between align-items-center">
-                    <span class="badge bg-white text-dark badge-number">Obat #${index + 1}</span>
-                    <button type="button" class="btn btn-sm btn-danger btn-remove" onclick="removeObatCard(this)" style="padding: 0.15rem 0.4rem;">
-                        Hapus
-                    </button>
+                <div class="card-header p-3 pb-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="icon icon-sm icon-shape bg-gradient-warning shadow text-center border-radius-md me-2">
+                                <i class="material-symbols-rounded opacity-10 text-sm">pill</i>
+                            </div>
+                            <h6 class="mb-0">Obat #${index + 1}</h6>
+                        </div>
+                        <button type="button" class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 btn-sm" onclick="removeObatCard(this)" title="Hapus">
+                            <i class="material-symbols-rounded text-sm">close</i>
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body p-2">
-                    <div class="mb-2">
-                        <label class="form-label small mb-1">Pilih Obat <span class="text-danger">*</span></label>
-                        <select name="obat[${index}][obat_id]" class="form-select form-select-sm" required>
+                <div class="card-body p-3">
+                    <div class="input-group input-group-static mb-3">
+                        <label>Pilih Obat <span class="text-danger">*</span></label>
+                        <select name="obat[${index}][obat_id]" class="form-control" required>
                             ${optionsHtml}
                         </select>
                     </div>
                     
-                    <div class="row g-2">
+                    <div class="row">
                         <div class="col-6">
-                            <label class="form-label small mb-1">Harga Beli <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-sm harga-beli-display" required placeholder="Rp 0" data-index="${index}">
-                            <input type="hidden" name="obat[${index}][harga_beli]" class="harga-beli" value="0">
+                            <div class="input-group input-group-static mb-3">
+                                <label>Harga Beli <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control harga-beli-display" required placeholder="Rp 0" data-index="${index}">
+                                <input type="hidden" name="obat[${index}][harga_beli]" class="harga-beli" value="0">
+                            </div>
                         </div>
                         <div class="col-6">
-                            <label class="form-label small mb-1">Harga Jual <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-sm harga-jual-display" required placeholder="Rp 0" data-index="${index}">
-                            <input type="hidden" name="obat[${index}][harga_jual]" class="harga-jual" value="0">
-                        </div>
-                    </div>
-                    
-                    <div class="row g-2 mt-1">
-                        <div class="col-6">
-                            <label class="form-label small mb-1">Jumlah <span class="text-danger">*</span></label>
-                            <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control form-control-sm jumlah-masuk" required min="1" value="1" onchange="hitungTotal()">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label small mb-1">Kadaluarsa <span class="text-danger">*</span></label>
-                            <input type="date" name="obat[${index}][tgl_kadaluarsa]" class="form-control form-control-sm" required>
+                            <div class="input-group input-group-static mb-3">
+                                <label>Harga Jual <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control harga-jual-display" required placeholder="Rp 0" data-index="${index}">
+                                <input type="hidden" name="obat[${index}][harga_jual]" class="harga-jual" value="0">
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="mt-2">
-                        <label class="form-label small mb-1">Subtotal</label>
-                        <input type="text" class="form-control form-control-sm subtotal bg-light fw-bold text-success" readonly value="Rp 0">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group input-group-static mb-3">
+                                <label>Jumlah <span class="text-danger">*</span></label>
+                                <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control jumlah-masuk" required min="1" value="1" onchange="hitungTotal()">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group input-group-static mb-3">
+                                <label>Kadaluarsa <span class="text-danger">*</span></label>
+                                <input type="date" name="obat[${index}][tgl_kadaluarsa]" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group input-group-static mb-0">
+                        <label>Subtotal</label>
+                        <input type="text" class="form-control subtotal fw-bold text-success" readonly value="Rp 0">
                     </div>
                 </div>
             </div>
@@ -233,14 +278,26 @@ document.addEventListener('DOMContentLoaded', function() {
             hitungTotal();
             updateObatNumbers();
         } else {
-            alert('Minimal harus ada 1 obat dalam pembelian!');
+            // Use Material Design alert
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-4';
+            alert.style.zIndex = '9999';
+            alert.innerHTML = `
+                <span class="alert-icon"><i class="material-symbols-rounded">warning</i></span>
+                <span class="alert-text">Minimal harus ada 1 obat dalam pembelian!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
         }
     };
 
     function updateObatNumbers() {
         const cards = containerObat.querySelectorAll('.obat-card');
         cards.forEach((card, idx) => {
-            card.querySelector('.badge-number').textContent = `Obat #${idx + 1}`;
+            card.querySelector('h6').textContent = `Obat #${idx + 1}`;
         });
     }
 

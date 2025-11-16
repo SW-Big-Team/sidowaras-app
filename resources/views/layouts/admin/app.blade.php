@@ -1,6 +1,7 @@
 <!--
 =========================================================
-* Material Dashboard 3 - Laravel Layout
+* Sidowaras App - Professional Admin Dashboard
+* Modern Medical/Healthcare Theme
 =========================================================
 -->
 <!DOCTYPE html>
@@ -11,7 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
-  <title>@yield('title', 'Material Dashboard 3')</title>
+  <title>@yield('title', 'Admin Dashboard - Sidowaras App')</title>
   
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
@@ -25,10 +26,95 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
   
+  <style>
+    /* Custom Professional Styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+    
+    /* Sidebar Toggle Styles */
+    .sidenav {
+      z-index: 1050;
+      transition: transform 0.3s ease, width 0.3s ease;
+    }
+    
+    .g-sidenav-hidden .sidenav {
+      transform: translateX(-100%);
+    }
+    
+    @media (min-width: 1200px) {
+      .g-sidenav-hidden .main-content {
+        margin-left: 0 !important;
+      }
+      
+      .g-sidenav-show .main-content {
+        margin-left: 17.125rem;
+      }
+    }
+    
+    .main-content {
+      background: transparent;
+      transition: margin-left 0.3s ease;
+    }
+    
+    .card {
+      border: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(6, 182, 212, 0.3);
+    }
+    
+    .page-header {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      color: white;
+    }
+    
+    /* Sidebar Hover Effects */
+    .sidenav .nav-link {
+      transition: all 0.2s ease;
+      border-radius: 0.5rem;
+      margin: 0 0.5rem;
+    }
+    
+    .sidenav .nav-link:not(.active):hover {
+      background-color: #f8f9fa;
+    
+    /* Sidebar Hover Effects */
+    .sidenav .nav-link {
+      transition: all 0.2s ease;
+      border-radius: 0.5rem;
+      margin: 0 0.5rem;
+    }
+    
+    .sidenav .nav-link:not(.active):hover {
+      background-color: #f8f9fa;
+      transform: translateX(5px);
+    }
+  </style>
+  
   @stack('styles')
 </head>
 
-<body class="g-sidenav-show bg-gray-100">
+<body class="g-sidenav-show">
   
   @include('layouts.admin.partials.sidebar')
   
@@ -36,7 +122,7 @@
     
     @include('layouts.admin.partials.navbar')
     
-    <div class="container-fluid py-2">
+    <div class="container-fluid py-4">
       @yield('content')
       
       @include('layouts.admin.partials.footer')
