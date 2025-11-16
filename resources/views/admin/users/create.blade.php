@@ -121,16 +121,6 @@
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label text-sm font-weight-bold mb-3">Status Akun</label>
-                                <div class="form-check form-switch ps-0">
-                                    <input class="form-check-input ms-0" type="checkbox" name="is_active" value="1" checked id="isActiveSwitch">
-                                    <label class="form-check-label ms-3" for="isActiveSwitch">
-                                        <span class="text-sm">Aktifkan akun setelah dibuat</span>
-                                    </label>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Form Actions -->

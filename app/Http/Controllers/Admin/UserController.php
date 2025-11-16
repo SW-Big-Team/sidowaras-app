@@ -135,6 +135,42 @@ class UserController extends Controller
     }
 
     /**
+     * Toggle status aktif/tidak aktif pengguna.
+     */
+    public function toggleStatus($id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->id === Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak dapat mengubah status akun Anda sendiri.'
+            ], 403);
+        }
+
+        DB::beginTransaction();
+        try {
+            $user->is_active = !$user->is_active;
+            $user->save();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status user berhasil diubah.',
+                'is_active' => $user->is_active
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengubah status user: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Hapus pengguna.
      */
     public function destroy($id)

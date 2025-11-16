@@ -12,9 +12,14 @@
 @section('content')
 <div class="container-fluid py-4">
     <x-content-header title="Daftar User" subtitle="Kelola data pengguna dan akses sistem">
-        <a href="{{ route('admin.users.create') }}" class="btn bg-gradient-primary mb-0">
-            <i class="material-symbols-rounded text-sm me-1">add</i> Tambah User
-        </a>
+        <div class="d-flex justify-content-end gap-2">
+            <a href="{{ route('admin.shift.index') }}" class="btn bg-gradient-secondary mb-0">
+                <i class="material-symbols-rounded text-sm me-1">schedule</i> Shift
+            </a>
+            <a href="{{ route('admin.users.create') }}" class="btn bg-gradient-primary mb-0">
+                <i class="material-symbols-rounded text-sm me-1">add</i> Tambah User
+            </a>
+        </div>
     </x-content-header>
 
     @if (session('success'))
@@ -76,15 +81,22 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    @if($user->is_active)
-                                        <span class="badge badge-sm bg-gradient-success">
-                                            <i class="material-symbols-rounded text-xs me-1">check_circle</i>Aktif
-                                        </span>
-                                    @else
-                                        <span class="badge badge-sm bg-gradient-secondary">
-                                            <i class="material-symbols-rounded text-xs me-1">cancel</i>Tidak Aktif
-                                        </span>
-                                    @endif
+                                    <div class="form-check form-switch d-inline-block">
+                                        <input 
+                                            class="form-check-input status-switch" 
+                                            type="checkbox" 
+                                            data-user-id="{{ $user->id }}"
+                                            data-user-name="{{ $user->nama_lengkap }}"
+                                            {{ $user->is_active ? 'checked' : '' }}
+                                            {{ $user->id === Auth::id() ? 'disabled' : '' }}
+                                            id="status-switch-{{ $user->id }}"
+                                        >
+                                        <label class="form-check-label" for="status-switch-{{ $user->id }}">
+                                            <span class="text-sm">
+                                                {{ $user->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                                            </span>
+                                        </label>
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <x-action-buttons 
@@ -110,4 +122,67 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSwitches = document.querySelectorAll('.status-switch');
+    
+    statusSwitches.forEach(function(switchElement) {
+        switchElement.addEventListener('change', function() {
+            const userId = this.getAttribute('data-user-id');
+            const userName = this.getAttribute('data-user-name');
+            const isChecked = this.checked;
+            const switchElement = this;
+            const label = this.nextElementSibling.querySelector('span');
+            
+            // Disable switch during request
+            switchElement.disabled = true;
+            
+            // Get CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            // Make AJAX request
+            fetch(`/adminx/users/${userId}/toggle-status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Gagal mengubah status user');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Update label text
+                    label.textContent = data.is_active ? 'Aktif' : 'Tidak Aktif';
+                } else {
+                    // Revert switch state on error
+                    switchElement.checked = !isChecked;
+                    alert(data.message || 'Gagal mengubah status user');
+                }
+            })
+            .catch(error => {
+                // Revert switch state on error
+                switchElement.checked = !isChecked;
+                console.error('Error:', error);
+                alert(error.message || 'Terjadi kesalahan saat mengubah status user');
+            })
+            .finally(() => {
+                // Re-enable switch
+                switchElement.disabled = false;
+            });
+        });
+    });
+});
+</script>
+@endpush
 @endsection

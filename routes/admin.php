@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ShiftController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Obat\ObatController;
 use App\Http\Controllers\Obat\KategoriObatController;
@@ -85,8 +86,17 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/create', [UserController::class, 'create'])->name('create');
         Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::patch('/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+    // Manajemen Shift
+    Route::prefix('shift')->name('shift.')->group(function () {
+        Route::get('/', [ShiftController::class, 'index'])->name('index');
+        Route::post('/', [ShiftController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [ShiftController::class, 'edit'])->name('edit');
+        Route::delete('/{id}', [ShiftController::class, 'destroy'])->name('destroy');
     });
 });
