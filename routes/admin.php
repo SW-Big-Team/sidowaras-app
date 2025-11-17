@@ -10,6 +10,7 @@ use App\Http\Controllers\Obat\SatuanObatController;
 use App\Http\Controllers\Obat\KandunganObatController;
 use App\Http\Controllers\Admin\StokController;
 use App\Http\Controllers\Admin\TransaksiController;
+use App\Http\Controllers\Shared\StokOpnameController;
 
 Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->group(function () {
     Route::get('/dashboard', fn() => view('admin.index'))->name('dashboard');
@@ -67,10 +68,6 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
         return redirect()->route('pembelian.index');
     })->name('pembelian.index');
 
-    Route::get('/opname', function () {
-        return redirect()->route('opname.index');
-    })->name('opname.index');
-
     // Riwayat Transaksi & Laporan
     Route::prefix('transaksi')->name('transaksi.')->group(function () {
         Route::get('/riwayat', [TransaksiController::class, 'riwayat'])->name('riwayat');
@@ -98,5 +95,18 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
         Route::post('/', [ShiftController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [ShiftController::class, 'edit'])->name('edit');
         Route::delete('/{id}', [ShiftController::class, 'destroy'])->name('destroy');
+    });
+
+    // Approval Stok Opname
+    Route::prefix('stok-opname')->name('stokopname.')->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('admin.stokopname.pending');
+        })->name('index');
+        Route::get('/pending', [StokOpnameController::class, 'pending'])
+            ->name('pending');
+        Route::post('/{id}/approve', [StokOpnameController::class, 'approve'])
+            ->name('approve');
+        Route::post('/{id}/reject', [StokOpnameController::class, 'reject'])
+            ->name('reject');
     });
 });

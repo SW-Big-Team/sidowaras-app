@@ -40,13 +40,23 @@
           </a>
       </li>
       <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('pembelian.index') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
+          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
              href="{{ route('pembelian.index') }}"
-             style="border-radius: 0.5rem; margin: 0.25rem 0.75rem; {{ request()->routeIs('pembelian.index') ? 'background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);' : '' }}">
+             style="border-radius: 0.5rem; margin: 0.25rem 0.75rem; {{ request()->routeIs('pembelian.*') ? 'background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);' : '' }}">
             <div class="icon icon-sm shadow-sm border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;">
               <i class="material-symbols-rounded" style="font-size: 1.25rem; color: #22c55e;">shopping_cart</i>
             </div>
             <span class="nav-link-text ms-1">Pembelian Obat</span>
+          </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('stokopname.*') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
+             href="{{ route('stokopname.index') }}"
+             style="border-radius: 0.5rem; margin: 0.25rem 0.75rem; {{ request()->routeIs('stokopname.*') ? 'background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);' : '' }}">
+            <div class="icon icon-sm shadow-sm border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;">
+              <i class="material-symbols-rounded" style="font-size: 1.25rem; color: #22c55e;">fact_check</i>
+            </div>
+            <span class="nav-link-text ms-1">Stock Opname</span>
           </a>
       </li>
 
