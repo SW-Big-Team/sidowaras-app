@@ -1,211 +1,116 @@
 @extends('layouts.karyawan.app')
 
+@section('title', 'Dashboard Karyawan')
+@section('breadcrumb', 'Dashboard / Ringkasan')
+
 @section('content')
 <div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <h4 class="text-dark font-weight-bold mb-1">Dashboard Karyawan</h4>
-            <p class="text-sm text-muted mb-4">Bantu pelanggan, kelola cart, dan lakukan stock opname harian/bulanan</p>
-        </div>
-    </div>
-
-    <!-- Metrics Cards Row -->
-    <div class="row">
-        <!-- Cart Active -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold opacity-7">Cart Aktif Saya</p>
-                                <h5 class="font-weight-bolder mb-0 text-primary">
-                                    3
-                                    <span class="text-sm font-weight-normal">Cart</span>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                <i class="material-symbols-rounded opacity-10 text-white" style="font-size: 2rem;">shopping_cart</i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="page-header">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h4 class="mb-1">Selamat datang kembali, {{ Auth::user()->nama ?? 'Tim Karyawan' }}</h4>
+                <p class="mb-0 text-sm">Monitor cart pelanggan, status stock opname, dan alert penting secara ringkas.</p>
             </div>
-        </div>
-
-        <!-- Stock Opname Today -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold opacity-7">Stok Opname Hari Ini</p>
-                                <h5 class="font-weight-bolder mb-0 text-success">
-                                    45
-                                    <span class="text-sm font-weight-normal">Item</span>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
-                                <i class="material-symbols-rounded opacity-10 text-white" style="font-size: 2rem;">fact_check</i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Stock Expired -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold opacity-7">Obat Expired</p>
-                                <h5 class="font-weight-bolder mb-0 text-danger">
-                                    5
-                                    <span class="text-sm font-weight-normal">Item</span>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md">
-                                <i class="material-symbols-rounded opacity-10 text-white" style="font-size: 2rem;">event_busy</i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Stock Low -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold opacity-7">Stok Hampir Habis</p>
-                                <h5 class="font-weight-bolder mb-0 text-warning">
-                                    12
-                                    <span class="text-sm font-weight-normal">Item</span>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-md">
-                                <i class="material-symbols-rounded opacity-10 text-white" style="font-size: 2rem;">inventory</i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('karyawan.cart.index') }}" class="btn btn-primary">Input Cart</a>
+                <a href="{{ route('stok.index') }}" class="btn btn-outline-primary">Lihat Stok</a>
             </div>
         </div>
     </div>
 
-    <!-- Quick Actions & Customer Service -->
-    <div class="row mt-4">
-        <div class="col-lg-4 mb-4">
+    <div class="row g-3">
+        @php
+            $metrics = [
+                ['label' => 'Cart Aktif Saya', 'value' => '3', 'unit' => 'cart', 'icon' => 'shopping_cart', 'trend' => '+2 today'],
+                ['label' => 'Stok Opname Hari Ini', 'value' => '45', 'unit' => 'item', 'icon' => 'fact_check', 'trend' => '6 gudang selesai'],
+                ['label' => 'Obat Expired', 'value' => '5', 'unit' => 'item', 'icon' => 'event_busy', 'trend' => 'butuh tindakan'],
+                ['label' => 'Stok Hampir Habis', 'value' => '12', 'unit' => 'item', 'icon' => 'inventory', 'trend' => 'prioritas restock'],
+            ];
+        @endphp
+        @foreach($metrics as $metric)
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card h-100">
+                    <div class="card-body d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-xs text-muted mb-2">{{ $metric['label'] }}</p>
+                            <h3 class="fw-semibold mb-1">{{ $metric['value'] }} <span class="text-sm text-muted text-capitalize">{{ $metric['unit'] }}</span></h3>
+                            <span class="text-xs text-muted">{{ $metric['trend'] }}</span>
+                        </div>
+                        <div class="stats-card-icon">
+                            <i class="material-symbols-rounded">{{ $metric['icon'] }}</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-4">
             <div class="card h-100">
-                <div class="card-header bg-transparent border-0 pb-0">
-                    <h6 class="text-dark font-weight-bold mb-0">Aksi Cepat</h6>
-                    <p class="text-sm mb-0">Fitur utama karyawan</p>
+                <div class="card-header border-0 pb-0">
+                    <h6 class="mb-1">Aksi Cepat</h6>
+                    <p class="text-sm text-muted mb-0">Pekerjaan utama setiap shift</p>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('karyawan.cart.index') }}" class="btn btn-lg bg-gradient-primary text-white mb-0">
-                            <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">shopping_cart</i>
-                            <div class="text-sm">Input Cart Pelanggan</div>
+                    <div class="d-grid gap-3">
+                        <a href="{{ route('karyawan.cart.index') }}" class="btn btn-primary d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="d-block">Input Cart Pelanggan</strong>
+                                <span class="text-sm fw-normal">Catat permintaan dan kirim ke kasir</span>
+                            </div>
+                            <i class="material-symbols-rounded">north_east</i>
                         </a>
-                        <a href="{{ route('stok.index') }}" class="btn btn-lg bg-gradient-warning text-white mb-0">
-                            <i class="material-symbols-rounded mb-1" style="font-size: 2rem;">inventory_2</i>
-                            <div class="text-sm">Stok Opname</div>
+                        <a href="{{ route('stok.index') }}" class="btn btn-outline-primary d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="d-block">Stok Opname</strong>
+                                <span class="text-sm fw-normal">Lanjutkan sesi yang sedang berlangsung</span>
+                            </div>
+                            <i class="material-symbols-rounded">inventory_2</i>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-8 mb-4">
+        <div class="col-lg-8">
             <div class="card h-100">
-                <div class="card-header bg-transparent border-0 pb-0">
-                    <h6 class="text-dark font-weight-bold mb-0">Cart Saya - Status Approval</h6>
-                    <p class="text-sm mb-0">Daftar cart yang sudah disubmit</p>
+                <div class="card-header border-0 pb-0">
+                    <h6 class="mb-1">Cart Saya - Status Approval</h6>
+                    <p class="text-sm text-muted mb-0">Pantau progres cart terakhir yang sudah dikirim</p>
                 </div>
-                <div class="card-body px-0 pb-2">
-                    <div class="table-responsive p-0">
+                <div class="card-body px-0">
+                    <div class="table-responsive">
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Cart</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Item</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                                    <th scope="col">ID Cart</th>
+                                    <th scope="col">Total Item</th>
+                                    <th scope="col">Total Harga</th>
+                                    <th scope="col">Waktu</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <div class="d-flex px-3 py-1">
-                                            <h6 class="mb-0 text-sm">CART-008</h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm mb-0">15 items</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 text-primary">Rp 560.000</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-xs text-secondary mb-0">15 menit lalu</p>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-sm bg-gradient-warning">Pending Approval</span>
-                                    </td>
+                                    <td>CART-008</td>
+                                    <td>15 item</td>
+                                    <td class="fw-semibold text-primary">Rp 560.000</td>
+                                    <td><span class="text-xs text-muted">15 menit lalu</span></td>
+                                    <td><span class="badge bg-warning text-dark">Pending approval</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="d-flex px-3 py-1">
-                                            <h6 class="mb-0 text-sm">CART-007</h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm mb-0">8 items</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 text-primary">Rp 320.000</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-xs text-secondary mb-0">1 jam lalu</p>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-sm bg-gradient-success">Approved</span>
-                                    </td>
+                                    <td>CART-007</td>
+                                    <td>8 item</td>
+                                    <td class="fw-semibold text-primary">Rp 320.000</td>
+                                    <td><span class="text-xs text-muted">1 jam lalu</span></td>
+                                    <td><span class="badge bg-success text-white">Approved</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="d-flex px-3 py-1">
-                                            <h6 class="mb-0 text-sm">CART-006</h6>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm mb-0">12 items</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0 text-primary">Rp 450.000</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-xs text-secondary mb-0">3 jam lalu</p>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-sm bg-gradient-danger">Rejected</span>
-                                    </td>
+                                    <td>CART-006</td>
+                                    <td>12 item</td>
+                                    <td class="fw-semibold text-primary">Rp 450.000</td>
+                                    <td><span class="text-xs text-muted">3 jam lalu</span></td>
+                                    <td><span class="badge bg-danger text-white">Perlu revisi</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -215,79 +120,76 @@
         </div>
     </div>
 
-    <!-- Stock Opname Progress -->
-    <div class="row mt-4">
-        <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-header bg-transparent border-0 pb-0">
-                    <h6 class="text-dark font-weight-bold mb-0">Progress Stok Opname Bulan Ini</h6>
-                    <p class="text-sm mb-0">Target: 1,245 item</p>
+    <div class="row g-4 mt-1">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header border-0 pb-0">
+                    <h6 class="mb-1">Progress Stok Opname Bulan Ini</h6>
+                    <p class="text-sm text-muted mb-0">Target 1.245 item • 78.7% selesai</p>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <div class="d-flex justify-content-between mb-1">
-                            <span class="text-sm">Completed</span>
-                            <span class="text-sm font-weight-bold">980 / 1,245 (78.7%)</span>
+                            <span class="text-sm">Progress keseluruhan</span>
+                            <span class="text-sm fw-semibold">980 / 1.245</span>
                         </div>
                         <div class="progress" style="height: 10px;">
-                            <div class="progress-bar bg-gradient-success" role="progressbar" style="width: 78.7%" aria-valuenow="78.7" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 78.7%" aria-valuenow="78.7" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
-                    
-                    <div class="row mt-4">
-                        <div class="col-6 text-center">
-                            <div class="p-3 bg-light border-radius-md">
-                                <p class="text-xs mb-0 text-muted">Target Harian</p>
-                                <h6 class="mb-0">42 item/hari</h6>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-3 rounded-4" style="background: var(--sw-surface-alt);">
+                                <p class="text-xs text-muted mb-1">Target Harian</p>
+                                <h5 class="mb-0">42 item</h5>
                             </div>
                         </div>
-                        <div class="col-6 text-center">
-                            <div class="p-3 bg-light border-radius-md">
-                                <p class="text-xs mb-0 text-muted">Sisa Hari</p>
-                                <h6 class="mb-0">7 hari</h6>
+                        <div class="col-6">
+                            <div class="p-3 rounded-4" style="background: var(--sw-surface-alt);">
+                                <p class="text-xs text-muted mb-1">Sisa Hari</p>
+                                <h5 class="mb-0">7 hari</h5>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-header bg-transparent border-0 pb-0">
-                    <h6 class="text-dark font-weight-bold mb-0">Aktivitas Hari Ini</h6>
-                    <p class="text-sm mb-0">Timeline aktivitas karyawan</p>
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header border-0 pb-0">
+                    <h6 class="mb-1">Aktivitas Hari Ini</h6>
+                    <p class="text-sm text-muted mb-0">Log aktivitas terakhir dari tim</p>
                 </div>
                 <div class="card-body">
                     <div class="timeline timeline-one-side">
                         <div class="timeline-block mb-3">
-                            <span class="timeline-step bg-gradient-success">
-                                <i class="material-symbols-rounded text-white text-sm">check_circle</i>
+                            <span class="timeline-step bg-success text-white">
+                                <i class="material-symbols-rounded text-sm">check_circle</i>
                             </span>
                             <div class="timeline-content">
-                                <h6 class="text-dark text-sm font-weight-bold mb-0">Submit cart CART-008</h6>
-                                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">15 items - Rp 560.000</p>
-                                <p class="text-xs text-muted mt-1 mb-0">15 menit yang lalu</p>
+                                <h6 class="text-sm fw-semibold mb-0">Submit cart CART-008</h6>
+                                <p class="text-xs text-muted mb-1">15 item • Rp 560.000</p>
+                                <span class="text-xs text-muted">15 menit yang lalu</span>
                             </div>
                         </div>
                         <div class="timeline-block mb-3">
-                            <span class="timeline-step bg-gradient-info">
-                                <i class="material-symbols-rounded text-white text-sm">fact_check</i>
+                            <span class="timeline-step bg-info text-white">
+                                <i class="material-symbols-rounded text-sm">fact_check</i>
                             </span>
                             <div class="timeline-content">
-                                <h6 class="text-dark text-sm font-weight-bold mb-0">Stok opname Gudang A</h6>
-                                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">45 item tercatat</p>
-                                <p class="text-xs text-muted mt-1 mb-0">2 jam yang lalu</p>
+                                <h6 class="text-sm fw-semibold mb-0">Stok opname Gudang A</h6>
+                                <p class="text-xs text-muted mb-1">45 item tercatat</p>
+                                <span class="text-xs text-muted">2 jam yang lalu</span>
                             </div>
                         </div>
-                        <div class="timeline-block mb-3">
-                            <span class="timeline-step bg-gradient-warning">
-                                <i class="material-symbols-rounded text-white text-sm">qr_code_scanner</i>
+                        <div class="timeline-block">
+                            <span class="timeline-step bg-warning text-white">
+                                <i class="material-symbols-rounded text-sm">qr_code_scanner</i>
                             </span>
                             <div class="timeline-content">
-                                <h6 class="text-dark text-sm font-weight-bold mb-0">Scan barcode - Customer service</h6>
-                                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Membantu pelanggan cari obat</p>
-                                <p class="text-xs text-muted mt-1 mb-0">3 jam yang lalu</p>
+                                <h6 class="text-sm fw-semibold mb-0">Scan barcode - Customer service</h6>
+                                <p class="text-xs text-muted mb-1">Membantu pelanggan mencari obat</p>
+                                <span class="text-xs text-muted">3 jam yang lalu</span>
                             </div>
                         </div>
                     </div>
@@ -296,51 +198,38 @@
         </div>
     </div>
 
-    <!-- Stock Alerts -->
-    <div class="row mt-4">
-        <div class="col-lg-12 mb-4">
+    <div class="row g-4 mt-1">
+        <div class="col-12">
             <div class="card">
-                <div class="card-header bg-transparent border-0 pb-0">
-                    <h6 class="text-dark font-weight-bold mb-0">Notifikasi Stok</h6>
-                    <p class="text-sm mb-0">Item yang perlu perhatian</p>
+                <div class="card-header border-0 pb-0">
+                    <h6 class="mb-1">Notifikasi Stok</h6>
+                    <p class="text-sm text-muted mb-0">Item yang memerlukan tindakan segera</p>
                 </div>
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="list-group-item px-3 py-2 border-0 bg-light rounded">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-danger text-white rounded-circle">
-                                            <i class="material-symbols-rounded opacity-10">warning</i>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="mb-0 text-sm font-weight-bold">Paracetamol 500mg - EXPIRED</h6>
-                                        <p class="text-xs text-muted mb-0">Expired: 01 Okt 2025 | Stok: 15 box</p>
-                                    </div>
-                                    <div class="col-auto">
-                                        <button class="btn btn-sm btn-outline-danger mb-0">Report</button>
-                                    </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex align-items-center justify-content-between px-0">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stats-card-icon" aria-hidden="true">
+                                    <i class="material-symbols-rounded">warning</i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Paracetamol 500mg — EXPIRED</h6>
+                                    <p class="text-xs text-muted mb-0">Kadaluarsa 01 Okt 2025 • 15 box</p>
                                 </div>
                             </div>
+                            <button class="btn btn-outline-danger btn-sm">Laporkan</button>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="list-group-item px-3 py-2 border-0 bg-light rounded">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white rounded-circle">
-                                            <i class="material-symbols-rounded opacity-10">inventory_2</i>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="mb-0 text-sm font-weight-bold">Amoxicillin 500mg - LOW STOCK</h6>
-                                        <p class="text-xs text-muted mb-0">Stok tersisa: 28 box (Min: 40)</p>
-                                    </div>
-                                    <div class="col-auto">
-                                        <button class="btn btn-sm btn-outline-warning mb-0">Restock</button>
-                                    </div>
+                        <div class="list-group-item d-flex align-items-center justify-content-between px-0">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stats-card-icon" aria-hidden="true">
+                                    <i class="material-symbols-rounded">inventory_2</i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Amoxicillin 500mg — LOW STOCK</h6>
+                                    <p class="text-xs text-muted mb-0">Sisa 28 box • Min 40</p>
                                 </div>
                             </div>
+                            <button class="btn btn-outline-primary btn-sm">Ajukan Restock</button>
                         </div>
                     </div>
                 </div>
