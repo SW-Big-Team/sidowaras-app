@@ -7,6 +7,7 @@ use App\Models\StokBatch;
 use App\Models\Obat;
 use App\Models\LogPerubahanStok;
 use App\Models\PembayaranTermin;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -111,6 +112,13 @@ class PembelianController extends Controller
             }
 
             DB::commit();
+            
+            // Generate notification
+            app(NotificationService::class)->notifyPembelianBaru($pembelian);
+            
+            // Update system notifications (stok menipis mungkin berubah)
+            app(NotificationService::class)->generateSystemNotifications();
+            
             return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dengan ' . count($request->obat) . ' item obat berhasil disimpan!');
         } catch (\Throwable $e) {
             DB::rollBack();

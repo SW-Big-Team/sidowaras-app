@@ -139,6 +139,40 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
     
+    // Notification functions
+    function markAsRead(notifId) {
+      const link = event.currentTarget.href;
+      event.preventDefault();
+      
+      fetch(`/notifications/${notifId}/read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+      }).then(() => {
+        if (link && link !== '#' && !link.includes('#')) {
+          window.location.href = link;
+        } else {
+          location.reload();
+        }
+      });
+      return false;
+    }
+    
+    function markAllAsRead() {
+      event.preventDefault();
+      fetch('/notifications/read-all', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+      }).then(() => {
+        location.reload();
+      });
+    }
+    
     setInterval(() => {
         fetch("/session/check")
             .then(res => res.json())

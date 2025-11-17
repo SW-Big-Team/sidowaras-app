@@ -36,19 +36,24 @@ class CartController extends Controller
 
         $obat = Obat::findOrFail($request->obat_id);
 
-        // Ambil batch paling awal (FIFO berdasarkan tgl_kadaluarsa)
+        // Hitung total stok tersedia dari semua batch
+        $totalStok = StokBatch::where('obat_id', $obat->id)
+                              ->where('sisa_stok', '>', 0)
+                              ->sum('sisa_stok');
+
+        if ($totalStok == 0) {
+            return back()->withErrors(['obat_id' => 'Stok habis untuk obat ini.']);
+        }
+
+        if ($request->jumlah > $totalStok) {
+            return back()->withErrors(['jumlah' => "Stok tidak mencukupi. Stok tersedia: {$totalStok}"]);
+        }
+
+        // Ambil batch paling awal (FIFO berdasarkan tgl_kadaluarsa) untuk harga referensi
         $batch = StokBatch::where('obat_id', $obat->id)
                           ->where('sisa_stok', '>', 0)
                           ->orderBy('tgl_kadaluarsa')
                           ->first();
-
-        if (!$batch) {
-            return back()->withErrors(['obat_id' => 'Stok habis untuk obat ini.']);
-        }
-
-        if ($request->jumlah > $batch->sisa_stok) {
-            return back()->withErrors(['jumlah' => 'Stok tidak mencukupi.']);
-        }
 
         // Buat atau ambil cart aktif
         $cart = Cart::firstOrCreate(
@@ -74,10 +79,7 @@ class CartController extends Controller
 
     public function checkout(Request $request)
     {
-        $request->validate([
-            'metode_pembayaran' => 'required|in:tunai,non tunai',
-        ]);
-
+        // Tidak perlu validasi metode_pembayaran - akan diisi oleh Kasir saat approval
         $cart = Cart::where('user_id', auth()->id())
                     ->where('is_approved', false)
                     ->first();
@@ -86,7 +88,8 @@ class CartController extends Controller
             return back()->withErrors(['cart' => 'Keranjang kosong.']);
         }
 
-        $cart->update(['metode_pembayaran' => $request->metode_pembayaran]);
+        // Kirim ke kasir tanpa metode pembayaran (metode_pembayaran tetap null)
+        // Kasir yang akan mengisi metode_pembayaran saat approval
 
         return redirect()->route('karyawan.cart.index')
                          ->with('success', 'Keranjang dikirim ke kasir untuk approval.');

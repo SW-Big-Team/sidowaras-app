@@ -17,30 +17,46 @@
         <li class="nav-item dropdown d-flex align-items-center me-2">
           <a class="nav-link text-body p-2 position-relative" href="#" data-bs-toggle="dropdown" aria-expanded="false" style="background: #fffbeb; border-radius: 0.5rem; transition: all 0.3s ease;">
             <i class="material-symbols-rounded" style="color: #f59e0b;">notifications</i>
+            @if($unreadNotificationCount > 0)
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); font-size: 0.65rem; padding: 0.25rem 0.4rem;">
-              5
+              {{ $unreadNotificationCount }}
             </span>
+            @endif
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-3" style="min-width: 320px;">
             <li class="mb-2">
               <h6 class="px-3 mb-3 font-weight-bold" style="color: #d97706;">Notifikasi Terbaru</h6>
             </li>
+            @forelse($notifications as $notif)
             <li>
-              <a class="dropdown-item border-radius-md mb-2 p-3" href="#" style="background: #fffbeb; transition: all 0.3s ease;">
+              <a class="dropdown-item border-radius-md mb-2 p-3 {{ $notif->is_warning ? 'border border-warning' : '' }}" href="{{ $notif->link ?? '#' }}" onclick="{{ $notif->is_warning ? 'return true;' : 'markAsRead(' . $notif->id . '); return false;' }}" style="background: #fffbeb; transition: all 0.3s ease;">
                 <div class="d-flex">
                   <div class="icon icon-sm shadow text-center border-radius-md me-3" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                    <i class="material-symbols-rounded opacity-10 text-white">task_alt</i>
+                    <i class="material-symbols-rounded opacity-10 text-white">{{ $notif->icon }}</i>
                   </div>
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="text-sm font-weight-bold mb-1">Tugas Baru</h6>
-                    <p class="text-xs text-secondary mb-0">2 tugas menunggu dikerjakan</p>
+                    <h6 class="text-sm font-weight-bold mb-1">
+                      {{ $notif->title }}
+                      @if($notif->is_warning)
+                      <span class="badge badge-sm bg-warning ms-1">!</span>
+                      @endif
+                    </h6>
+                    <p class="text-xs text-secondary mb-0">{{ $notif->message }}</p>
                   </div>
                 </div>
               </a>
             </li>
+            @empty
             <li>
-              <a class="dropdown-item border-radius-md text-center py-2" href="#" style="color: #f59e0b; font-weight: 600;">
-                Lihat Semua Notifikasi
+              <div class="text-center py-3">
+                <i class="material-symbols-rounded text-secondary" style="font-size: 2rem;">notifications_off</i>
+                <p class="text-xs text-secondary mb-0">Tidak ada notifikasi</p>
+              </div>
+            </li>
+            @endforelse
+            <li>
+              <a class="dropdown-item border-radius-md text-center py-2" href="#" onclick="markAllAsRead()" style="color: #f59e0b; font-weight: 600;">
+                Tandai Semua Dibaca
               </a>
             </li>
           </ul>

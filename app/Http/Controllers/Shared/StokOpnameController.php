@@ -7,6 +7,7 @@ use App\Models\StockOpname;
 use App\Models\DetailStockOpname;
 use App\Models\Obat;
 use App\Models\StokBatch;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,10 @@ class StokOpnameController extends Controller
             }
 
             DB::commit();
+            
+            // Generate notification for Admin
+            app(NotificationService::class)->notifyStockOpnameCreated($opname);
+            
             return redirect()->route('stokopname.index')
                 ->with('success', 'Stock opname berhasil disimpan dan menunggu approval admin.');
                 
@@ -137,6 +142,13 @@ class StokOpnameController extends Controller
             $this->adjustStock($opname);
             
             DB::commit();
+            
+            // Generate notification for creator
+            app(NotificationService::class)->notifyStockOpnameApproved($opname);
+            
+            // Update system notifications
+            app(NotificationService::class)->generateSystemNotifications();
+            
             return redirect()->route('admin.stokopname.pending')
                 ->with('success', 'Stock opname berhasil disetujui dan stok telah disesuaikan!');
                 
@@ -165,6 +177,9 @@ class StokOpnameController extends Controller
             'approved_by' => Auth::id(),
             'approved_at' => now()
         ]);
+        
+        // Generate notification for creator
+        app(NotificationService::class)->notifyStockOpnameRejected($opname);
 
         return redirect()->route('admin.stokopname.pending')
             ->with('success', 'Stock opname berhasil ditolak!');

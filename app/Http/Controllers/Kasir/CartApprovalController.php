@@ -8,6 +8,7 @@ use App\Models\DetailTransaksi;
 use App\Models\LogPerubahanStok;
 use App\Models\StokBatch;
 use App\Models\Transaksi;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -57,38 +58,53 @@ class CartApprovalController extends Controller
                 'tgl_transaksi' => now(),
             ]);
 
-            // 2. Kurangi stok & buat detail
+            // 2. Kurangi stok & buat detail (dengan FIFO)
             foreach ($cart->items as $item) {
-                $batch = StokBatch::where('obat_id', $item->obat_id)
-                                ->where('sisa_stok', '>', 0)
-                                ->orderBy('tgl_kadaluarsa')
-                                ->first();
-
-                if (!$batch || $batch->sisa_stok < $item->jumlah) {
-                    throw new \Exception("Stok tidak cukup untuk {$item->obat->nama_obat}");
+                $sisaJumlah = $item->jumlah;
+                
+                // Ambil semua batch yang ada stok, urutkan FIFO (tgl_kadaluarsa paling awal dulu)
+                $batches = StokBatch::where('obat_id', $item->obat_id)
+                                    ->where('sisa_stok', '>', 0)
+                                    ->orderBy('tgl_kadaluarsa')
+                                    ->get();
+                
+                // Hitung total stok tersedia
+                $totalStokTersedia = $batches->sum('sisa_stok');
+                
+                if ($totalStokTersedia < $item->jumlah) {
+                    throw new \Exception("Stok tidak cukup untuk {$item->obat->nama_obat}. Tersedia: {$totalStokTersedia}, Dibutuhkan: {$item->jumlah}");
                 }
+                
+                // Kurangi stok dari batch satu per satu (FIFO)
+                foreach ($batches as $batch) {
+                    if ($sisaJumlah <= 0) break;
+                    
+                    $jumlahAmbil = min($sisaJumlah, $batch->sisa_stok);
+                    
+                    $stok_sebelum = $batch->sisa_stok;
+                    $batch->decrement('sisa_stok', $jumlahAmbil);
+                    $stok_sesudah = $batch->sisa_stok;
 
-                $stok_sebelum = $batch->sisa_stok;
-                $batch->decrement('sisa_stok', $item->jumlah);
-                $stok_sesudah = $batch->sisa_stok;
+                    LogPerubahanStok::create([
+                        'uuid' => \Illuminate\Support\Str::uuid(),
+                        'batch_id' => $batch->id,
+                        'user_id' => auth()->id(),
+                        'stok_sebelum' => $stok_sebelum,
+                        'stok_sesudah' => $stok_sesudah,
+                        'keterangan' => "Penjualan via transaksi {$transaksi->no_transaksi}",
+                    ]);
 
-                LogPerubahanStok::create([
-                    'uuid' => \Illuminate\Support\Str::uuid(),
-                    'batch_id' => $batch->id,
-                    'user_id' => auth()->id(),
-                    'stok_sebelum' => $stok_sebelum,
-                    'stok_sesudah' => $stok_sesudah,
-                    'keterangan' => "Penjualan via transaksi {$transaksi->no_transaksi}",
-                ]);
-
-                DetailTransaksi::create([
-                    'uuid' => \Illuminate\Support\Str::uuid(),
-                    'transaksi_id' => $transaksi->id,
-                    'batch_id' => $batch->id,
-                    'jumlah' => $item->jumlah,
-                    'harga_saat_transaksi' => $item->harga_satuan,
-                    'sub_total' => $item->jumlah * $item->harga_satuan,
-                ]);
+                    DetailTransaksi::create([
+                        'uuid' => \Illuminate\Support\Str::uuid(),
+                        'transaksi_id' => $transaksi->id,
+                        'batch_id' => $batch->id,
+                        'jumlah' => $jumlahAmbil,
+                        'harga_saat_transaksi' => $item->harga_satuan,
+                        'sub_total' => $jumlahAmbil * $item->harga_satuan,
+                    ]);
+                    
+                    $sisaJumlah -= $jumlahAmbil;
+                }
             }
 
             // 3. Tandai cart sebagai disetujui
@@ -97,6 +113,12 @@ class CartApprovalController extends Controller
                 'approved_at' => now(),
                 'approved_by' => auth()->id(),
             ]);
+            
+            // Generate notification for cart creator
+            app(NotificationService::class)->notifyCartApproved($cart);
+            
+            // Update system notifications (stok dan kadaluarsa mungkin berubah)
+            app(NotificationService::class)->generateSystemNotifications();
 
             return redirect()->route('kasir.transaksi.riwayat')
                             ->with('success', 'Transaksi berhasil diproses.');
@@ -105,7 +127,14 @@ class CartApprovalController extends Controller
 
     public function reject(Cart $cart)
     {
+        // Generate notification for cart creator before deleting
+        app(NotificationService::class)->notifyCartRejected($cart);
+        
+        // Update system notifications
+        app(NotificationService::class)->generateSystemNotifications();
+        
         $cart->delete();
+        
         return redirect()->route('kasir.cart.approval')
                         ->with('success', 'Cart ditolak.');
     }
