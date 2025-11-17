@@ -210,13 +210,11 @@ class StokOpnameController extends Controller
 
                     // Catat log perubahan stok
                     \App\Models\LogPerubahanStok::create([
-                        'obat_id' => $detail->obat_id,
                         'batch_id' => $batch->id,
-                        'stok_sebelumnya' => $stokSebelum,
-                        'stok_setelah' => $stokSetelah,
+                        'stok_sebelum' => $stokSebelum,
+                        'stok_sesudah' => $stokSetelah,
                         'keterangan' => "Stock opname adjustment: " . ($sign > 0 ? "+" : "-") . abs($adjustQty) . " unit",
                         'user_id' => auth()->id(),
-                        'tipe' => 'adjustment'
                     ]);
                 });
 
@@ -257,13 +255,11 @@ class StokOpnameController extends Controller
 
         // Catat log perubahan
         \App\Models\LogPerubahanStok::create([
-            'obat_id' => $obatId,
             'batch_id' => $newBatch->id,
-            'stok_sebelumnya' => 0,
-            'stok_setelah' => $qty,
+            'stok_sebelum' => 0,
+            'stok_sesudah' => $qty,
             'keterangan' => "Batch baru untuk kelebihan stock opname",
             'user_id' => auth()->id(),
-            'tipe' => 'new_batch'
         ]);
     }
 }
