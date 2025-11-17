@@ -20,56 +20,74 @@
             </span>
             @endif
           </a>
-          <ul class="dropdown-menu dropdown-menu-end p-2 me-sm-n4" aria-labelledby="dropdownNotif" style="min-width: 320px;">
+          <ul class="dropdown-menu dropdown-menu-end p-2 me-sm-n4" aria-labelledby="dropdownNotif" style="min-width: 320px; max-width: 380px;">
             <li class="mb-2">
-              <h6 class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-2">
-                <i class="material-symbols-rounded me-2">notifications_active</i>
-                Notifikasi
-              </h6>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            @forelse($notifications as $notif)
-            <li class="mb-2">
-              <a class="dropdown-item border-radius-md {{ $notif->is_warning ? 'bg-light-warning' : '' }}" href="{{ $notif->link ?? '#' }}" onclick="{{ $notif->is_warning ? 'return true;' : 'markAsRead(' . $notif->id . '); return false;' }}">
-                <div class="d-flex py-1">
-                  <div class="my-auto">
-                    <div class="icon icon-shape bg-gradient-{{ $notif->icon_color }} shadow text-center border-radius-md me-2">
-                      <i class="material-symbols-rounded opacity-10 text-sm">{{ $notif->icon }}</i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column justify-content-center">
-                    <h6 class="text-sm font-weight-normal mb-1">
-                      <span class="font-weight-bold">{{ $notif->title }}</span>
-                      @if($notif->is_warning)
-                      <span class="badge badge-sm bg-warning ms-1">!</span>
-                      @endif
-                    </h6>
-                    <p class="text-xs text-secondary mb-0">
-                      <i class="material-symbols-rounded text-xxs">schedule</i>
-                      {{ $notif->message }}
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </li>
-            @empty
-            <li class="mb-2">
-              <div class="text-center py-3">
-                <i class="material-symbols-rounded text-secondary" style="font-size: 2rem;">notifications_off</i>
-                <p class="text-xs text-secondary mb-0">Tidak ada notifikasi</p>
+              <div class="d-flex align-items-center justify-content-between px-2">
+                <h6 class="dropdown-header text-dark font-weight-bolder d-flex align-items-center p-0 m-0">
+                  <i class="material-symbols-rounded me-2">notifications_active</i>
+                  Notifikasi
+                </h6>
+                <a href="#" class="text-xs text-primary font-weight-bold" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                  Lihat Semua
+                </a>
               </div>
             </li>
-            @endforelse
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li class="text-center">
-              <a href="#" class="btn btn-sm bg-gradient-primary mb-0 w-100" onclick="markAllAsRead()">
-                Tandai Semua Dibaca
-              </a>
+            <div style="max-height: 320px; overflow-y: auto; overflow-x: hidden;">
+              @forelse($notifications->take(5) as $notif)
+              <li class="mb-2">
+                <a class="dropdown-item border-radius-md {{ $notif->is_warning ? 'bg-light-warning' : '' }}" href="{{ $notif->link ?? '#' }}" onclick="{{ $notif->is_warning ? 'return true;' : 'markAsRead(' . $notif->id . '); return false;' }}">
+                  <div class="d-flex py-1">
+                    <div class="my-auto">
+                      <div class="icon icon-shape bg-gradient-{{ $notif->icon_color }} shadow text-center border-radius-md me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-symbols-rounded text-sm">{{ $notif->icon }}</i>
+                      </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                      <h6 class="text-sm font-weight-normal mb-1">
+                        <span class="font-weight-bold">{{ $notif->title }}</span>
+                        @if($notif->is_warning)
+                        <span class="badge badge-sm bg-warning ms-1">!</span>
+                        @endif
+                      </h6>
+                      <p class="text-xs text-secondary mb-0">
+                        <i class="material-symbols-rounded text-xxs">schedule</i>
+                        {{ $notif->message }}
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              @empty
+              <li class="mb-2">
+                <div class="text-center py-3">
+                  <i class="material-symbols-rounded text-secondary" style="font-size: 2rem;">notifications_off</i>
+                  <p class="text-xs text-secondary mb-0">Tidak ada notifikasi</p>
+                </div>
+              </li>
+              @endforelse
+            </div>
+            @if($notifications->count() > 0)
+            <li>
+              <hr class="dropdown-divider">
             </li>
+            <li class="text-center px-2">
+              <div class="d-grid gap-2">
+                <button class="btn btn-sm bg-gradient-primary mb-0" onclick="markAllAsRead()">
+                  <i class="material-symbols-rounded text-sm me-1">done_all</i>
+                  Tandai Semua Dibaca
+                </button>
+                @if($notifications->count() > 5)
+                <button class="btn btn-sm btn-outline-primary mb-0" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                  <i class="material-symbols-rounded text-sm me-1">list</i>
+                  Lihat Semua Notifikasi ({{ $notifications->count() }})
+                </button>
+                @endif
+              </div>
+            </li>
+            @endif
           </ul>
         </li>
         

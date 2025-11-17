@@ -1,7 +1,12 @@
 <div class="fixed-plugin">
-  <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-    <i class="material-symbols-rounded py-2">settings</i>
-  </a>
+  <button 
+    type="button"
+    class="fixed-plugin-button"
+    data-tooltip="Pengaturan Tampilan"
+    aria-label="Toggle Configurator"
+  >
+    <i class="material-symbols-rounded">settings</i>
+  </button>
   <div class="card shadow-lg">
     <div class="card-header pb-0 pt-3">
       <div class="float-start">
@@ -64,3 +69,135 @@
     </div>
   </div>
 </div>
+
+<style>
+/* Configurator Button - Matching Sidebar Toggle Style */
+.fixed-plugin {
+  position: fixed;
+  right: 20px;
+  bottom: 90px;
+  z-index: 1000;
+}
+
+.fixed-plugin-button {
+  width: 56px;
+  height: 56px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.61, 0.7, 1);
+  border: none;
+  padding: 0;
+}
+
+.fixed-plugin-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.24);
+}
+
+.fixed-plugin-button:active {
+  transform: scale(0.95);
+}
+
+.fixed-plugin-button i {
+  font-size: 24px;
+  color: #344767;
+  transition: transform 0.3s ease;
+}
+
+/* Rotate icon when configurator is open */
+.show-fixed-plugin .fixed-plugin-button i {
+  transform: rotate(180deg);
+}
+
+/* Tooltip */
+.fixed-plugin-button::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 70px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  font-weight: 500;
+}
+
+.fixed-plugin-button:hover::before {
+  opacity: 1;
+}
+
+/* Tooltip arrow */
+.fixed-plugin-button::after {
+  content: '';
+  position: absolute;
+  right: 60px;
+  border: 6px solid transparent;
+  border-left-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.fixed-plugin-button:hover::after {
+  opacity: 1;
+}
+
+/* Configurator Panel */
+.fixed-plugin .card {
+  position: fixed;
+  right: -360px;
+  top: 0;
+  width: 360px;
+  height: 100vh;
+  border-radius: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.61, 0.7, 1);
+}
+
+.show-fixed-plugin .fixed-plugin .card {
+  right: 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .fixed-plugin-button::before,
+  .fixed-plugin-button::after {
+    display: none;
+  }
+  
+  .fixed-plugin {
+    bottom: 80px;
+    right: 16px;
+  }
+  
+  .fixed-plugin .card {
+    width: 100%;
+    right: -100%;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 575px) {
+  .fixed-plugin {
+    bottom: 70px;
+    right: 16px;
+  }
+  
+  .fixed-plugin-button {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .fixed-plugin-button i {
+    font-size: 20px;
+  }
+}
+</style>

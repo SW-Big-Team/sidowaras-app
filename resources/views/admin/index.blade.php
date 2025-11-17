@@ -273,57 +273,62 @@
   </div>
 
   <div class="col-lg-6 mb-4">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-header pb-0">
         <h6>Laporan Stok</h6>
         <p class="text-sm mb-0">Inventory status & alerts</p>
       </div>
       <div class="card-body p-3">
         <div class="list-group list-group-flush">
-          <div class="list-group-item px-0 border-0 mb-2 bg-light rounded">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <div class="icon icon-shape bg-danger text-white rounded-circle">
-                  <i class="material-symbols-rounded opacity-10">warning</i>
+          {{-- Obat Kadaluarsa --}}
+          <div class="list-group-item px-3 py-3 border-0 mb-2 bg-light rounded">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="icon icon-shape bg-gradient-danger text-white rounded-circle me-3 d-flex align-items-center justify-content-center">
+                  <i class="material-symbols-rounded">warning</i>
+                </div>
+                <div>
+                  <h6 class="mb-0 text-sm font-weight-bold">Obat Kadaluarsa</h6>
+                  <p class="text-xs text-muted mb-0"><strong>5 item</strong> perlu ditindaklanjuti</p>
                 </div>
               </div>
-              <div class="col">
-                <h6 class="mb-0 text-sm font-weight-bold">Obat Kadaluarsa</h6>
-                <p class="text-xs text-muted mb-0"><strong>5 item</strong> perlu ditindaklanjuti</p>
-              </div>
-              <div class="col-auto">
+              <div>
                 <button class="btn btn-sm btn-outline-danger mb-0">Lihat</button>
               </div>
             </div>
           </div>
-          <div class="list-group-item px-0 border-0 mb-2 bg-light rounded">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <div class="icon icon-shape bg-warning text-white rounded-circle">
-                  <i class="material-symbols-rounded opacity-10">inventory_2</i>
+
+          {{-- Stok Minimum --}}
+          <div class="list-group-item px-3 py-3 border-0 mb-2 bg-light rounded">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="icon icon-shape bg-gradient-warning text-white rounded-circle me-3 d-flex align-items-center justify-content-center">
+                  <i class="material-symbols-rounded">inventory_2</i>
+                </div>
+                <div>
+                  <h6 class="mb-0 text-sm font-weight-bold">Stok Minimum</h6>
+                  <p class="text-xs text-muted mb-0"><strong>12 item</strong> di bawah minimum</p>
                 </div>
               </div>
-              <div class="col">
-                <h6 class="mb-0 text-sm font-weight-bold">Stok Minimum</h6>
-                <p class="text-xs text-muted mb-0"><strong>12 item</strong> di bawah minimum</p>
-              </div>
-              <div class="col-auto">
+              <div>
                 <button class="btn btn-sm btn-outline-warning mb-0">Lihat</button>
               </div>
             </div>
           </div>
-          <div class="list-group-item px-0 border-0 mb-2 bg-light rounded">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <div class="icon icon-shape bg-info text-white rounded-circle">
-                  <i class="material-symbols-rounded opacity-10">trending_up</i>
+
+          {{-- Stok Opname Pending --}}
+          <div class="list-group-item px-3 py-3 border-0 mb-0 bg-light rounded">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="icon icon-shape bg-gradient-info text-white rounded-circle me-3 d-flex align-items-center justify-content-center">
+                  <i class="material-symbols-rounded">trending_up</i>
+                </div>
+                <div>
+                  <h6 class="mb-0 text-sm font-weight-bold">Stok Opname Pending</h6>
+                  <p class="text-xs text-muted mb-0"><strong>3 laporan</strong> menunggu review</p>
                 </div>
               </div>
-              <div class="col">
-                <h6 class="mb-0 text-sm font-weight-bold">Stok Opname Pending</h6>
-                <p class="text-xs text-muted mb-0"><strong>3 laporan</strong> menunggu review</p>
-              </div>
-              <div class="col-auto">
+              <div>
                 <button class="btn btn-sm btn-outline-info mb-0">Review</button>
               </div>
             </div>

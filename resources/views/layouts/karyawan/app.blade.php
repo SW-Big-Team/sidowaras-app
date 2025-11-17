@@ -35,15 +35,24 @@
     
     /* Sidebar Toggle Styles */
     .sidenav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
       z-index: 1050;
-      transition: transform 0.3s ease, width 0.3s ease;
+      transition: transform 0.3s ease;
     }
     
-    .g-sidenav-hidden .sidenav {
-      transform: translateX(-100%);
-    }
-    
+    /* Desktop Behavior */
     @media (min-width: 1200px) {
+      .g-sidenav-show .sidenav {
+        transform: translateX(0);
+      }
+      
+      .g-sidenav-hidden .sidenav {
+        transform: translateX(-100%);
+      }
+      
       .g-sidenav-hidden .main-content {
         margin-left: 0 !important;
       }
@@ -53,9 +62,47 @@
       }
     }
     
+    /* Mobile/Tablet Behavior */
+    @media (max-width: 1199px) {
+      .sidenav {
+        transform: translateX(-100%);
+      }
+      
+      .g-sidenav-show .sidenav {
+        transform: translateX(0) !important;
+      }
+      
+      .g-sidenav-hidden .sidenav {
+        transform: translateX(-100%) !important;
+      }
+      
+      .main-content {
+        margin-left: 0 !important;
+      }
+      
+      /* Backdrop overlay when sidebar is open on mobile */
+      .g-sidenav-show::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1049;
+        animation: fadeIn 0.3s ease;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    }
+    
     .main-content {
       background: transparent;
       transition: margin-left 0.3s ease;
+      position: relative;
     }
     
     .card {
@@ -120,6 +167,8 @@
   </main>
   
   @include('layouts.karyawan.partials.configurator')
+  @include('layouts.karyawan.partials.notifications-modal')
+  @include('layouts.karyawan.partials.sidebar-toggle')
   
   <!--   Core JS Files   -->
   <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
