@@ -29,7 +29,7 @@ class Obat extends Model
     // Relasi ke batch stok
     public function stokBatches()
     {
-        return $this->hasMany(StokBatch::class);
+        return $this->hasMany(StokBatch::class, 'obat_id');
     }
 
     /**

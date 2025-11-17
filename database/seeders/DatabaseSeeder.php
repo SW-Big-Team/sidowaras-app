@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             SatuanObatSeeder::class,
             KandunganObatSeeder::class,
             ObatSeeder::class,
+            StokBatchSeeder::class,
         ]);
     }
 }

@@ -48,14 +48,6 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder" style="color: #d97706; letter-spacing: 0.5px;">Manajemen Stok</h6>
       </li>
 
-      {{-- Pembelian --}}
-      <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('pembelian.index') }}">
-              <i class="material-symbols-rounded opacity-5">dashboard</i>
-              <span class="nav-link-text">Pembelian</span>
-          </a>
-      </li>
-
       <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('stok.index') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
            href="{{ route('stok.index') }}"
@@ -68,9 +60,9 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('pembelian.index') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
+        <a class="nav-link {{ request()->routeIs('pembelian.*') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
            href="{{ route('pembelian.index') }}"
-           style="border-radius: 0.5rem; margin: 0.25rem 0.75rem; {{ request()->routeIs('pembelian.index') ? 'background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);' : '' }}">
+           style="border-radius: 0.5rem; margin: 0.25rem 0.75rem; {{ request()->routeIs('pembelian.*') ? 'background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);' : '' }}">
           <div class="icon icon-sm shadow-sm border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;">
             <i class="material-symbols-rounded" style="font-size: 1.25rem; color: #f59e0b;">shopping_cart</i>
           </div>
@@ -79,13 +71,13 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('opname.index') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
-           href="{{ route('opname.index') }}"
-           style="border-radius: 0.5rem; margin: 0.25rem 0.75rem; {{ request()->routeIs('opname.index') ? 'background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);' : '' }}">
+        <a class="nav-link {{ request()->routeIs('stokopname.*') ? 'text-white' : 'text-dark' }} mb-0 px-4" 
+           href="{{ route('stokopname.index') }}"
+           style="border-radius: 0.5rem; margin: 0.25rem 0.75rem; {{ request()->routeIs('stokopname.*') ? 'background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);' : '' }}">
           <div class="icon icon-sm shadow-sm border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;">
             <i class="material-symbols-rounded" style="font-size: 1.25rem; color: #f59e0b;">fact_check</i>
           </div>
-          <span class="nav-link-text ms-1">Stok Opname</span>
+          <span class="nav-link-text ms-1">Stock Opname</span>
         </a>
       </li>
 

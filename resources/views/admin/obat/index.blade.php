@@ -98,7 +98,10 @@
                             <tbody>
                                 @forelse($obats as $index => $obat)
                                 @php
-                                    $kandunganList = $obat->kandungan->pluck('nama_kandungan')->toArray();
+                                    // Flatten nested arrays from kandungan nama_kandungan JSON field
+                                    $kandunganList = $obat->kandungan->flatMap(function($k) {
+                                        return is_array($k->nama_kandungan) ? $k->nama_kandungan : [$k->nama_kandungan];
+                                    })->toArray();
                                 @endphp
                                     <tr>
                                         <td class="text-center">{{ $obats->firstItem() + $index }}</td>

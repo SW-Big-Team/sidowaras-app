@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
+use App\Services\NotificationService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(NotificationService::class, function ($app) {
+            return new NotificationService();
+        });
     }
 
     /**
@@ -32,5 +36,20 @@ class AppServiceProvider extends ServiceProvider
                     : null,
             ],
         ]);
+
+        // Share notifications to all Blade views
+        View::composer('*', function ($view) {
+            if (Auth::check()) {
+                $notificationService = app(NotificationService::class);
+                $user = Auth::user();
+                $role = $user->role->nama_role ?? 'Guest';
+                
+                $view->with([
+                    'notifications' => $notificationService->getNotificationsForUser($user->id, $role, 10),
+                    'unreadNotificationCount' => $notificationService->getUnreadCount($user->id, $role),
+                ]);
+            }
+        });
     }
 }
+

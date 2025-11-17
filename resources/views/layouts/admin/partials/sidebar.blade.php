@@ -29,8 +29,9 @@
             'label' => 'Manajemen Stok',
             'items' => [
                 ['route' => 'admin.stok.index', 'routeIndex' => 'admin.stok.index', 'icon' => 'inventory_2', 'label' => 'Daftar Stok'],
-                ['route' => 'pembelian.index', 'routeIndex' => 'pembelian.index', 'icon' => 'shopping_cart', 'label' => 'Pembelian Obat'],
-                ['route' => 'opname.index', 'routeIndex' => 'opname.index', 'icon' => 'fact_check', 'label' => 'Stok Opname'],
+                ['route' => 'pembelian.*', 'routeIndex' => 'pembelian.index', 'icon' => 'shopping_cart', 'label' => 'Pembelian Obat'],
+                ['route' => 'stokopname.*', 'routeIndex' => 'stokopname.index', 'icon' => 'inventory', 'label' => 'Riwayat Opname'],
+                ['route' => 'admin.stokopname.*', 'routeIndex' => 'admin.stokopname.pending', 'icon' => 'pending_actions', 'label' => 'Approval Opname'],
             ]
         ],
         [

@@ -14,6 +14,7 @@ public function up()
         $table->enum('status', ['draft', 'pending', 'approved', 'rejected'])->default('draft');
         $table->foreignId('created_by')->constrained('users'); // Karyawan yang input
         $table->foreignId('approved_by')->nullable()->constrained('users'); // Admin yang approve
+        $table->timestamp('approved_at')->nullable(); // Waktu approval/rejection
         $table->timestamps();
     });
 }

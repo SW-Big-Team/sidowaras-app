@@ -57,12 +57,12 @@ class ObatSeeder extends Seeder
         $tube = SatuanObat::where('nama_satuan', 'Tube')->first();
         $pcs = SatuanObat::where('nama_satuan', 'Pcs')->first();
 
-        // Ambil referensi kandungan
-        $paracetamol = KandunganObat::where('nama_kandungan', 'Paracetamol')->first();
-        $ibuprofen = KandunganObat::where('nama_kandungan', 'Ibuprofen')->first();
-        $amoxicillin = KandunganObat::where('nama_kandungan', 'Amoxicillin')->first();
-        $cetirizine = KandunganObat::where('nama_kandungan', 'Cetirizine')->first();
-        $loratadine = KandunganObat::where('nama_kandungan', 'Loratadine')->first();
+        // Ambil referensi kandungan - nama_kandungan is JSON array, use JSON query
+        $paracetamol = KandunganObat::whereJsonContains('nama_kandungan', 'Paracetamol')->first();
+        $ibuprofen = KandunganObat::whereJsonContains('nama_kandungan', 'Ibuprofen')->first();
+        $amoxicillin = KandunganObat::whereJsonContains('nama_kandungan', 'Amoxicillin')->first();
+        $cetirizine = KandunganObat::whereJsonContains('nama_kandungan', 'Cetirizine')->first();
+        $loratadine = KandunganObat::whereJsonContains('nama_kandungan', 'Loratadine')->first();
 
         $obatData = [
             [
@@ -176,23 +176,28 @@ class ObatSeeder extends Seeder
         ];
 
         foreach ($obatData as $data) {
-            Obat::firstOrCreate(
+            $obat = Obat::updateOrCreate(
                 [
                     'kode_obat' => $data['kode_obat'],
                 ],
                 [
-                    'uuid' => Str::uuid(),
                     'nama_obat' => $data['nama_obat'],
                     'deskripsi' => $data['deskripsi'],
                     'kategori_id' => $data['kategori_id'],
                     'satuan_obat_id' => $data['satuan_obat_id'],
-                    'kandungan_id' => $data['kandungan_id'],
+                    'kandungan_id' => $data['kandungan_id'], // Already an array, will be auto-cast to JSON
                     'stok_minimum' => $data['stok_minimum'],
                     'is_racikan' => $data['is_racikan'],
                     'lokasi_rak' => $data['lokasi_rak'],
                     'barcode' => $data['barcode'],
                 ]
             );
+            
+            // Ensure UUID is set if not already present
+            if (empty($obat->uuid)) {
+                $obat->uuid = Str::uuid();
+                $obat->save();
+            }
         }
     }
 }

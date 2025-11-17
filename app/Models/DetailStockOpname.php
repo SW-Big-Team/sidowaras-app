@@ -12,13 +12,13 @@ class DetailStockOpname extends Model
     protected $table = 'detail_stock_opname';
     protected $guarded = ['id'];
 
-    public function stockOpname()
+    public function obat()
     {
-        return $this->belongsTo(StockOpname::class, 'opname_id');
+        return $this->belongsTo(Obat::class, 'obat_id');
     }
 
-    public function batch()
+    public function stockOpname()
     {
-        return $this->belongsTo(StokBatch::class, 'batch_id');
+        return $this->belongsTo(StockOpname::class, 'stock_opname_id');
     }
 }

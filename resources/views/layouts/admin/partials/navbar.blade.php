@@ -14,9 +14,11 @@
         <li class="nav-item dropdown pe-3">
           <a class="nav-link text-body p-0 position-relative cursor-pointer" id="dropdownNotif" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="material-symbols-rounded cursor-pointer">notifications</i>
+            @if($unreadNotificationCount > 0)
             <span class="position-absolute top-5 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
-              3
+              {{ $unreadNotificationCount }}
             </span>
+            @endif
           </a>
           <ul class="dropdown-menu dropdown-menu-end p-2 me-sm-n4" aria-labelledby="dropdownNotif" style="min-width: 320px;">
             <li class="mb-2">
@@ -28,72 +30,44 @@
             <li>
               <hr class="dropdown-divider">
             </li>
+            @forelse($notifications as $notif)
             <li class="mb-2">
-              <a class="dropdown-item border-radius-md" href="#">
+              <a class="dropdown-item border-radius-md {{ $notif->is_warning ? 'bg-light-warning' : '' }}" href="{{ $notif->link ?? '#' }}" onclick="{{ $notif->is_warning ? 'return true;' : 'markAsRead(' . $notif->id . '); return false;' }}">
                 <div class="d-flex py-1">
                   <div class="my-auto">
-                    <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-md me-2">
-                      <i class="material-symbols-rounded opacity-10 text-sm">inventory_2</i>
+                    <div class="icon icon-shape bg-gradient-{{ $notif->icon_color }} shadow text-center border-radius-md me-2">
+                      <i class="material-symbols-rounded opacity-10 text-sm">{{ $notif->icon }}</i>
                     </div>
                   </div>
                   <div class="d-flex flex-column justify-content-center">
                     <h6 class="text-sm font-weight-normal mb-1">
-                      <span class="font-weight-bold">Stok Menipis</span>
+                      <span class="font-weight-bold">{{ $notif->title }}</span>
+                      @if($notif->is_warning)
+                      <span class="badge badge-sm bg-warning ms-1">!</span>
+                      @endif
                     </h6>
                     <p class="text-xs text-secondary mb-0">
                       <i class="material-symbols-rounded text-xxs">schedule</i>
-                      5 obat perlu restok segera
+                      {{ $notif->message }}
                     </p>
                   </div>
                 </div>
               </a>
             </li>
+            @empty
             <li class="mb-2">
-              <a class="dropdown-item border-radius-md" href="#">
-                <div class="d-flex py-1">
-                  <div class="my-auto">
-                    <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md me-2">
-                      <i class="material-symbols-rounded opacity-10 text-sm">event_busy</i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column justify-content-center">
-                    <h6 class="text-sm font-weight-normal mb-1">
-                      <span class="font-weight-bold">Obat Kadaluarsa</span>
-                    </h6>
-                    <p class="text-xs text-secondary mb-0">
-                      <i class="material-symbols-rounded text-xxs">schedule</i>
-                      2 obat akan kadaluarsa bulan ini
-                    </p>
-                  </div>
-                </div>
-              </a>
+              <div class="text-center py-3">
+                <i class="material-symbols-rounded text-secondary" style="font-size: 2rem;">notifications_off</i>
+                <p class="text-xs text-secondary mb-0">Tidak ada notifikasi</p>
+              </div>
             </li>
-            <li class="mb-2">
-              <a class="dropdown-item border-radius-md" href="#">
-                <div class="d-flex py-1">
-                  <div class="my-auto">
-                    <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md me-2">
-                      <i class="material-symbols-rounded opacity-10 text-sm">shopping_cart</i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column justify-content-center">
-                    <h6 class="text-sm font-weight-normal mb-1">
-                      <span class="font-weight-bold">Pembelian Baru</span>
-                    </h6>
-                    <p class="text-xs text-secondary mb-0">
-                      <i class="material-symbols-rounded text-xxs">schedule</i>
-                      Pembelian #PB-001 berhasil
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </li>
+            @endforelse
             <li>
               <hr class="dropdown-divider">
             </li>
             <li class="text-center">
-              <a href="#" class="btn btn-sm bg-gradient-primary mb-0 w-100">
-                Lihat Semua Notifikasi
+              <a href="#" class="btn btn-sm bg-gradient-primary mb-0 w-100" onclick="markAllAsRead()">
+                Tandai Semua Dibaca
               </a>
             </li>
           </ul>
