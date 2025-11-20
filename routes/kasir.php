@@ -3,10 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Kasir\CartApprovalController;
 use App\Http\Controllers\Kasir\TransaksiController;
+use App\Http\Controllers\Kasir\DashboardController;
 use App\Http\Controllers\Shared\StokController;
 
 Route::middleware(['auth', 'role:Kasir,Admin'])->prefix('kasir')->name('kasir.')->group(function () {
-    Route::get('/dashboard', fn() => view('kasir.index'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Cart Approval
     Route::prefix('cart')->name('cart.')->group(function () {

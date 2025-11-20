@@ -1,238 +1,240 @@
-<!--
-=========================================================
-* Sidowaras App - Professional Kasir Dashboard
-* Modern Medical/Healthcare Theme
-=========================================================
--->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+
   <title>@yield('title', 'Dashboard Kasir - Sidowaras App')</title>
-  
-  <!--     Fonts and icons     -->
+
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
-  <!-- Nucleo Icons -->
+  
   <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- Material Icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
   
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
+
   <style>
-    /* Custom Professional Styles */
+    :root {
+      --sw-primary: #22c55e;
+      --sw-primary-dark: #16a34a;
+      --sw-primary-soft: #f0fdf4;
+      --sw-text: #1e293b;
+      --sw-surface: #ffffff;
+      --sw-surface-alt: #f8fafc;
+      --sw-border: #e2e8f0;
+      --sw-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      color: var(--sw-text);
+      overflow-x: hidden;
     }
-    
-    /* Sidebar Toggle Styles */
+
+    /* Sidebar Logic */
     .sidenav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      z-index: 1050;
-      transition: transform 0.3s ease;
+      z-index: 3000 !important;
+      transition: transform 0.3s ease-in-out;
     }
-    
-    /* Desktop Behavior */
+
+    /* Mobile: Hidden by default */
+    @media (max-width: 1199px) {
+        body:not(.g-sidenav-show) .sidenav {
+            transform: translateX(-120%) !important;
+        }
+        body.g-sidenav-show .sidenav {
+            transform: translateX(0) !important;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        body.g-sidenav-show::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2999;
+            backdrop-filter: blur(2px);
+        }
+    }
+
+    /* Desktop: Standard Behavior */
     @media (min-width: 1200px) {
-      .g-sidenav-show .sidenav {
+      /* Sidebar always visible on desktop, but can slide off-screen */
+      .sidenav {
         transform: translateX(0);
       }
       
-      .g-sidenav-hidden .sidenav {
-        transform: translateX(-100%);
-      }
-      
-      .g-sidenav-hidden .main-content {
-        margin-left: 0 !important;
-      }
-      
-      .g-sidenav-show .main-content {
+      /* When sidebar is shown, push content to the right */
+      body.g-sidenav-show .main-content {
         margin-left: 17.125rem;
       }
-    }
-    
-    /* Mobile/Tablet Behavior */
-    @media (max-width: 1199px) {
-      .sidenav {
-        transform: translateX(-100%);
-      }
       
-      .g-sidenav-show .sidenav {
-        transform: translateX(0) !important;
-      }
-      
-      .g-sidenav-hidden .sidenav {
-        transform: translateX(-100%) !important;
-      }
-      
-      .main-content {
+      /* When sidebar is hidden, remove content margin and slide sidebar off */
+      body:not(.g-sidenav-show) .main-content {
         margin-left: 0 !important;
       }
       
-      /* Backdrop overlay when sidebar is open on mobile */
-      .g-sidenav-show::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1049;
-        animation: fadeIn 0.3s ease;
-      }
-      
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+      body:not(.g-sidenav-show) .sidenav {
+        transform: translateX(-100%);
       }
     }
-    
-    .main-content {
-      background: transparent;
-      transition: margin-left 0.3s ease;
-      position: relative;
+
+    .navbar-main {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1030 !important;
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(12px) !important;
     }
-    
-    .card {
-      border: none;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-    }
-    
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-      border: none;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
-    }
-    
-    .page-header {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-      border-radius: 1rem;
-      margin-bottom: 2rem;
-      padding: 2rem;
-      color: white;
-    }
-    
-    /* Sidebar Hover Effects */
-    .sidenav .nav-link {
-      transition: all 0.2s ease;
-      border-radius: 0.5rem;
-      margin: 0 0.5rem;
-    }
-    
-    .sidenav .nav-link:not(.active):hover {
-      background-color: #f8f9fa;
-      transform: translateX(5px);
-    }
+
+    .text-primary { color: var(--sw-primary) !important; }
+    .bg-primary { background-color: var(--sw-primary) !important; }
+    a, button, .card, .nav-link { transition: all 0.2s ease-in-out; }
   </style>
-  
+
   @stack('styles')
 </head>
 
 <body class="g-sidenav-show">
   
   @include('layouts.kasir.partials.sidebar')
-  
+
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    
     @include('layouts.kasir.partials.navbar')
-    
+
     <div class="container-fluid py-4">
       @yield('content')
-      
       @include('layouts.kasir.partials.footer')
     </div>
   </main>
-  
-  @include('layouts.kasir.partials.configurator')
+
   @include('layouts.kasir.partials.notifications-modal')
   @include('layouts.kasir.partials.sidebar-toggle')
-  
-  <!--   Core JS Files   -->
-  <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
-  <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
-  <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
-  <script src="{{ asset('assets/js/material-dashboard.min.js?v=3.2.0') }}"></script>
-  
+
+  <script src="{{ asset('assets/js/core/popper.min.js') }}" defer></script>
+  <script src="{{ asset('assets/js/core/bootstrap.min.js') }}" defer></script>
+  <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}" defer></script>
+  <script src="{{ asset('assets/js/material-dashboard.min.js?v=3.2.0') }}" defer></script>
+
   @stack('scripts')
-  
+
   <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-    
-    // Notification functions
-    function markAsRead(notifId) {
-      const link = event.currentTarget.href;
-      event.preventDefault();
+    document.addEventListener('DOMContentLoaded', function () {
       
-      fetch(`/notifications/${notifId}/read`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        }
-      }).then(() => {
-        if (link && link !== '#' && !link.includes('#')) {
-          window.location.href = link;
+      // --- SIDEBAR TOGGLE LOGIC (Same as Karyawan) ---
+      const body = document.body;
+      const className = 'g-sidenav-show';
+      const mobileBreakPoint = 1200;
+
+      // 1. UPDATE ICON
+      function updateToggleIcon(isShown) {
+         const icon = document.querySelector('#sidebarToggleBtn i');
+         if(icon) {
+             icon.textContent = isShown ? 'close' : 'menu';
+             icon.style.transform = isShown ? 'rotate(90deg)' : 'rotate(0deg)';
+         }
+      }
+
+      // 2. INIT SIDEBAR STATE
+      function initSidebarState() {
+        const savedState = localStorage.getItem('sidebarState');
+        const isMobile = window.innerWidth < mobileBreakPoint;
+
+        if (isMobile) {
+          // Mobile: start hidden by default
+          body.classList.remove(className);
+          updateToggleIcon(false);
         } else {
-          location.reload();
+          // Desktop: check localStorage
+          if (savedState === 'hidden') {
+            body.classList.remove(className);
+          } else {
+            body.classList.add(className);
+          }
+        }
+      }
+
+      // 3. TOGGLE FUNCTION (Global)
+      window.toggleSidebar = function () {
+        const isShown = body.classList.contains(className);
+        
+        if (isShown) {
+          body.classList.remove(className);
+          localStorage.setItem('sidebarState', 'hidden');
+          updateToggleIcon(false);
+        } else {
+          body.classList.add(className);
+          localStorage.setItem('sidebarState', 'show');
+          updateToggleIcon(true);
+        }
+      };
+
+      // 4. CLOSE SIDEBAR ON BACKDROP CLICK (Mobile Only)
+      document.addEventListener('click', function (event) {
+        const isMobile = window.innerWidth < mobileBreakPoint;
+        if (!isMobile) return;
+
+        if (body.classList.contains(className)) {
+            const sidebar = document.querySelector('.sidenav');
+            const toggleBtn = document.getElementById('sidebarToggleBtn');
+
+            const clickedInsideSidebar = sidebar && sidebar.contains(event.target);
+            const clickedToggle = toggleBtn && toggleBtn.contains(event.target);
+
+            if (!clickedInsideSidebar && !clickedToggle) {
+                window.toggleSidebar();
+            }
         }
       });
-      return false;
-    }
-    
-    function markAllAsRead() {
-      event.preventDefault();
-      fetch('/notifications/read-all', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        }
-      }).then(() => {
-        location.reload();
+
+      // 5. INIT
+      initSidebarState();
+
+      // 6. RESIZE HANDLER
+      let resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(initSidebarState, 200);
       });
-    }
-    
-    setInterval(() => {
+
+      // --- NOTIFICATION LOGIC ---
+      window.markAsRead = function (notifId) {
+        const link = event.currentTarget.href;
+        event.preventDefault();
+        fetch(`/notifications/${notifId}/read`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          }
+        }).then(() => {
+           if (link && link !== '#' && !link.includes('#')) window.location.href = link;
+           else location.reload();
+        });
+      };
+
+      // --- SESSION CHECK ---
+      setInterval(() => {
         fetch("/session/check")
-            .then(res => res.json())
-            .then(data => {
-                if (!data.authenticated) {
-                    alert("Your session has expired or logged in elsewhere.");
-                    window.location.href = "/login";
-                }
-            })
-            .catch(() => {});
-    }, 10000);
+          .then(res => res.json())
+          .then(data => {
+            if (!data.authenticated) {
+              window.location.href = "/login";
+            }
+          }).catch(() => { });
+      }, 30000);
+    });
   </script>
 </body>
 
