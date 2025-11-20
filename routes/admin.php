@@ -75,7 +75,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
     });
 
     Route::prefix('laporan')->name('laporan.')->group(function () {
-        Route::get('/', fn() => view('admin.laporan.index'))->name('index');
+        Route::get('/', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('index');
     });
 
     // Manajemen Pengguna

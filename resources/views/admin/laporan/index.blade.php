@@ -32,30 +32,19 @@
             <div class="card">
                 <div class="card-body p-3">
                     <form method="GET" class="row g-3 align-items-end">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label text-sm font-weight-bold">Tanggal Dari</label>
                             <div class="input-group input-group-outline">
-                                <input type="date" name="from" value="{{ request('from', now()->startOfMonth()->format('Y-m-d')) }}" class="form-control">
+                                <input type="date" name="from" value="{{ request('from', $from->format('Y-m-d')) }}" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label text-sm font-weight-bold">Tanggal Sampai</label>
                             <div class="input-group input-group-outline">
-                                <input type="date" name="to" value="{{ request('to', now()->format('Y-m-d')) }}" class="form-control">
+                                <input type="date" name="to" value="{{ request('to', $to->format('Y-m-d')) }}" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label text-sm font-weight-bold">Jenis Laporan</label>
-                            <div class="input-group input-group-outline">
-                                <select name="type" class="form-control">
-                                    <option value="all">Semua</option>
-                                    <option value="transaksi">Transaksi</option>
-                                    <option value="pembelian">Pembelian</option>
-                                    <option value="stok">Stok</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <button type="submit" class="btn btn-primary mb-0 w-100">
                                 <i class="material-symbols-rounded me-1">search</i> Tampilkan
                             </button>
@@ -76,9 +65,10 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Total Pendapatan</p>
-                        <h4 class="mb-0">Rp 50.450.000</h4>
-                        <p class="text-xs text-success mb-0">
-                            <i class="material-symbols-rounded text-xs">arrow_upward</i> +15% dari bulan lalu
+                        <h4 class="mb-0">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h4>
+                        <p class="text-xs mb-0 {{ $revenueChange >= 0 ? 'text-success' : 'text-danger' }}">
+                            <i class="material-symbols-rounded text-xs">{{ $revenueChange >= 0 ? 'arrow_upward' : 'arrow_downward' }}</i> 
+                            {{ number_format(abs($revenueChange), 1) }}% dari periode sebelumnya
                         </p>
                     </div>
                 </div>
@@ -92,9 +82,10 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Total Transaksi</p>
-                        <h4 class="mb-0">1,245</h4>
-                        <p class="text-xs text-success mb-0">
-                            <i class="material-symbols-rounded text-xs">arrow_upward</i> +8% dari bulan lalu
+                        <h4 class="mb-0">{{ number_format($totalTransactions) }}</h4>
+                        <p class="text-xs mb-0 {{ $transactionsChange >= 0 ? 'text-success' : 'text-danger' }}">
+                            <i class="material-symbols-rounded text-xs">{{ $transactionsChange >= 0 ? 'arrow_upward' : 'arrow_downward' }}</i> 
+                            {{ number_format(abs($transactionsChange), 1) }}% dari periode sebelumnya
                         </p>
                     </div>
                 </div>
@@ -108,9 +99,10 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Total Pembelian</p>
-                        <h4 class="mb-0">Rp 35.200.000</h4>
-                        <p class="text-xs text-danger mb-0">
-                            <i class="material-symbols-rounded text-xs">arrow_downward</i> -3% dari bulan lalu
+                        <h4 class="mb-0">Rp {{ number_format($totalPurchases, 0, ',', '.') }}</h4>
+                        <p class="text-xs mb-0 {{ $purchasesChange >= 0 ? 'text-danger' : 'text-success' }}">
+                            <i class="material-symbols-rounded text-xs">{{ $purchasesChange >= 0 ? 'arrow_upward' : 'arrow_downward' }}</i> 
+                            {{ number_format(abs($purchasesChange), 1) }}% dari periode sebelumnya
                         </p>
                     </div>
                 </div>
@@ -124,7 +116,7 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Jumlah Item Stok</p>
-                        <h4 class="mb-0">456</h4>
+                        <h4 class="mb-0">{{ number_format($totalStock) }}</h4>
                         <p class="text-xs text-secondary mb-0">
                             Total produk tersedia
                         </p>
@@ -141,9 +133,7 @@
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-0">Grafik Penjualan & Pembelian</h6>
-                        <button class="btn btn-sm btn-outline-primary mb-0">
-                            <i class="material-symbols-rounded text-sm">refresh</i>
-                        </button>
+                        <span class="text-xs text-secondary">{{ $from->format('d M Y') }} - {{ $to->format('d M Y') }}</span>
                     </div>
                 </div>
                 <div class="card-body p-3">
@@ -167,13 +157,13 @@
                             <span class="text-sm">
                                 <span class="badge badge-sm bg-gradient-success"></span> Tunai
                             </span>
-                            <span class="text-sm font-weight-bold">65%</span>
+                            <span class="text-sm font-weight-bold">{{ number_format($tunaiPercentage, 1) }}%</span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-sm">
                                 <span class="badge badge-sm bg-gradient-info"></span> Non Tunai
                             </span>
-                            <span class="text-sm font-weight-bold">35%</span>
+                            <span class="text-sm font-weight-bold">{{ number_format($nonTunaiPercentage, 1) }}%</span>
                         </div>
                     </div>
                 </div>
@@ -188,47 +178,28 @@
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">Obat Terlaris</h6>
-                        <a href="#" class="text-primary text-sm">Lihat Semua</a>
+                        <span class="text-xs text-secondary">Top 5</span>
                     </div>
                 </div>
                 <div class="card-body p-3">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="mb-0 text-sm">Paracetamol 500mg</h6>
-                                    <p class="text-xs text-secondary mb-0">Kategori: Analgesik</p>
+                        @forelse($topSelling as $medicine)
+                            <li class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="mb-0 text-sm">{{ $medicine->nama_obat }}</h6>
+                                        <p class="text-xs text-secondary mb-0">{{ $medicine->total_sold }} unit terjual</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge badge-sm bg-gradient-success">Rp {{ number_format($medicine->total_revenue, 0, ',', '.') }}</span>
+                                    </div>
                                 </div>
-                                <div class="text-end">
-                                    <span class="badge badge-sm bg-gradient-success">245 terjual</span>
-                                    <p class="text-xs text-secondary mb-0">Rp 2.450.000</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="mb-0 text-sm">Amoxicillin 500mg</h6>
-                                    <p class="text-xs text-secondary mb-0">Kategori: Antibiotik</p>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge badge-sm bg-gradient-success">198 terjual</span>
-                                    <p class="text-xs text-secondary mb-0">Rp 3.960.000</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="mb-0 text-sm">Vitamin C 1000mg</h6>
-                                    <p class="text-xs text-secondary mb-0">Kategori: Vitamin</p>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge badge-sm bg-gradient-success">156 terjual</span>
-                                    <p class="text-xs text-secondary mb-0">Rp 1.560.000</p>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        @empty
+                            <li class="list-group-item border-0 px-0 text-center text-secondary">
+                                <p class="mb-0">Tidak ada data untuk periode ini</p>
+                            </li>
+                        @endforelse
                     </ul>
                 </div>
             </div>
@@ -243,45 +214,25 @@
                 </div>
                 <div class="card-body p-3">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="mb-0 text-sm">Ibuprofen 400mg</h6>
-                                    <p class="text-xs text-secondary mb-0">Stok Min: 50</p>
+                        @forelse($lowStock as $item)
+                            <li class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="mb-0 text-sm">{{ $item->obat->nama_obat }}</h6>
+                                        <p class="text-xs text-secondary mb-0">Stok Min: {{ $item->obat->stok_minimum }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge badge-sm {{ $item->total_stock < ($item->obat->stok_minimum / 2) ? 'bg-gradient-danger' : 'bg-gradient-warning' }}">
+                                            <i class="material-symbols-rounded text-xs">warning</i> {{ $item->total_stock }} tersisa
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="text-end">
-                                    <span class="badge badge-sm bg-gradient-warning">
-                                        <i class="material-symbols-rounded text-xs">warning</i> 35 tersisa
-                                    </span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="mb-0 text-sm">Cetirizine 10mg</h6>
-                                    <p class="text-xs text-secondary mb-0">Stok Min: 30</p>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge badge-sm bg-gradient-danger">
-                                        <i class="material-symbols-rounded text-xs">warning</i> 18 tersisa
-                                    </span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="mb-0 text-sm">Antasida Tablet</h6>
-                                    <p class="text-xs text-secondary mb-0">Stok Min: 40</p>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge badge-sm bg-gradient-warning">
-                                        <i class="material-symbols-rounded text-xs">warning</i> 28 tersisa
-                                    </span>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        @empty
+                            <li class="list-group-item border-0 px-0 text-center text-secondary">
+                                <p class="mb-0">Semua stok aman</p>
+                            </li>
+                        @endforelse
                     </ul>
                 </div>
             </div>
@@ -299,17 +250,17 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(salesCtx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                labels: @json($monthlyLabels),
                 datasets: [{
-                    label: 'Penjualan',
-                    data: [65, 59, 80, 81, 56, 55, 70, 75, 85, 90, 95, 100],
+                    label: 'Penjualan (Juta Rp)',
+                    data: @json($monthlyData['sales'] ?? []),
                     borderColor: '#22c55e',
                     backgroundColor: 'rgba(34, 197, 94, 0.1)',
                     tension: 0.4,
                     fill: true
                 }, {
-                    label: 'Pembelian',
-                    data: [28, 48, 40, 19, 86, 27, 45, 50, 55, 60, 65, 70],
+                    label: 'Pembelian (Juta Rp)',
+                    data: @json($monthlyData['purchases'] ?? []),
                     borderColor: '#f59e0b',
                     backgroundColor: 'rgba(245, 158, 11, 0.1)',
                     tension: 0.4,
@@ -327,7 +278,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'Rp ' + value + 'jt';
+                            }
+                        }
                     }
                 }
             }
@@ -342,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: ['Tunai', 'Non Tunai'],
                 datasets: [{
-                    data: [65, 35],
+                    data: [@json($tunaiPercentage), @json($nonTunaiPercentage)],
                     backgroundColor: ['#22c55e', '#06b6d4'],
                     borderWidth: 0
                 }]

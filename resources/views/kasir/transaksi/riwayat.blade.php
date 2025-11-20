@@ -18,18 +18,24 @@
                                 Pantau semua transaksi yang telah Anda proses.
                             </p>
                         </div>
-                        <div class="col-md-6 d-flex justify-content-md-end justify-content-start gap-2">
-                            {{-- Search Input (Visual Only - Connect to backend if needed) --}}
-                            <div class="input-group w-md-50 w-100">
-                                <span class="input-group-text text-body bg-gray-100 border-end-0">
-                                    <i class="fas fa-search" aria-hidden="true"></i>
-                                </span>
-                                <input type="text" class="form-control bg-gray-100 border-start-0 ps-0" placeholder="Cari No Transaksi...">
-                            </div>
-                            {{-- Date Filter Button --}}
-                            <button class="btn btn-white border mb-0 text-secondary text-nowrap">
-                                <i class="material-symbols-rounded align-middle me-1 text-lg">calendar_today</i> Filter
-                            </button>
+                        <div class="col-md-6">
+                            <form method="GET" action="{{ route('kasir.transaksi.riwayat') }}" class="d-flex justify-content-md-end justify-content-start gap-2">
+                                {{-- Search Input --}}
+                                <div class="input-group" style="max-width: 300px;">
+                                    <span class="input-group-text text-body bg-gray-100 border-end-0">
+                                        <i class="fas fa-search" aria-hidden="true"></i>
+                                    </span>
+                                    <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-gray-100 border-start-0 ps-0" placeholder="Cari No Transaksi...">
+                                </div>
+                                {{-- Date Filter Button --}}
+                                <button type="button" class="btn btn-outline-secondary mb-0 text-nowrap" data-bs-toggle="modal" data-bs-target="#filterModal">
+                                    <i class="material-symbols-rounded align-middle me-1" style="font-size: 1.2rem;">filter_list</i> 
+                                    Filter
+                                    @if(request('start_date') || request('end_date') || request('metode'))
+                                        <span class="badge bg-success ms-1">✓</span>
+                                    @endif
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -137,6 +143,82 @@
     </div>
 </div>
 @endsection
+
+{{-- Filter Modal --}}
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterModalLabel">
+                    <i class="material-symbols-rounded align-middle me-2">filter_list</i>
+                    Filter Transaksi
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="GET" action="{{ route('kasir.transaksi.riwayat') }}">
+                <div class="modal-body">
+                    {{-- Preserve search query --}}
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
+
+                    {{-- Date Range --}}
+                    <div class="mb-3">
+                        <label class="form-label text-sm font-weight-bold">Rentang Tanggal</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control" placeholder="Dari">
+                                <small class="text-muted">Dari</small>
+                            </div>
+                            <div class="col-6">
+                                <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control" placeholder="Sampai">
+                                <small class="text-muted">Sampai</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Payment Method --}}
+                    <div class="mb-3">
+                        <label class="form-label text-sm font-weight-bold">Metode Pembayaran</label>
+                        <select name="metode" class="form-control">
+                            <option value="">Semua Metode</option>
+                            <option value="tunai" {{ request('metode') == 'tunai' ? 'selected' : '' }}>Tunai</option>
+                            <option value="non tunai" {{ request('metode') == 'non tunai' ? 'selected' : '' }}>Non Tunai</option>
+                        </select>
+                    </div>
+
+                    {{-- Active Filters Summary --}}
+                    @if(request('start_date') || request('end_date') || request('metode'))
+                        <div class="alert alert-info">
+                            <small class="text-sm">
+                                <strong>Filter Aktif:</strong><br>
+                                @if(request('start_date'))
+                                    • Dari: {{ \Carbon\Carbon::parse(request('start_date'))->format('d M Y') }}<br>
+                                @endif
+                                @if(request('end_date'))
+                                    • Sampai: {{ \Carbon\Carbon::parse(request('end_date'))->format('d M Y') }}<br>
+                                @endif
+                                @if(request('metode'))
+                                    • Metode: {{ ucfirst(request('metode')) }}<br>
+                                @endif
+                            </small>
+                        </div>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ route('kasir.transaksi.riwayat') }}" class="btn btn-outline-secondary mb-0">
+                        <i class="material-symbols-rounded align-middle me-1" style="font-size: 1rem;">refresh</i>
+                        Reset
+                    </a>
+                    <button type="submit" class="btn btn-success mb-0">
+                        <i class="material-symbols-rounded align-middle me-1" style="font-size: 1rem;">check</i>
+                        Terapkan Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @push('styles')
 <style>

@@ -11,7 +11,7 @@
                 <i class="fas fa-arrow-left me-2"></i> Kembali ke Riwayat
             </a>
             <div class="d-flex gap-2">
-                <button onclick="window.print()" class="btn btn-white btn-sm mb-0 text-dark border">
+                <button type="button" onclick="printStruk()" class="btn btn-white btn-sm mb-0 text-dark border">
                     <i class="fas fa-print me-2"></i> Cetak Struk
                 </button>
                 <button class="btn btn-dark btn-sm mb-0 bg-gradient-dark">
@@ -151,29 +151,79 @@
 
 @push('styles')
 <style>
-    /* Print Styles */
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        #print-area, #print-area * {
-            visibility: visible;
-        }
-        #print-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            box-shadow: none !important;
-            border: none !important;
-        }
-        .btn {
-            display: none !important;
-        }
+.bg-gray-100 {
+    background-color: #f8f9fa !important;
+}
+
+@media print {
+    /* Hide unwanted elements di halaman utama */
+    .sidenav, 
+    .navbar, 
+    .sidebar-toggle-plugin,
+    .container-fluid > .row:first-child {
+        display: none !important;
     }
-    
-    .bg-gray-100 {
-        background-color: #f8f9fa !important;
+
+    .card {
+        box-shadow: none !important;
+        border: none !important;
     }
+
+    .badge {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    @page {
+        margin: 1.5cm;
+        size: A4;
+    }
+
+    body {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
 </style>
+
+@push('scripts')
+<script>
+ function printStruk() {
+    const printArea = document.getElementById('print-area');
+    if (!printArea) {
+        // fallback, tapi seharusnya tidak kepakai
+        window.print();
+        return;
+    }
+
+    // Ambil HTML struk saja
+    const printContents = printArea.innerHTML;
+
+    // Buka window baru khusus untuk printing
+    const printWindow = window.open('', '', 'width=800,height=900');
+
+    printWindow.document.open();
+    printWindow.document.write('<html><head><title>Struk {{ $transaksi->no_transaksi }}</title>');
+
+    // Tambahkan stylesheet utama supaya tampilan tetap rapi
+    printWindow.document.write('<link rel="stylesheet" href="{{ asset('assets/css/material-dashboard.css?v=3.2.0') }}">');
+
+    // Styling minimal khusus print
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: "Inter", sans-serif; background:#ffffff; padding: 1.5cm; }');
+    printWindow.document.write('.card { box-shadow: none !important; border: none !important; }');
+    printWindow.document.write('@page { size: A4; margin: 0; }');
+    printWindow.document.write('</style>');
+
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+
+    printWindow.focus();
+    printWindow.print();
+    // Kalau mau otomatis nutup setelah print:
+    // printWindow.close();
+ }
+</script>
 @endpush
