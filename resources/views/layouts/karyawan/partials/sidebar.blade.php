@@ -35,10 +35,11 @@
     ];
 @endphp
 
-{{-- SIDEBAR --}}
+{{-- SIDEBAR HTML --}}
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-white" id="sidenav-main">
     <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-xl-none"
+        {{-- Close 'X' icon inside sidebar (optional, strictly for mobile internal closing) --}}
+        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
            aria-hidden="true"
            id="iconSidenav"
            onclick="toggleSidebar()"></i>
@@ -85,80 +86,43 @@
     </div>
 </aside>
 
-{{-- TOGGLE BUTTON (BOTTOM RIGHT) --}}
-<div class="sidebar-toggle-plugin">
-    <a class="sidebar-toggle-button" onclick="toggleSidebar()" id="sidebarToggleBtn">
-        <i class="material-symbols-rounded" id="sidebarToggleIcon">menu</i>
-    </a>
-</div>
+{{-- NOTE: The Toggle Button HTML is REMOVED from here because you have it in sidebar-toggle.blade.php --}}
 
-{{-- STYLE & SCRIPT --}}
+{{-- STYLE & SCRIPT FOR SIDEBAR BEHAVIOR --}}
 <style>
-    /* Animasi / transisi hide-show sidebar */
+    /* --- DESKTOP --- */
     #sidenav-main {
-        transition: transform 0.25s ease, opacity 0.2s ease;
+        transition: transform 0.3s ease-in-out;
+        z-index: 1050;
     }
 
-    /* Keadaan tersembunyi: benar-benar keluar layar + tidak bisa diklik */
-    #sidenav-main.sidenav-hidden {
-        transform: translateX(-150%);
-        opacity: 0;
-        pointer-events: none;
-    }
+    /* --- MOBILE LOGIC (Max-width 1199px) --- */
+    @media (max-width: 1199px) {
+        #sidenav-main {
+            /* Fixed off-screen to the left */
+            position: fixed !important;
+            left: 0 !important;
+            margin-left: 0 !important; 
+            transform: translateX(-110%); /* Hidden */
+            height: 100vh;
+            box-shadow: none;
+        }
 
-    /* Supaya konten bisa melebar kalau sidebar disembunyikan (opsional) */
-    .main-content.sidebar-collapsed {
-        margin-left: 0 !important;
-    }
-
-    .sidebar-toggle-plugin {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 9999;
-    }
-
-    .sidebar-toggle-button {
-        background: #ffffff;
-        border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 56px;
-        height: 56px;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .sidebar-toggle-button:hover {
-        transform: scale(1.08);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-    }
-
-    .sidebar-toggle-button i {
-        font-size: 28px;
-        color: #333;
+        /* Class added by JS to show sidebar */
+        #sidenav-main.mobile-visible {
+            transform: translateX(0) !important; /* Show */
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Dark Backdrop */
+        body.sidebar-open::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040; /* Behind sidebar, above content */
+            backdrop-filter: blur(2px);
+        }
     }
 </style>
-
-<script>
-    function toggleSidebar() {
-        const sidebar   = document.getElementById('sidenav-main');
-        const main      = document.querySelector('.main-content');
-        const icon      = document.getElementById('sidebarToggleIcon');
-
-        sidebar.classList.toggle('sidenav-hidden');
-
-        // Optional: lebarkan main-content ketika sidebar disembunyikan
-        if (main) {
-            main.classList.toggle('sidebar-collapsed');
-        }
-
-        // Ubah ikon antara menu / close
-        if (icon) {
-            const isHidden = sidebar.classList.contains('sidenav-hidden');
-            icon.textContent = isHidden ? 'menu' : 'close';
-        }
-    }
-</script>

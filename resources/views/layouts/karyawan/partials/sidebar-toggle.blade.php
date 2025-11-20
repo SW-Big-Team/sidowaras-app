@@ -1,10 +1,12 @@
-{{-- Sidebar Toggle Button (Mobile & Desktop) --}}
 <style>
     .sidebar-toggle-plugin {
         position: fixed;
-        bottom: 24px;    /* bottom right */
+        bottom: 24px;
         right: 24px;
-        z-index: 9999;   /* make sure it's above everything */
+        /* Max Safe Integer for Z-Index to ensure it's above all overlays/modals */
+        z-index: 2147483647; 
+        /* Ensures the element accepts clicks even if a parent has pointer-events: none */
+        pointer-events: auto; 
     }
 
     .sidebar-toggle-button {
@@ -18,6 +20,10 @@
         width: 56px;
         height: 56px;
         transition: all 0.2s ease-in-out;
+        /* specific text settings to prevent icon misalignment */
+        text-decoration: none;
+        user-select: none; 
+        -webkit-tap-highlight-color: transparent; /* Removes mobile tap blue box */
     }
 
     .sidebar-toggle-button:hover {
@@ -30,9 +36,9 @@
         color: #333;
     }
 </style>
-
 <div class="sidebar-toggle-plugin">
     <a class="sidebar-toggle-button" onclick="toggleSidebar()" id="sidebarToggleBtn">
         <i class="material-symbols-rounded">menu</i>
     </a>
 </div>
+
