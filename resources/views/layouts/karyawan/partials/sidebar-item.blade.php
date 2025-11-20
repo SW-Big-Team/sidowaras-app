@@ -1,31 +1,39 @@
-{{--
+{{-- 
   Sidebar Item Component
-  Description: Reusable navigation item for sidebar menu
-  
   Props:
-  - $route: Route pattern for active state matching
-  - $routeIndex: Actual route to navigate to (defaults to $route)
-  - $icon: Material Symbols icon name
-  - $label: Display text for the menu item
+  - $route: Route pattern for active state
+  - $routeIndex: Route name for navigation (optional)
+  - $icon: Material Symbols icon
+  - $label: Menu label
 --}}
 
 @php
     $targetRoute = $routeIndex ?? $route;
     $pattern = $routePattern ?? $route;
     $isActive = request()->routeIs($pattern);
-    $linkClasses = 'karyawan-nav-link'.($isActive ? ' active' : '');
 @endphp
 
-<li class="nav-item" role="presentation">
+<li class="nav-item">
     <a 
-        class="{{ $linkClasses }}" 
         href="{{ route($targetRoute) }}"
-        role="menuitem"
-        aria-current="{{ $isActive ? 'page' : 'false' }}"
+        @class([
+            'nav-link',
+            'active bg-gradient-primary text-white' => $isActive,
+            'text-dark' => ! $isActive,
+        ])
     >
-        <span class="icon" aria-hidden="true">
-            <i class="material-symbols-rounded">{{ $icon }}</i>
-        </span>
+        <div class="text-center me-2 d-flex align-items-center justify-content-center">
+            <i 
+                class="material-symbols-rounded"
+                @class([
+                    'text-white' => $isActive,
+                    'text-dark' => ! $isActive,
+                ])
+            >
+                {{ $icon }}
+            </i>
+        </div>
+
         <span class="nav-link-text ms-1">{{ $label }}</span>
     </a>
 </li>
