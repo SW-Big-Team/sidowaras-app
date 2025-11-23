@@ -27,10 +27,10 @@
                                 <select name="obat_id" id="obatSelect" class="form-control form-select" required style="border-right: 0;">
                                     <option value="">-- Cari atau pilih obat --</option>
                                     @foreach($obats as $obat)
-                                        <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_tersedia ?? 0 }}" data-barcode="{{ $obat->barcode ?? '' }}">
+                                        <option value="{{ $obat->id }}" data-stok="{{ $obat->sisa_stok ?? 0 }}" data-barcode="{{ $obat->barcode ?? '' }}">
                                             {{ $obat->nama_obat }} ({{ $obat->kode_obat }})
-                                            @if($obat->stok_tersedia && $obat->stok_tersedia > 0)
-                                                — Stok: {{ $obat->stok_tersedia }}
+                                            @if($obat->sisa_stok && $obat->sisa_stok > 0)
+                                                — Stok: {{ $obat->sisa_stok }}
                                             @else
                                                 — Stok Habis
                                             @endif

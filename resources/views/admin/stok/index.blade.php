@@ -84,7 +84,7 @@
             </div>
 
             <!-- Table -->
-            <x-data-table :headers="['#', 'Kode', 'Nama Obat', 'Kategori', 'Satuan', 'Stok Tersedia', 'Stok Min', 'Status', 'Aksi']">
+            <x-data-table :headers="['#', 'Kode', 'Nama Obat', 'Kategori', 'Satuan', 'Stok Tersedia', 'Stok Min', 'Status']">
                 @forelse($obats as $index => $obat)
                     @php
                         $totalStok = $obat->stokBatches->sum('sisa_stok');

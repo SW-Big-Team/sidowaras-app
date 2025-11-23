@@ -1,254 +1,159 @@
 @php
-    $role = Auth::user()->role->nama_role; 
+    $role = Auth::user()->role->nama_role;
     $layoutPath = 'layouts.' . strtolower($role) . '.app';
 @endphp
 
+
 @extends($layoutPath)
+
 
 @section('title', 'Tambah Pembelian')
 
-@section('breadcrumb')
-<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('pembelian.index') }}">Pembelian</a></li>
-    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tambah Pembelian</li>
-</ol>
-@endsection
 
 @section('content')
-<div class="container-fluid py-4">
-    <x-content-header title="Tambah Pembelian Baru" subtitle="Form untuk menambahkan data pembelian obat dari supplier">
-        <a href="{{ route('pembelian.index') }}" class="btn btn-outline-secondary mb-0">
-            <i class="material-symbols-rounded text-sm me-1">arrow_back</i> Kembali
+<div class="container-fluid mt-4 px-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0"><i class="fas fa-shopping-cart"></i> Tambah Pembelian</h4>
+        <a href="{{ route('pembelian.index') }}" class="btn btn-sm btn-secondary">
+            <i class="fas fa-arrow-left"></i> Kembali
         </a>
-    </x-content-header>
+    </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body p-4">
-                    @if($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
-                            <span class="alert-text">
-                                <strong>Terdapat kesalahan:</strong>
-                                <ul class="mb-0 mt-2">
-                                    @foreach($errors->all() as $err)
-                                        <li>{{ $err }}</li>
-                                    @endforeach
-                                </ul>
-                            </span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
 
-                    <form action="{{ route('pembelian.store') }}" method="POST" id="formPembelian">
-                        @csrf
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>Error!</strong>
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-                        <!-- Informasi Pembelian -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md me-3">
-                                        <i class="material-symbols-rounded opacity-10">receipt_long</i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">Informasi Pembelian</h6>
-                                        <p class="text-sm text-secondary mb-0">Data faktur dan pembayaran</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-3 mb-3">
-                                <div class="input-group input-group-static">
-                                    <label>No Faktur</label>
-                                    <input type="text" name="no_faktur" class="form-control" value="{{ old('no_faktur') }}" placeholder="Auto generate">
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="input-group input-group-static">
-                                    <label>Tanggal <span class="text-danger">*</span></label>
-                                    <input type="datetime-local" name="tgl_pembelian" class="form-control" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="input-group input-group-static">
-                                    <label>Metode Pembayaran <span class="text-danger">*</span></label>
-                                    <select name="metode_pembayaran" id="metode_pembayaran" class="form-control" required>
-                                        <option value="tunai" @selected(old('metode_pembayaran', 'tunai') === 'tunai')>Tunai</option>
-                                        <option value="non tunai" @selected(old('metode_pembayaran') === 'non tunai')>Non Tunai</option>
-                                        <option value="termin" @selected(old('metode_pembayaran') === 'termin')>Termin</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="input-group input-group-static">
-                                    <label>Total Harga</label>
-                                    <input type="text" id="total_harga_display" class="form-control fw-bold text-success" value="Rp 0" readonly>
-                                    <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Data Pengirim -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md me-3">
-                                        <i class="material-symbols-rounded opacity-10">local_shipping</i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">Data Pengirim</h6>
-                                        <p class="text-sm text-secondary mb-0">Informasi pengirim barang</p>
-                                    </div>
-                                </div>
-                            </div>
+    <form action="{{ route('pembelian.store') }}" method="POST" id="formPembelian">
+        @csrf
 
-                            <div class="col-md-6 mb-3">
-                                <div class="input-group input-group-static">
-                                    <label>Nama Pengirim <span class="text-danger">*</span></label>
-                                    <input type="text" name="nama_pengirim" class="form-control" value="{{ old('nama_pengirim') }}" placeholder="Masukkan nama pengirim" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="input-group input-group-static">
-                                    <label>No Telepon Pengirim</label>
-                                    <input type="text" name="no_telepon_pengirim" class="form-control" value="{{ old('no_telepon_pengirim') }}" placeholder="Nomor telepon (opsional)">
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Detail Obat -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md me-3">
-                                            <i class="material-symbols-rounded opacity-10">medication</i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0">Detail Obat</h6>
-                                            <p class="text-sm text-secondary mb-0">Daftar obat yang dibeli</p>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-sm bg-gradient-success mb-0" id="btnTambahObat">
-                                        <i class="material-symbols-rounded text-sm me-1">add</i> Tambah Obat
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row g-3" id="containerObat">
-                                    @if(old('obat'))
-                                        @foreach(old('obat') as $i => $obat)
-                                            <script>
-                                                window.oldObat = window.oldObat || [];
-                                                window.oldObat.push(@json($obat));
-                                            </script>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Detail Termin -->
-                        <div class="row mb-4" id="cardTermin" style="display: none;">
-                            <div class="col-12">
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-md me-3">
-                                            <i class="material-symbols-rounded opacity-10">event</i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0">Detail Termin Pembayaran</h6>
-                                            <p class="text-sm text-secondary mb-0">Jadwal pembayaran bertahap</p>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-sm bg-gradient-warning mb-0" id="btnTambahTermin">
-                                        <i class="material-symbols-rounded text-sm me-1">add</i> Tambah Termin
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div id="containerTermin" class="mb-3">
-                                    @if(old('termin_list'))
-                                        @foreach(old('termin_list') as $i => $termin)
-                                            <script>
-                                                window.oldTermin = window.oldTermin || [];
-                                                window.oldTermin.push(@json($termin));
-                                            </script>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Form Actions -->
-                        <div class="row">
-                            <div class="col-12">
-                                <hr class="horizontal dark my-4">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('pembelian.index') }}" class="btn btn-outline-secondary mb-0">
-                                        <i class="material-symbols-rounded text-sm me-1">close</i> Batal
-                                    </a>
-                                    <button type="submit" class="btn bg-gradient-primary mb-0">
-                                        <i class="material-symbols-rounded text-sm me-1">save</i> Simpan Pembelian
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-primary text-white py-2">
+                <h6 class="mb-0"><i class="fas fa-file-invoice"></i> Informasi Pembelian</h6>
+            </div>
+            <div class="card-body p-3">
+                <div class="row g-2">
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small mb-1">No Faktur</label>
+                        <input type="text" name="no_faktur" class="form-control form-control-sm" value="{{ old('no_faktur') }}" placeholder="Auto">
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small mb-1">Tanggal <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="tgl_pembelian" class="form-control form-control-sm" value="{{ old('tgl_pembelian', now()->format('Y-m-d\TH:i')) }}" required>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small mb-1">Pembayaran <span class="text-danger">*</span></label>
+                        <select name="metode_pembayaran" id="metode_pembayaran" class="form-select form-select-sm" required>
+                            <option value="tunai" @selected(old('metode_pembayaran', 'tunai') === 'tunai')>Tunai</option>
+                            <option value="non tunai" @selected(old('metode_pembayaran') === 'non tunai')>Non Tunai</option>
+                            <option value="termin" @selected(old('metode_pembayaran') === 'termin')>Termin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <label class="form-label small mb-1">Total Harga</label>
+                        <input type="text" id="total_harga_display" class="form-control form-control-sm bg-light fw-bold text-success" value="Rp 0" readonly>
+                        <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
+                    </div>
+                </div>
+                <div class="row g-2 mt-1">
+                    <div class="col-md-6 col-12">
+                        <label class="form-label small mb-1">Nama Pengirim <span class="text-danger">*</span></label>
+                        <input type="text" name="nama_pengirim" class="form-control form-control-sm" value="{{ old('nama_pengirim') }}" required>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label class="form-label small mb-1">No Telepon Pengirim</label>
+                        <input type="text" name="no_telepon_pengirim" class="form-control form-control-sm" value="{{ old('no_telepon_pengirim') }}">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-2">
+                <h6 class="mb-0"><i class="fas fa-pills"></i> Detail Obat</h6>
+                <button type="button" class="btn btn-sm btn-light" id="btnTambahObat">
+                    <i class="fas fa-plus"></i> Tambah Obat
+                </button>
+            </div>
+            <div class="card-body p-3">
+                <div class="row g-3" id="containerObat">
+                    @if(old('obat'))
+                        @foreach(old('obat') as $i => $obat)
+                            <script>
+                                window.oldObat = window.oldObat || [];
+                                window.oldObat.push(@json($obat));
+                            </script>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </div>
+       
+        <div class="card shadow-sm mb-3" id="cardTermin" style="display: none;">
+            <div class="card-header bg-warning d-flex justify-content-between align-items-center py-2">
+                <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> Detail Termin Pembayaran</h6>
+                <button type="button" class="btn btn-sm btn-dark" id="btnTambahTermin">
+                    <i class="fas fa-plus"></i> Tambah Termin
+                </button>
+            </div>
+            <div class="card-body p-3">
+                <div id="containerTermin" class="mb-3">
+                     @if(old('termin_list'))
+                        @foreach(old('termin_list') as $i => $termin)
+                            <script>
+                                window.oldTermin = window.oldTermin || [];
+                                window.oldTermin.push(@json($termin));
+                            </script>
+                        @endforeach
+                    @endif
+                </div>
+                </div>
+        </div>
+
+
+
+
+        <div class="text-end mb-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Simpan Pembelian
+            </button>
+        </div>
+    </form>
 </div>
 
+
 <style>
-    .obat-card { 
-        transition: all 0.3s ease; 
-    }
-    .obat-card .card { 
-        height: 100%; 
-        border: 1px solid #e9ecef;
-        border-radius: 0.75rem;
-    }
-    .obat-card:hover .card { 
-        box-shadow: 0 4px 20px 0 rgba(0,0,0,0.1);
-        transform: translateY(-2px);
-    }
-    .obat-card .card-header { 
-        background: linear-gradient(195deg, #667eea 0%, #764ba2 100%);
-        padding: 0.75rem 1rem;
-        border-radius: 0.75rem 0.75rem 0 0;
-    }
-    .form-label.small { 
-        font-size: 0.875rem; 
-        font-weight: 600; 
-        color: #344767;
-        margin-bottom: 0.5rem;
-    }
-    .badge-number { 
-        font-size: 0.875rem; 
-        padding: 0.4rem 0.75rem;
-        font-weight: 600;
-    }
+    .obat-card { transition: all 0.3s ease; }
+    .obat-card .card { height: 100%; border: 2px solid #e9ecef; }
+    .obat-card:hover .card { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); }
+    .obat-card .card-header { background: #764ba2; padding: 0.5rem 0.75rem; }
+    .form-label.small { font-size: 0.8rem; font-weight: 600; color: #495057; }
+    .form-control-sm, .form-select-sm { font-size: 0.85rem; }
+    .badge-number { font-size: 0.9rem; padding: 0.35rem 0.65rem; }
     .termin-row {
         transition: all 0.3s ease;
-        border: 1px solid #e9ecef;
-        border-radius: 0.5rem;
-        padding: 1rem;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 1rem;
         margin-bottom: 1rem;
-        background: #f8f9fa;
-    }
-    .termin-row:hover {
-        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.05);
     }
     .termin-row:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
         margin-bottom: 0;
     }
-    .gap-2 {
-        gap: 0.5rem !important;
-    }
 </style>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -261,22 +166,25 @@ document.addEventListener('DOMContentLoaded', function() {
     let obatCounter = 0;
     let terminCounter = 0;
 
-    const obatList = @json($obatList ?? []);
-    
+
+    const obatList = @json($obatList);
+   
     const metodePembayaranSelect = document.getElementById('metode_pembayaran');
     const cardTermin = document.getElementById('cardTermin');
     const containerTermin = document.getElementById('containerTermin');
     const btnTambahTermin = document.getElementById('btnTambahTermin');
 
+
     // === FUNGSI UTAMA ===
+
 
     function formatInputRupiah(displayInput, hiddenInput, callbackOnInput = null) {
         displayInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
             let numericValue = parseInt(value) || 0;
-            
+           
             hiddenInput.value = numericValue;
-            
+           
             if (value === '') {
                 e.target.value = '';
             } else {
@@ -286,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 callbackOnInput();
             }
         });
-        
+       
         let initialValue = hiddenInput.value;
          if (initialValue && parseInt(initialValue) > 0) {
             let numericValue = parseInt(initialValue);
@@ -294,92 +202,89 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
     function formatRupiah(angka) {
         return 'Rp ' + (Number(angka) || 0).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
+
     // --- FUNGSI OBAT ---
+
 
     function createObatCard(data = {}) {
         const index = obatCounter++;
         const col = document.createElement('div');
         col.className = 'col-12 col-md-6 col-lg-4 obat-card';
         col.setAttribute('data-index', index);
-        
+       
         let optionsHtml = '<option value="">-- Pilih Obat --</option>';
         obatList.forEach(obat => {
             const selected = (data.obat_id && data.obat_id == obat.id) ? 'selected' : '';
             optionsHtml += `<option value="${obat.id}" ${selected}>${obat.nama_obat}${obat.barcode ? ' (' + obat.barcode + ')' : ''}</option>`;
         });
 
+
         col.innerHTML = `
-            <div class="card shadow-sm">
-                <div class="card-header text-white d-flex justify-content-between align-items-center">
+            <div class="card">
+                <div class="card-header text-white d-flex justify-content-between align-items-center" style="background: #764ba2;">
                     <span class="badge bg-white text-dark badge-number">Obat #${index + 1}</span>
-                    <button type="button" class="btn btn-sm btn-danger btn-remove" onclick="removeObatCard(this)" style="padding: 0.25rem 0.5rem;">
-                        <i class="material-symbols-rounded text-sm">delete</i>
+                    <button type="button" class="btn btn-sm btn-danger btn-remove" onclick="removeObatCard(this)" style="padding: 0.15rem 0.4rem;">
+                        Hapus
                     </button>
                 </div>
-                <div class="card-body p-3">
-                    <div class="input-group input-group-static mb-3">
-                        <label>Pilih Obat <span class="text-danger">*</span></label>
-                        <select name="obat[${index}][obat_id]" class="form-control" required>
+                <div class="card-body p-2">
+                    <div class="mb-2">
+                        <label class="form-label small mb-1">Pilih Obat <span class="text-danger">*</span></label>
+                        <select name="obat[${index}][obat_id]" class="form-select form-select-sm" required>
                             ${optionsHtml}
                         </select>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <div class="input-group input-group-static">
-                                <label>Harga Beli <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control harga-beli-display" required placeholder="Rp 0">
-                                <input type="hidden" name="obat[${index}][harga_beli]" class="harga-beli" value="${data.harga_beli || 0}">
-                            </div>
+                   
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small mb-1">Harga Beli <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm harga-beli-display" required placeholder="Rp 0">
+                            <input type="hidden" name="obat[${index}][harga_beli]" class="harga-beli" value="${data.harga_beli || 0}">
                         </div>
-                        <div class="col-6 mb-3">
-                            <div class="input-group input-group-static">
-                                <label>Harga Jual <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control harga-jual-display" required placeholder="Rp 0">
-                                <input type="hidden" name="obat[${index}][harga_jual]" class="harga-jual" value="${data.harga_jual || 0}">
-                            </div>
+                        <div class="col-6">
+                            <label class="form-label small mb-1">Harga Jual <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm harga-jual-display" required placeholder="Rp 0">
+                            <input type="hidden" name="obat[${index}][harga_jual]" class="harga-jual" value="${data.harga_jual || 0}">
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <div class="input-group input-group-static">
-                                <label>Jumlah <span class="text-danger">*</span></label>
-                                <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control jumlah-masuk" required min="1" value="${data.jumlah_masuk || 1}">
-                            </div>
+                   
+                    <div class="row g-2 mt-1">
+                        <div class="col-6">
+                            <label class="form-label small mb-1">Jumlah <span class="text-danger">*</span></label>
+                            <input type="number" name="obat[${index}][jumlah_masuk]" class="form-control form-control-sm jumlah-masuk" required min="1" value="${data.jumlah_masuk || 1}">
                         </div>
-                        <div class="col-6 mb-3">
-                            <div class="input-group input-group-static">
-                                <label>Kadaluarsa <span class="text-danger">*</span></label>
-                                <input type="date" name="obat[${index}][tgl_kadaluarsa]" class="form-control" value="${data.tgl_kadaluarsa || ''}" required>
-                            </div>
+                        <div class="col-6">
+                            <label class="form-label small mb-1">Kadaluarsa <span class="text-danger">*</span></label>
+                            <input type="date" name="obat[${index}][tgl_kadaluarsa]" class="form-control form-control-sm" value="${data.tgl_kadaluarsa || ''}" required>
                         </div>
                     </div>
-                    
-                    <div class="input-group input-group-static mb-0">
-                        <label>Subtotal</label>
-                        <input type="text" class="form-control subtotal fw-bold text-success" readonly value="Rp 0">
+                   
+                    <div class="mt-2">
+                        <label class="form-label small mb-1">Subtotal</label>
+                        <input type="text" class="form-control form-control-sm subtotal bg-light fw-bold text-success" readonly value="Rp 0">
                     </div>
                 </div>
             </div>
         `;
-        
+       
         containerObat.appendChild(col);
-        
+       
         const hargaBeliDisplay = col.querySelector('.harga-beli-display');
         const hargaBeliHidden = col.querySelector('.harga-beli');
         formatInputRupiah(hargaBeliDisplay, hargaBeliHidden, hitungTotal);
-        
+       
         const hargaJualDisplay = col.querySelector('.harga-jual-display');
         const hargaJualHidden = col.querySelector('.harga-jual');
         formatInputRupiah(hargaJualDisplay, hargaJualHidden);
-        
+       
         col.querySelector('.jumlah-masuk').addEventListener('input', hitungTotal);
     }
+
 
     window.removeObatCard = function(btn) {
         const obatCard = btn.closest('.obat-card');
@@ -388,21 +293,10 @@ document.addEventListener('DOMContentLoaded', function() {
             hitungTotal();
             updateObatNumbers();
         } else {
-            // Use Material Design alert
-            const alert = document.createElement('div');
-            alert.className = 'alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-4';
-            alert.style.zIndex = '9999';
-            alert.innerHTML = `
-                <span class="alert-icon"><i class="material-symbols-rounded">warning</i></span>
-                <span class="alert-text">Minimal harus ada 1 obat dalam pembelian!</span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            `;
-            document.body.appendChild(alert);
-            setTimeout(() => alert.remove(), 3000);
+            alert('Minimal harus ada 1 obat dalam pembelian!');
         }
     };
+
 
     function updateObatNumbers() {
         containerObat.querySelectorAll('.obat-card').forEach((card, idx) => {
@@ -410,70 +304,69 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
     window.hitungTotal = function() {
         let total = 0;
         containerObat.querySelectorAll('.obat-card').forEach(card => {
             const hargaBeli = parseFloat(card.querySelector('.harga-beli').value) || 0;
             const jumlahMasuk = parseInt(card.querySelector('.jumlah-masuk').value) || 0;
             const subtotal = hargaBeli * jumlahMasuk;
-            
+           
             card.querySelector('.subtotal').value = formatRupiah(subtotal);
             total += subtotal;
         });
-        
+       
         totalHargaInput.value = total.toFixed(2);
         totalHargaDisplay.value = formatRupiah(total);
     };
 
+
     // --- FUNGSI TERMIN ---
+
 
     function createTerminCard(data = {}) {
         const index = terminCounter++;
         const row = document.createElement('div');
-        row.className = 'termin-row';
+        row.className = 'row g-2 align-items-center termin-row';
         row.setAttribute('data-index', index);
-        
+       
         row.innerHTML = `
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <span class="badge bg-gradient-dark badge-number">#${index + 1}</span>
-                </div>
-                <div class="col-md-5">
-                    <div class="input-group input-group-static">
-                        <label>Jumlah Bayar</label>
-                        <input type="text" class="form-control termin-jumlah-display" placeholder="Rp 0 (Boleh kosong)">
-                        <input type="hidden" name="termin_list[${index}][jumlah_bayar]" class="termin-jumlah-bayar" value="${data.jumlah_bayar || 0}">
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="input-group input-group-static">
-                        <label>Tgl. Jatuh Tempo <span class="text-danger">*</span></label>
-                        <input type="date" name="termin_list[${index}][tgl_jatuh_tempo]" class="form-control" value="${data.tgl_jatuh_tempo || ''}" required>
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-outline-danger btn-remove-termin" style="padding: 0.5rem;">
-                        <i class="material-symbols-rounded text-sm">delete</i>
-                    </button>
-                </div>
+            <div class="col-1">
+                <span class="badge bg-dark badge-number">#${index + 1}</span>
+            </div>
+            <div class="col-5">
+                <label class="form-label small mb-1">Jumlah Bayar</label>
+                <input type="text" class="form-control form-control-sm termin-jumlah-display" placeholder="Rp 0 (Boleh kosong)">
+                <input type="hidden" name="termin_list[${index}][jumlah_bayar]" class="termin-jumlah-bayar" value="${data.jumlah_bayar || 0}">
+            </div>
+            <div class="col-5">
+                <label class="form-label small mb-1">Tgl. Jatuh Tempo <span class="text-danger">*</span></label>
+                <input type="date" name="termin_list[${index}][tgl_jatuh_tempo]" class="form-control form-control-sm" value="${data.tgl_jatuh_tempo || ''}" required>
+            </div>
+            <div class="col-1 text-end">
+                <button type="button" class="btn btn-sm btn-outline-danger btn-remove-termin" style="padding: 0.15rem 0.4rem;">
+                    &times;
+                </button>
             </div>
         `;
-        
+       
         containerTermin.appendChild(row);
-        
+       
         const jumlahDisplay = row.querySelector('.termin-jumlah-display');
         const jumlahHidden = row.querySelector('.termin-jumlah-bayar');
         formatInputRupiah(jumlahDisplay, jumlahHidden);
-        
+       
         row.querySelector('.btn-remove-termin').addEventListener('click', function() {
             removeTerminCard(this);
         });
     }
 
+
     function removeTerminCard(btn) {
         btn.closest('.termin-row').remove();
         updateTerminNumbers();
     }
+
 
     function updateTerminNumbers() {
         containerTermin.querySelectorAll('.termin-row').forEach((row, idx) => {
@@ -481,22 +374,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
     function toggleTerminCard() {
         if (metodePembayaranSelect.value === 'termin') {
             cardTermin.style.display = 'block';
             if (containerTermin.querySelectorAll('.termin-row').length === 0 && !window.oldTermin) {
-                 createTerminCard(); 
+                 createTerminCard();
             }
         } else {
             cardTermin.style.display = 'none';
         }
     }
 
+
     function validasiForm(e) {
         if (metodePembayaranSelect.value === 'termin') {
-            if (containerTermin.querySelectorAll('.            if (containerTermin.querySelectorAll('.termin-row').length === 0) {
-                e.preventDefault();
-                alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan baris termin.');
+            const totalPembelian = parseFloat(totalHargaInput.value) || 0;
+            const totalAlokasi = hitungTotalTermin();
+           
+            if (Math.abs(totalPembelian - totalAlokasi) > 0.01) {
+                e.preventDefault(); // Hentikan submit
+                alert('Validasi Gagal!\nTotal alokasi termin ( ' + formatRupiah(totalAlokasi) + ' ) tidak sama dengan Total Harga Pembelian ( ' + formatRupiah(totalPembelian) + ' ).\nPastikan Sisa Alokasi adalah Rp 0.');
+                cardTermin.scrollIntoView({ behavior: 'smooth' });
+                return false;
+            }
+
+
+            if (containerTermin.querySelectorAll('.termin-row').length === 0) {
+                 e.preventDefault(); // Hentikan submit
+                alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan detail termin.');
                 cardTermin.scrollIntoView({ behavior: 'smooth' });
                 return false;
             }
@@ -504,36 +410,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+
     // === EVENT LISTENERS ===
-    
+   
     btnTambahObat.addEventListener('click', function() {
         createObatCard();
     });
 
+
+    // BARU: Listeners untuk Termin
     metodePembayaranSelect.addEventListener('change', toggleTerminCard);
     btnTambahTermin.addEventListener('click', function() {
         createTerminCard();
     });
     formPembelian.addEventListener('submit', validasiForm);
 
-    // === INISIALISASI ===
-    
+
+
+
+    // === INISIALISASI (LOAD DATA) ===
+   
+    // BARU: Inisialisasi old data obat
     if (window.oldObat && window.oldObat.length > 0) {
-        window.oldObat.forEach(data => {
-            createObatCard(data);
-        });
+        window.oldObat.forEach(obatData => createObatCard(obatData));
     } else {
-        createObatCard();
+        createObatCard(); // Tambah card obat pertama jika tidak ada old data
     }
-    
-    if (window.oldTermin && window.oldTermin.length > 0) {
-        window.oldTermin.forEach(data => {
-            createTerminCard(data);
-        });
+   
+    // BARU: Inisialisasi old data termin
+     if (window.oldTermin && window.oldTermin.length > 0) {
+        window.oldTermin.forEach(terminData => createTerminCard(terminData));
     }
 
+
+    // Panggil kalkulasi & toggle saat halaman dimuat
     hitungTotal();
-    toggleTerminCard();
+    toggleTerminCard(); // Tampilkan/sembunyikan card termin berdasarkan old data
 });
 </script>
 @endsection

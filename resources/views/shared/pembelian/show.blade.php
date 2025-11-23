@@ -1,11 +1,14 @@
 @php
-    $role = Auth::user()->role->nama_role; 
+    $role = Auth::user()->role->nama_role;
     $layoutPath = 'layouts.' . strtolower($role) . '.app';
 @endphp
 
+
 @extends($layoutPath)
 
+
 @section('title', 'Detail Pembelian')
+
 
 @section('content')
 <div class="container mt-4">
@@ -15,6 +18,7 @@
             <i class="fas fa-arrow-left"></i> Kembali ke Daftar
         </a>
     </div>
+
 
     {{-- Notifikasi Sukses/Error dari Aksi Pembayaran --}}
     @if(session('success'))
@@ -34,6 +38,7 @@
             </ul>
         </div>
     @endif
+
 
     {{-- Card Informasi Utama --}}
     <div class="card shadow-sm mb-3">
@@ -81,7 +86,7 @@
             </table>
         </div>
     </div>
-    
+   
     {{-- Card Detail Item Obat --}}
     <div class="card shadow-sm mb-3">
          <div class="card-header bg-success text-white py-2">
@@ -117,6 +122,7 @@
         </div>
     </div>
 
+
     {{-- PERBAIKAN: Tampilkan Detail Termin & Form Pembayaran --}}
     @if($pembelian->metode_pembayaran == 'termin')
     @php
@@ -126,7 +132,7 @@
     <div class="card shadow-sm mb-3">
          <div class="card-header bg-warning py-2 d-flex justify-content-between align-items-center">
             <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> Detail Pembayaran Termin</h6>
-            
+           
             {{-- Tombol untuk memicu Modal Pembayaran --}}
             @if($sisa_utang > 0.01)
                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalBayarTermin">
@@ -167,7 +173,7 @@
                                 </td>
                             </tr>
                         @endforeach
-                        
+                       
                         {{-- Ringkasan Total --}}
                         <tr class="table-group-divider">
                             <td colspan="1" class="text-end fw-bold">TOTAL DIBAYAR:</td>
@@ -188,6 +194,7 @@
     </div>
     @endif
 </div>
+
 
 {{-- BARU: Modal untuk Pembayaran Termin --}}
 @if($pembelian->metode_pembayaran == 'termin' && $sisa_utang > 0.01)
@@ -212,9 +219,9 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Jumlah Bayar</label>
-                        <input type="number" name="jumlah_bayar" class="form-control" 
-                            placeholder="Maks: Rp {{ number_format($sisa_utang, 0, ',', '.') }}" 
-                            max="{{ $sisa_utang }}" 
+                        <input type="number" name="jumlah_bayar" class="form-control"
+                            placeholder="Maks: Rp {{ number_format($sisa_utang, 0, ',', '.') }}"
+                            max="{{ $sisa_utang }}"
                             required>
                     </div>
                     <div class="mb-3">

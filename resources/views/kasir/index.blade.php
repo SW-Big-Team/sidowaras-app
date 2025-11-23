@@ -160,14 +160,14 @@
                     <div class="list-group-item px-0 border-0 mb-2 bg-light rounded">
                         <div class="row align-items-center">
                             <div class="col-auto">
-                                <div class="icon icon-shape {{ $item->stok_tersedia == 0 ? 'bg-danger' : 'bg-warning' }} text-white rounded-circle">
+                                <div class="icon icon-shape {{ $item->total_stok == 0 ? 'bg-danger' : 'bg-warning' }} text-white rounded-circle">
                                     <i class="material-symbols-rounded opacity-10">warning</i>
                                 </div>
                             </div>
                             <div class="col">
                                 <h6 class="mb-0 text-sm font-weight-bold">{{ $item->nama_obat }}</h6>
                                 <p class="text-xs text-muted mb-0">
-                                    Stok tersisa: <strong>{{ $item->stok_tersedia ?? 0 }}</strong> 
+                                    Stok tersisa: <strong>{{ $item->total_stok ?? 0 }}</strong> 
                                     (Min: {{ $item->stok_minimum ?? 0 }})
                                 </p>
                             </div>

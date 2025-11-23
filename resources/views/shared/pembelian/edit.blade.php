@@ -1,11 +1,14 @@
 @php
-    $role = Auth::user()->role->nama_role; 
+    $role = Auth::user()->role->nama_role;
     $layoutPath = 'layouts.' . strtolower($role) . '.app';
 @endphp
 
+
 @extends($layoutPath)
 
+
 @section('title', 'Edit Pembelian')
+
 
 @section('content')
 <div class="container-fluid mt-4 px-3">
@@ -15,6 +18,7 @@
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
     </div>
+
 
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show">
@@ -28,10 +32,12 @@
         </div>
     @endif
 
+
     {{-- PERBAIKAN: Gunakan $pembelian->uuid --}}
     <form action="{{ route('pembelian.update', $pembelian->uuid) }}" method="POST" id="formPembelian">
         @csrf
         @method('PUT')
+
 
         <div class="card shadow-sm mb-3">
             <div class="card-header bg-primary text-white py-2">
@@ -74,6 +80,7 @@
             </div>
         </div>
 
+
         <div class="card shadow-sm mb-3">
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-2">
                 <h6 class="mb-0"><i class="fas fa-pills"></i> Detail Obat</h6>
@@ -86,7 +93,7 @@
                 </div>
             </div>
         </div>
-        
+       
         <div class="card shadow-sm mb-3" id="cardTermin" style="display: none;">
             <div class="card-header bg-warning d-flex justify-content-between align-items-center py-2">
                 <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> Detail Termin Pembayaran</h6>
@@ -101,6 +108,8 @@
         </div>
 
 
+
+
         <div class="text-end mb-4">
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i> Simpan Perubahan
@@ -108,6 +117,7 @@
         </div>
     </form>
 </div>
+
 
 <style>
     .obat-card { transition: all 0.3s ease; }
@@ -130,6 +140,7 @@
     }
 </style>
 
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // === DEKLARASI ELEMEN ===
@@ -141,22 +152,25 @@ document.addEventListener('DOMContentLoaded', function() {
     let obatCounter = 0;
     let terminCounter = 0;
 
+
     const obatList = @json($obatList);
-    
+   
     const metodePembayaranSelect = document.getElementById('metode_pembayaran');
     const cardTermin = document.getElementById('cardTermin');
     const containerTermin = document.getElementById('containerTermin');
     const btnTambahTermin = document.getElementById('btnTambahTermin');
 
+
     // === FUNGSI UTAMA ===
+
 
     function formatInputRupiah(displayInput, hiddenInput, callbackOnInput = null) {
         displayInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
             let numericValue = parseInt(value) || 0;
-            
+           
             hiddenInput.value = numericValue;
-            
+           
             if (value === '') {
                 e.target.value = '';
             } else {
@@ -166,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 callbackOnInput();
             }
         });
-        
+       
         let initialValue = hiddenInput.value;
          if (initialValue && parseFloat(initialValue) > 0) {
             let numericValue = parseFloat(initialValue);
@@ -174,23 +188,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
     function formatRupiah(angka) {
         return 'Rp ' + (Number(angka) || 0).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
+
     // --- FUNGSI OBAT ---
+
 
     function createObatCard(data = {}) {
         const index = obatCounter++;
         const col = document.createElement('div');
         col.className = 'col-12 col-md-6 col-lg-4 obat-card';
         col.setAttribute('data-index', index);
-        
+       
         let optionsHtml = '<option value="">-- Pilih Obat --</option>';
         obatList.forEach(obat => {
             const selected = (data.obat_id && data.obat_id == obat.id) ? 'selected' : '';
             optionsHtml += `<option value="${obat.id}" ${selected}>${obat.nama_obat}${obat.barcode ? ' (' + obat.barcode + ')' : ''}</option>`;
         });
+
 
         col.innerHTML = `
             <div class="card">
@@ -236,19 +254,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
-        
+       
         containerObat.appendChild(col);
-        
+       
         const hargaBeliDisplay = col.querySelector('.harga-beli-display');
         const hargaBeliHidden = col.querySelector('.harga-beli');
         formatInputRupiah(hargaBeliDisplay, hargaBeliHidden, hitungTotal);
-        
+       
         const hargaJualDisplay = col.querySelector('.harga-jual-display');
         const hargaJualHidden = col.querySelector('.harga-jual');
         formatInputRupiah(hargaJualDisplay, hargaJualHidden);
-        
+       
         col.querySelector('.jumlah-masuk').addEventListener('input', hitungTotal);
     }
+
 
     window.removeObatCard = function(btn) {
         const obatCard = btn.closest('.obat-card');
@@ -261,11 +280,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+
     function updateObatNumbers() {
         containerObat.querySelectorAll('.obat-card').forEach((card, idx) => {
             card.querySelector('.badge-number').textContent = `Obat #${idx + 1}`;
         });
     }
+
 
     window.hitungTotal = function() {
         let total = 0;
@@ -273,24 +294,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const hargaBeli = parseFloat(card.querySelector('.harga-beli').value) || 0;
             const jumlahMasuk = parseInt(card.querySelector('.jumlah-masuk').value) || 0;
             const subtotal = hargaBeli * jumlahMasuk;
-            
+           
             card.querySelector('.subtotal').value = formatRupiah(subtotal);
             total += subtotal;
         });
-        
+       
         totalHargaInput.value = total.toFixed(2);
         totalHargaDisplay.value = formatRupiah(total);
     };
 
+
     // --- FUNGSI TERMIN ---
+
 
     function createTerminCard(data = {}) {
         const index = terminCounter++;
         const row = document.createElement('div');
         row.className = 'row g-2 align-items-center termin-row';
         row.setAttribute('data-index', index);
-        
+       
         const tglJatuhTempo = data.tgl_jatuh_tempo ? data.tgl_jatuh_tempo.split('T')[0] : '';
+
 
         row.innerHTML = `
             <div class="col-1">
@@ -311,28 +335,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
             </div>
         `;
-        
+       
         containerTermin.appendChild(row);
-        
+       
         const jumlahDisplay = row.querySelector('.termin-jumlah-display');
         const jumlahHidden = row.querySelector('.termin-jumlah-bayar');
         formatInputRupiah(jumlahDisplay, jumlahHidden);
-        
+       
         row.querySelector('.btn-remove-termin').addEventListener('click', function() {
             removeTerminCard(this);
         });
     }
+
 
     function removeTerminCard(btn) {
         btn.closest('.termin-row').remove();
         updateTerminNumbers();
     }
 
+
     function updateTerminNumbers() {
         containerTermin.querySelectorAll('.termin-row').forEach((row, idx) => {
             row.querySelector('.badge-number').textContent = `#${idx + 1}`;
         });
     }
+
 
     function toggleTerminCard() {
         if (metodePembayaranSelect.value === 'termin') {
@@ -342,10 +369,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
     function validasiForm(e) {
         if (metodePembayaranSelect.value === 'termin') {
             if (containerTermin.querySelectorAll('.termin-row').length === 0) {
-                 e.preventDefault(); 
+                 e.preventDefault();
                 alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan baris termin.');
                 cardTermin.scrollIntoView({ behavior: 'smooth' });
                 return false;
@@ -354,11 +382,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+
     // === EVENT LISTENERS ===
-    
+   
     btnTambahObat.addEventListener('click', function() {
         createObatCard();
     });
+
 
     metodePembayaranSelect.addEventListener('change', toggleTerminCard);
     btnTambahTermin.addEventListener('click', function() {
@@ -367,23 +397,26 @@ document.addEventListener('DOMContentLoaded', function() {
     formPembelian.addEventListener('submit', validasiForm);
 
 
+
+
     // === INISIALISASI (LOAD DATA) ===
-    
+   
     const pembelian = @json($pembelian);
-    
+   
     if (pembelian.stok_batches && pembelian.stok_batches.length > 0) {
         pembelian.stok_batches.forEach(batchData => {
             createObatCard(batchData);
         });
     } else {
-         createObatCard(); 
+         createObatCard();
     }
-    
+   
      if (pembelian.pembayaran_termin && pembelian.pembayaran_termin.length > 0) {
         pembelian.pembayaran_termin.forEach(terminData => {
             createTerminCard(terminData);
         });
     }
+
 
     hitungTotal();
     toggleTerminCard();
