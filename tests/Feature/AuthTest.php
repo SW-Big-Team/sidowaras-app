@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureSingleSession;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,8 @@ beforeEach(function () {
 // ========== LOGIN TESTS ==========
 
 test('guest can view login page', function () {
-    $response = $this->get('/login');
+    $response = $this->withoutMiddleware(EnsureSingleSession::class)
+    ->get('/login');
     
     $response->assertStatus(200);
     $response->assertViewIs('auth.login');
