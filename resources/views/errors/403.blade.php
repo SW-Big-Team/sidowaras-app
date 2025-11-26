@@ -302,6 +302,18 @@
                 </a>
             </div>
 
+            @auth
+            <div class="actions" style="margin-top: 12px;">
+                <form method="POST" action="{{ route('logout') }}" style="width: 100%;">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary" style="width: 100%; background: #FEF2F2; color: #DC2626; border-color: #FEE2E2;">
+                        <span class="material-symbols-rounded icon">logout</span>
+                        Logout
+                    </button>
+                </form>
+            </div>
+            @endauth
+
             <div class="footer-info">
                 <div class="footer-brand">
                     <span class="material-symbols-rounded" style="font-size: 16px; color: var(--primary);">local_pharmacy</span>
