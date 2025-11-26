@@ -38,7 +38,7 @@ class SupplierController extends Controller
             'supplier_email' => ['nullable', 'email', 'max:255'],
             'supplier_website' => ['nullable', 'string', 'max:255'],
             'supplier_logo' => ['nullable', 'string', 'max:255'],
-            'supplier_status' => ['sometimes', 'boolean'],
+            'supplier_status' => ['nullable', 'boolean'],
         ]);
 
         // If a soft-deleted supplier with same name exists, restore and update it
@@ -49,6 +49,7 @@ class SupplierController extends Controller
         if ($trashed && $trashed->trashed()) {
             $trashed->restore();
             $trashed->fill($validated);
+            $trashed->supplier_status = $request->has('supplier_status'); // Fix: Checkbox logic
             $trashed->updated_by = optional($request->user())->id;
             $trashed->save();
 
@@ -58,6 +59,7 @@ class SupplierController extends Controller
         }
 
         $supplier = new Supplier($validated);
+        $supplier->supplier_status = $request->has('supplier_status'); // Fix: Checkbox logic
         $supplier->created_by = optional($request->user())->id;
         $supplier->updated_by = optional($request->user())->id;
         $supplier->save();
@@ -81,16 +83,31 @@ class SupplierController extends Controller
             'supplier_email' => ['nullable', 'email', 'max:255'],
             'supplier_website' => ['nullable', 'string', 'max:255'],
             'supplier_logo' => ['nullable', 'string', 'max:255'],
-            'supplier_status' => ['sometimes', 'boolean'],
+            'supplier_status' => ['nullable', 'boolean'],
         ]);
 
         $supplier->fill($validated);
+        $supplier->supplier_status = $request->has('supplier_status'); // Fix: Checkbox logic
         $supplier->updated_by = optional($request->user())->id;
         $supplier->save();
 
         return redirect()
             ->route('admin.supplier.index')
             ->with('success', 'Supplier updated successfully.');
+    }
+
+    /**
+     * Toggle status supplier.
+     */
+    public function toggleStatus($id)
+    {
+        $supplier = Supplier::findOrFail($id);
+        $supplier->supplier_status = !$supplier->supplier_status;
+        $supplier->save();
+
+        return redirect()
+            ->route('admin.supplier.index')
+            ->with('success', 'Status supplier berhasil diperbarui.');
     }
 
     public function destroy(Request $request, Supplier $supplier)

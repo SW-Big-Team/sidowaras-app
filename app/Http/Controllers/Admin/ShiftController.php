@@ -67,7 +67,7 @@ class ShiftController extends Controller
                 'shift_day_of_week' => $validated['shift_day_of_week'],
                 'shift_start' => $validated['shift_start'],
                 'shift_end' => $validated['shift_end'],
-                'shift_status' => $validated['shift_status'] ?? true,
+                'shift_status' => $request->has('shift_status'), // Fix: Checkbox presence determines value
                 'user_list' => $validated['user_list'],
             ]);
 
@@ -118,7 +118,7 @@ class ShiftController extends Controller
                 'shift_day_of_week' => $validated['shift_day_of_week'],
                 'shift_start' => $validated['shift_start'],
                 'shift_end' => $validated['shift_end'],
-                'shift_status' => $validated['shift_status'] ?? $shift->shift_status,
+                'shift_status' => $request->has('shift_status'), // Fix: Checkbox presence determines value
                 'user_list' => $validated['user_list'],
             ]);
 
@@ -136,6 +136,20 @@ class ShiftController extends Controller
                 ->with('error', 'Gagal memperbarui shift: ' . $e->getMessage())
                 ->with('_edit_id', $id);
         }
+    }
+
+    /**
+     * Toggle status shift.
+     */
+    public function toggleStatus($id)
+    {
+        $shift = Shift::findOrFail($id);
+        $shift->shift_status = !$shift->shift_status;
+        $shift->save();
+
+        return redirect()
+            ->route('admin.shift.index')
+            ->with('success', 'Status shift berhasil diperbarui.');
     }
 
     /**

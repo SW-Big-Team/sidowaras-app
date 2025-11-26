@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ShiftController;
-use App\Http\Controllers\Admin\SupplierController;
-use App\Http\Controllers\Obat\ObatController;
-use App\Http\Controllers\Obat\KategoriObatController;
-use App\Http\Controllers\Obat\SatuanObatController;
-use App\Http\Controllers\Obat\KandunganObatController;
 use App\Http\Controllers\Admin\StokController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\TransaksiController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Obat\KandunganObatController;
+use App\Http\Controllers\Obat\KategoriObatController;
+use App\Http\Controllers\Obat\ObatController;
+use App\Http\Controllers\Obat\SatuanObatController;
 use App\Http\Controllers\Shared\StokOpnameController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->group(function () {
-    Route::get('/dashboard', fn() => view('admin.index'))->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
     // Manajemen Obat (Hanya Admin)
     Route::prefix('obat')->name('obat.')->group(function () {
@@ -56,6 +57,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
         Route::get('/', [SupplierController::class, 'index'])->name('index');
         Route::get('/create', [SupplierController::class, 'create'])->name('create');
         Route::post('/', [SupplierController::class, 'store'])->name('store');
+        Route::patch('/{id}/toggle-status', [SupplierController::class, 'toggleStatus'])->name('toggle-status');
         Route::get('/{supplier}/edit', [SupplierController::class, 'edit'])->name('edit');
         Route::put('/{supplier}', [SupplierController::class, 'update'])->name('update');
         Route::delete('/{supplier}', [SupplierController::class, 'destroy'])->name('destroy');
@@ -93,6 +95,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
     Route::prefix('shift')->name('shift.')->group(function () {
         Route::get('/', [ShiftController::class, 'index'])->name('index');
         Route::post('/', [ShiftController::class, 'store'])->name('store');
+        Route::patch('/{id}/toggle-status', [ShiftController::class, 'toggleStatus'])->name('toggle-status');
         Route::get('/{id}/edit', [ShiftController::class, 'edit'])->name('edit');
         Route::put('/{id}', [ShiftController::class, 'update'])->name('update');
         Route::delete('/{id}', [ShiftController::class, 'destroy'])->name('destroy');

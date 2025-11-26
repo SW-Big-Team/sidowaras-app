@@ -11,25 +11,109 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <x-content-header title="Daftar Shift" subtitle="Kelola jadwal shift karyawan">
-        <div class="d-flex justify-content-end gap-2">
-            <a href="{{ route('admin.users.index') }}" class="btn bg-gradient-secondary mb-0">
-                <i class="material-symbols-rounded text-sm me-1">people</i> User
-            </a>
-            <button type="button" 
-                    class="btn bg-gradient-primary mb-0" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#shiftModal" 
-                    data-mode="create">
-                <i class="material-symbols-rounded text-sm me-1">add</i> Tambah Shift
-            </button>
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-dark border-0 shadow-lg rounded-3">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-lg icon-shape bg-white shadow text-center border-radius-xl me-3">
+                                    <i class="material-symbols-rounded text-dark">schedule</i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-1 text-white fw-bold">Daftar Shift</h4>
+                                    <p class="text-sm text-white opacity-8 mb-0">Kelola jadwal shift dan penugasan karyawan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end text-start mt-3 mt-md-0">
+                            <div class="d-flex gap-2 justify-content-md-end">
+                                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-white mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1">
+                                    <i class="material-symbols-rounded text-sm">group</i> User
+                                </a>
+                                <button type="button" 
+                                        class="btn bg-white text-dark mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#shiftModal" 
+                                        data-mode="create">
+                                    <i class="material-symbols-rounded text-sm">add</i> Tambah Shift
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </x-content-header>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+            <div class="card border-0 shadow-sm rounded-3 summary-card">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                                Total Shift
+                            </p>
+                            <h4 class="mb-0 text-dark fw-bold">{{ $shifts->count() }}</h4>
+                            <p class="mb-0 text-xxs text-muted mt-1">Seluruh shift terdaftar</p>
+                        </div>
+                        <div class="summary-icon bg-soft-primary">
+                            <i class="material-symbols-rounded text-primary">list_alt</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+            <div class="card border-0 shadow-sm rounded-3 summary-card">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                                Shift Aktif
+                            </p>
+                            <h4 class="mb-0 text-dark fw-bold">
+                                {{ $shifts->where('shift_status', true)->count() }}
+                            </h4>
+                            <p class="mb-0 text-xxs text-muted mt-1">Shift yang sedang berjalan</p>
+                        </div>
+                        <div class="summary-icon bg-soft-success">
+                            <i class="material-symbols-rounded text-success">toggle_on</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-sm-6">
+            <div class="card border-0 shadow-sm rounded-3 summary-card">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                                Karyawan Terjadwal
+                            </p>
+                            <h4 class="mb-0 text-dark fw-bold">
+                                {{ $shifts->sum(function($shift) { return count($shift->user_list ?? []); }) }}
+                            </h4>
+                            <p class="mb-0 text-xxs text-muted mt-1">Total penugasan karyawan</p>
+                        </div>
+                        <div class="summary-icon bg-soft-info">
+                            <i class="material-symbols-rounded text-info">groups</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <span class="alert-icon"><i class="material-symbols-rounded">check_circle</i></span>
-            <span class="alert-text">{{ session('success') }}</span>
+        <div class="alert alert-success alert-dismissible fade show text-white" role="alert">
+            <span class="alert-icon"><i class="material-symbols-rounded align-middle">check_circle</i></span>
+            <span class="alert-text fw-bold">{{ session('success') }}</span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -37,9 +121,9 @@
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
-            <span class="alert-text">{{ session('error') }}</span>
+        <div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
+            <span class="alert-icon"><i class="material-symbols-rounded align-middle">error</i></span>
+            <span class="alert-text fw-bold">{{ session('error') }}</span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -48,99 +132,164 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white pb-0">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <h6 class="mb-0 fw-bold">Data Shift</h6>
+                                <span class="badge bg-soft-primary text-primary text-xs fw-bold rounded-pill">
+                                    {{ $shifts->count() }} shift
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body px-0 pb-2">
-                    <x-data-table>
-                        <x-slot name="header">
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Shift</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Hari</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu Mulai</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu Selesai</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Jumlah Karyawan</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Status</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                            </tr>
-                        </x-slot>
-
-                        @forelse ($shifts as $shift)
-                            <tr>
-                                <td>
-                                    <div class="d-flex px-3 py-1">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm">{{ $shift->shift_name }}</h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge badge-sm bg-gradient-primary text-capitalize">
-                                        {{ ucfirst($shift->shift_day_of_week ?? '-') }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <p class="text-sm mb-0">{{ \Carbon\Carbon::parse($shift->shift_start)->format('H:i') }}</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="text-sm mb-0">{{ \Carbon\Carbon::parse($shift->shift_end)->format('H:i') }}</p>
-                                </td>
-                                <td>
-                                    <span class="badge badge-sm bg-gradient-info">
-                                        {{ is_array($shift->user_list) ? count($shift->user_list) : 0 }} Karyawan
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    @if($shift->shift_status)
-                                        <span class="badge badge-sm bg-gradient-success">
-                                            <i class="material-symbols-rounded text-xs me-1">check_circle</i>Aktif
-                                        </span>
-                                    @else
-                                        <span class="badge badge-sm bg-gradient-secondary">
-                                            <i class="material-symbols-rounded text-xs me-1">cancel</i>Tidak Aktif
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex gap-2 justify-content-center">
-                                        <button type="button"
-                                            class="btn btn-link text-warning px-3 mb-0"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#shiftModal"
-                                            data-mode="edit"
-                                            data-id="{{ $shift->id }}"
-                                            data-shift-name="{{ $shift->shift_name }}"
-                                            data-shift-day="{{ $shift->shift_day_of_week }}"
-                                            data-shift-start="{{ \Carbon\Carbon::parse($shift->shift_start)->format('H:i') }}"
-                                            data-shift-end="{{ \Carbon\Carbon::parse($shift->shift_end)->format('H:i') }}"
-                                            data-shift-status="{{ $shift->shift_status ? '1' : '0' }}"
-                                            data-user-list="{{ json_encode($shift->user_list ?? []) }}"
-                                            title="Edit">
-                                            <i class="material-symbols-rounded text-sm">edit</i>
-                                        </button>
-                                        <form action="{{ route('admin.shift.destroy', $shift->id) }}" method="POST" class="d-inline m-0" onsubmit="return confirm('Yakin ingin menghapus shift {{ $shift->shift_name }}?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="btn btn-link text-danger px-3 mb-0"
-                                                    title="Hapus">
-                                                <i class="material-symbols-rounded text-sm">delete</i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center py-4">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <i class="material-symbols-rounded text-muted mb-2" style="font-size: 3rem;">schedule</i>
-                                        <p class="text-sm text-muted mb-0">Belum ada data shift</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </x-data-table>
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0 table-stok">
+                            <thead class="bg-gradient-dark">
+                                <tr>
+                                    <th class="text-uppercase text-white text-xxs font-weight-bolder opacity-9 ps-4">Nama Shift</th>
+                                    <th class="text-uppercase text-white text-xxs font-weight-bolder opacity-9 ps-2">Hari</th>
+                                    <th class="text-uppercase text-white text-xxs font-weight-bolder opacity-9 ps-2">Waktu</th>
+                                    <th class="text-uppercase text-white text-xxs font-weight-bolder opacity-9 ps-2">Karyawan</th>
+                                    <th class="text-uppercase text-white text-xxs font-weight-bolder opacity-9 ps-2 text-center">Status</th>
+                                    <th class="text-center text-uppercase text-white text-xxs font-weight-bolder opacity-9">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($shifts as $shift)
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex px-2 py-1">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm fw-bold text-dark">{{ $shift->shift_name }}</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @php
+                                                $dayColor = match(strtolower($shift->shift_day_of_week)) {
+                                                    'minggu' => 'danger',
+                                                    'sabtu' => 'warning',
+                                                    default => 'primary'
+                                                };
+                                            @endphp
+                                            <span class="badge badge-sm bg-gradient-{{ $dayColor }} text-capitalize">
+                                                {{ ucfirst($shift->shift_day_of_week ?? '-') }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <span class="text-xs font-weight-bold text-dark mb-1">
+                                                    <i class="material-symbols-rounded text-xxs align-middle me-1">login</i>
+                                                    {{ \Carbon\Carbon::parse($shift->shift_start)->format('H:i') }}
+                                                </span>
+                                                <span class="text-xs font-weight-bold text-secondary">
+                                                    <i class="material-symbols-rounded text-xxs align-middle me-1">logout</i>
+                                                    {{ \Carbon\Carbon::parse($shift->shift_end)->format('H:i') }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="avatar-group mt-2">
+                                                @php 
+                                                    $users = $shift->users;
+                                                    $limit = 4;
+                                                    $displayedUsers = $users->take($limit);
+                                                    $remaining = $users->count() - $limit;
+                                                @endphp
+                                                
+                                                @if($users->count() > 0)
+                                                    @foreach($displayedUsers as $user)
+                                                        <a href="javascript:;" 
+                                                           class="avatar avatar-xs rounded-circle" 
+                                                           data-bs-toggle="tooltip" 
+                                                           data-bs-placement="bottom" 
+                                                           title="{{ $user->nama_lengkap }}">
+                                                            <img alt="{{ $user->nama_lengkap }}" 
+                                                                 src="https://ui-avatars.com/api/?name={{ urlencode($user->nama_lengkap) }}&background=random&color=fff&size=64"
+                                                                 class="rounded-circle">
+                                                        </a>
+                                                    @endforeach
+                                                    
+                                                    @if($remaining > 0)
+                                                        <a href="javascript:;" 
+                                                           class="avatar avatar-xs rounded-circle bg-gradient-secondary text-white" 
+                                                           data-bs-toggle="tooltip" 
+                                                           data-bs-placement="bottom" 
+                                                           title="{{ $remaining }} karyawan lainnya">
+                                                            <span class="text-xxs fw-bold">+{{ $remaining }}</span>
+                                                        </a>
+                                                    @endif
+                                                @else
+                                                    <span class="text-xs text-secondary fst-italic">Belum ada</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <form action="{{ route('admin.shift.toggle-status', $shift->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="border-0 bg-transparent p-0 cursor-pointer" title="Klik untuk mengubah status">
+                                                    @if($shift->shift_status)
+                                                        <span class="badge badge-sm bg-soft-success text-success">
+                                                            <i class="material-symbols-rounded text-xxs me-1 align-middle">check_circle</i>Aktif
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-sm bg-soft-secondary text-secondary">
+                                                            <i class="material-symbols-rounded text-xxs me-1 align-middle">cancel</i>Non-Aktif
+                                                        </span>
+                                                    @endif
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex gap-2 justify-content-center">
+                                                <button type="button"
+                                                    class="btn btn-link text-warning px-3 mb-0"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#shiftModal"
+                                                    data-mode="edit"
+                                                    data-id="{{ $shift->id }}"
+                                                    data-shift-name="{{ $shift->shift_name }}"
+                                                    data-shift-day="{{ $shift->shift_day_of_week }}"
+                                                    data-shift-start="{{ \Carbon\Carbon::parse($shift->shift_start)->format('H:i') }}"
+                                                    data-shift-end="{{ \Carbon\Carbon::parse($shift->shift_end)->format('H:i') }}"
+                                                    data-shift-status="{{ $shift->shift_status ? '1' : '0' }}"
+                                                    data-user-list="{{ json_encode($shift->user_list ?? []) }}"
+                                                    title="Edit">
+                                                    <i class="material-symbols-rounded text-sm">edit</i>
+                                                </button>
+                                                <form action="{{ route('admin.shift.destroy', $shift->id) }}" method="POST" class="d-inline m-0" onsubmit="return confirm('Yakin ingin menghapus shift {{ $shift->shift_name }}?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="btn btn-link text-danger px-3 mb-0"
+                                                            title="Hapus">
+                                                        <i class="material-symbols-rounded text-sm">delete</i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5">
+                                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                                <div class="icon icon-lg icon-shape bg-light shadow-sm rounded-circle mb-3">
+                                                    <i class="material-symbols-rounded text-secondary opacity-5" style="font-size: 2rem;">schedule</i>
+                                                </div>
+                                                <h6 class="text-secondary mb-1">Belum ada data shift</h6>
+                                                <p class="text-xs text-secondary">Silakan tambahkan shift baru</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -148,11 +297,11 @@
 
     <!-- Modal: Create/Edit Shift -->
     <div class="modal fade" id="shiftModal" tabindex="-1" aria-labelledby="shiftModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-gradient-primary">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-gradient-dark">
                     <h5 class="modal-title text-white" id="shiftModalLabel">
-                        <i class="material-symbols-rounded me-2">schedule</i>
+                        <i class="material-symbols-rounded me-2 align-middle">schedule</i>
                         Tambah Shift
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -160,10 +309,10 @@
                 <form id="shiftForm" method="POST" action="{{ session('_edit_id') ? route('admin.shift.update', session('_edit_id')) : route('admin.shift.store') }}">
                     @csrf
                     <input type="hidden" name="_method" id="shiftFormMethod" value="{{ session('_edit_id') ? 'PUT' : 'POST' }}">
-                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <div class="modal-body p-4" style="max-height: 75vh; overflow-y: auto;">
                         @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <span class="alert-icon"><i class="material-symbols-rounded">error</i></span>
+                            <div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
+                                <span class="alert-icon"><i class="material-symbols-rounded align-middle">error</i></span>
                                 <span class="alert-text">
                                     <ul class="mb-0 ps-3">
                                         @foreach ($errors->all() as $error)
@@ -178,18 +327,18 @@
                         <!-- Informasi Shift -->
                         <div class="mb-4">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md me-3">
-                                    <i class="material-symbols-rounded opacity-10">schedule</i>
+                                <div class="icon icon-shape bg-soft-primary text-primary shadow-none text-center border-radius-md me-3">
+                                    <i class="material-symbols-rounded text-lg">schedule</i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0">Informasi Shift</h6>
-                                    <p class="text-sm text-secondary mb-0">Data jadwal shift</p>
+                                    <h6 class="mb-0 fw-bold text-dark">Informasi Shift</h6>
+                                    <p class="text-xs text-secondary mb-0">Atur detail jadwal shift</p>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label text-sm font-weight-bold">Nama Shift <span class="text-danger">*</span></label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Nama Shift <span class="text-danger">*</span></label>
                                     <div class="input-group input-group-outline">
                                         <input type="text" 
                                                class="form-control @error('shift_name') is-invalid @enderror" 
@@ -200,12 +349,12 @@
                                                required>
                                     </div>
                                     @error('shift_name')
-                                        <div class="text-danger text-sm mt-1">{{ $message }}</div>
+                                        <div class="text-danger text-xs mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-2 mb-3">
-                                    <label class="form-label text-sm font-weight-bold">Hari <span class="text-danger">*</span></label>
+                                <div class="col-md-2">
+                                    <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Hari <span class="text-danger">*</span></label>
                                     <div class="input-group input-group-outline">
                                         <select class="form-control @error('shift_day_of_week') is-invalid @enderror" 
                                                 name="shift_day_of_week" 
@@ -222,12 +371,12 @@
                                         </select>
                                     </div>
                                     @error('shift_day_of_week')
-                                        <div class="text-danger text-sm mt-1">{{ $message }}</div>
+                                        <div class="text-danger text-xs mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-label text-sm font-weight-bold">Waktu Mulai <span class="text-danger">*</span></label>
+                                <div class="col-md-3">
+                                    <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Waktu Mulai <span class="text-danger">*</span></label>
                                     <div class="input-group input-group-outline">
                                         <input type="time" 
                                                class="form-control @error('shift_start') is-invalid @enderror" 
@@ -237,12 +386,12 @@
                                                required>
                                     </div>
                                     @error('shift_start')
-                                        <div class="text-danger text-sm mt-1">{{ $message }}</div>
+                                        <div class="text-danger text-xs mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-label text-sm font-weight-bold">Waktu Selesai <span class="text-danger">*</span></label>
+                                <div class="col-md-3">
+                                    <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Waktu Selesai <span class="text-danger">*</span></label>
                                     <div class="input-group input-group-outline">
                                         <input type="time" 
                                                class="form-control @error('shift_end') is-invalid @enderror" 
@@ -252,7 +401,7 @@
                                                required>
                                     </div>
                                     @error('shift_end')
-                                        <div class="text-danger text-sm mt-1">{{ $message }}</div>
+                                        <div class="text-danger text-xs mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -261,19 +410,19 @@
                         <!-- Status Shift -->
                         <div class="mb-4">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-md me-3">
-                                    <i class="material-symbols-rounded opacity-10">toggle_on</i>
+                                <div class="icon icon-shape bg-soft-warning text-warning shadow-none text-center border-radius-md me-3">
+                                    <i class="material-symbols-rounded text-lg">toggle_on</i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0">Status Shift</h6>
-                                    <p class="text-sm text-secondary mb-0">Aktifkan atau nonaktifkan shift</p>
+                                    <h6 class="mb-0 fw-bold text-dark">Status Shift</h6>
+                                    <p class="text-xs text-secondary mb-0">Aktifkan atau nonaktifkan shift</p>
                                 </div>
                             </div>
 
                             <div class="form-check form-switch ps-0">
                                 <input class="form-check-input ms-0" type="checkbox" name="shift_status" value="1" {{ old('shift_status', '1') ? 'checked' : '' }} id="shift_status">
-                                <label class="form-check-label ms-3" for="shift_status">
-                                    <span class="text-sm">Aktifkan shift</span>
+                                <label class="form-check-label ms-3 text-sm fw-bold text-dark" for="shift_status">
+                                    Aktifkan shift
                                 </label>
                             </div>
                         </div>
@@ -281,18 +430,17 @@
                         <!-- Daftar Karyawan -->
                         <div class="mb-4">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md me-3">
-                                    <i class="material-symbols-rounded opacity-10">people</i>
+                                <div class="icon icon-shape bg-soft-success text-success shadow-none text-center border-radius-md me-3">
+                                    <i class="material-symbols-rounded text-lg">groups</i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0">Daftar Karyawan</h6>
-                                    <p class="text-sm text-secondary mb-0">Pilih karyawan untuk shift ini</p>
+                                    <h6 class="mb-0 fw-bold text-dark">Daftar Karyawan</h6>
+                                    <p class="text-xs text-secondary mb-0">Pilih karyawan untuk shift ini</p>
                                 </div>
                             </div>
 
                             @if($karyawanUsers->count() > 0)
                                 <div class="mb-3">
-                                    <label class="form-label text-sm font-weight-bold mb-2">Cari Karyawan</label>
                                     <div class="input-group input-group-outline mb-2">
                                         <span class="input-group-text">
                                             <i class="material-symbols-rounded">search</i>
@@ -300,58 +448,71 @@
                                         <input type="text" 
                                                class="form-control" 
                                                id="userSearchInput" 
-                                               placeholder="Ketik nama atau email untuk mencari...">
+                                               placeholder="Cari karyawan...">
                                     </div>
                                 </div>
                                 
-                                <div class="card border" style="max-height: 300px; overflow-y: auto;">
-                                    <div class="card-body">
-                                        <div class="row" id="userListContainer">
+                                <div class="card border shadow-none bg-gray-100" style="max-height: 350px; overflow-y: auto;">
+                                    <div class="card-body p-3">
+                                        <div class="row g-2" id="userListContainer">
                                             @foreach($karyawanUsers as $user)
-                                                <div class="col-md-6 mb-2 user-item" 
+                                                <div class="col-md-6 user-item" 
                                                      data-name="{{ strtolower($user->nama_lengkap) }}" 
                                                      data-email="{{ strtolower($user->email) }}">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input user-checkbox" 
-                                                               type="checkbox" 
-                                                               name="user_list[]" 
-                                                               value="{{ $user->id }}" 
-                                                               id="user_{{ $user->id }}"
-                                                               {{ in_array($user->id, old('user_list', [])) ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="user_{{ $user->id }}">
-                                                            <strong>{{ $user->nama_lengkap }}</strong>
-                                                            <br>
-                                                            <small class="text-muted">{{ $user->email }}</small>
-                                                        </label>
+                                                    <div class="card border-0 shadow-sm user-card h-100 cursor-pointer position-relative overflow-hidden" onclick="document.getElementById('user_{{ $user->id }}').click()">
+                                                        <div class="card-body p-3 d-flex align-items-center">
+                                                            <div class="form-check ps-0 m-0 me-3">
+                                                                <input class="form-check-input user-checkbox ms-0" 
+                                                                       type="checkbox" 
+                                                                       name="user_list[]" 
+                                                                       value="{{ $user->id }}" 
+                                                                       id="user_{{ $user->id }}"
+                                                                       {{ in_array($user->id, old('user_list', [])) ? 'checked' : '' }}
+                                                                       onclick="event.stopPropagation()">
+                                                            </div>
+                                                            <div class="d-flex flex-column">
+                                                                <span class="text-sm fw-bold text-dark">{{ $user->nama_lengkap }}</span>
+                                                                <span class="text-xs text-muted">{{ $user->email }}</span>
+                                                            </div>
+                                                            <div class="ms-auto">
+                                                                <span class="badge bg-soft-secondary text-secondary text-xxs">Karyawan</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="selected-indicator"></div>
                                                     </div>
                                                 </div>
                                             @endforeach
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mt-2">
-                                    <small class="text-muted">
-                                        <span id="selectedCount">0</span> karyawan dipilih
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <small class="text-muted text-xs">
+                                        <span id="selectedCount" class="fw-bold text-primary">0</span> karyawan dipilih
                                     </small>
+                                    <button type="button" class="btn btn-link btn-sm text-secondary mb-0 p-0" onclick="document.querySelectorAll('.user-checkbox').forEach(c => c.checked = false); updateSelectedCount();">
+                                        Reset Pilihan
+                                    </button>
                                 </div>
                                 @error('user_list')
-                                    <div class="text-danger text-sm mt-2">{{ $message }}</div>
+                                    <div class="text-danger text-xs mt-2">{{ $message }}</div>
                                 @enderror
-                                <div id="userListError" class="text-danger text-sm mt-2" style="display: none;"></div>
+                                <div id="userListError" class="text-danger text-xs mt-2" style="display: none;"></div>
                             @else
-                                <div class="alert alert-warning">
-                                    <i class="material-symbols-rounded me-2">warning</i>
-                                    Tidak ada karyawan aktif yang tersedia. Silakan buat user dengan role "Karyawan" terlebih dahulu.
+                                <div class="alert alert-warning text-white" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        <span class="alert-icon me-2"><i class="material-symbols-rounded">warning</i></span>
+                                        <span class="alert-text text-sm">Tidak ada karyawan aktif yang tersedia. Silakan buat user dengan role "Karyawan" terlebih dahulu.</span>
+                                    </div>
                                 </div>
                             @endif
                         </div>
                     </div>
-                    <div class="modal-footer border-top">
-                        <button type="button" class="btn btn-outline-secondary mb-0" data-bs-dismiss="modal">
-                            <i class="material-symbols-rounded me-1">close</i> Batal
+                    <div class="modal-footer border-top p-3">
+                        <button type="button" class="btn btn-outline-secondary mb-0 d-flex align-items-center gap-1" data-bs-dismiss="modal">
+                            <i class="material-symbols-rounded text-sm">close</i> Batal
                         </button>
-                        <button type="submit" class="btn bg-gradient-primary mb-0" id="shiftSubmitBtn" {{ $karyawanUsers->count() == 0 ? 'disabled' : '' }}>
-                            <i class="material-symbols-rounded me-1">save</i> Simpan
+                        <button type="submit" class="btn bg-gradient-primary mb-0 d-flex align-items-center gap-1" id="shiftSubmitBtn" {{ $karyawanUsers->count() == 0 ? 'disabled' : '' }}>
+                            <i class="material-symbols-rounded text-sm">save</i> Simpan
                         </button>
                     </div>
                 </form>
@@ -383,11 +544,28 @@
         }
 
         function updateSelectedCount() {
-            const checked = document.querySelectorAll('.user-checkbox:checked').length;
+            const checkboxes = document.querySelectorAll('.user-checkbox');
+            const checkedCount = document.querySelectorAll('.user-checkbox:checked').length;
             const countEl = document.getElementById('selectedCount');
+            
             if (countEl) {
-                countEl.textContent = checked;
+                countEl.textContent = checkedCount;
             }
+
+            // Update card styling based on selection
+            checkboxes.forEach(cb => {
+                const card = cb.closest('.user-card');
+                if (card) {
+                    if (cb.checked) {
+                        card.classList.add('border-primary', 'bg-soft-primary');
+                        card.classList.remove('border-0', 'shadow-sm');
+                        card.classList.add('shadow-md');
+                    } else {
+                        card.classList.remove('border-primary', 'bg-soft-primary', 'shadow-md');
+                        card.classList.add('border-0', 'shadow-sm');
+                    }
+                }
+            });
         }
         
         // Auto-open modal if there are validation errors
@@ -404,8 +582,8 @@
                 
                 form.action = "{{ route('admin.shift.update', session('_edit_id')) }}";
                 methodInput.value = 'PUT';
-                titleEl.innerHTML = '<i class="material-symbols-rounded me-2">schedule</i> Edit Shift';
-                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1">update</i> Update';
+                titleEl.innerHTML = '<i class="material-symbols-rounded me-2 align-middle">schedule</i> Edit Shift';
+                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1 text-sm">update</i> Update';
             @endif
             
             // Update selected count after modal is shown
@@ -441,8 +619,8 @@
                 const id = button.getAttribute('data-id');
                 form.action = "{{ url('adminx/shift') }}/" + id;
                 methodInput.value = 'PUT';
-                titleEl.innerHTML = '<i class="material-symbols-rounded me-2">schedule</i> Edit Shift';
-                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1">update</i> Update';
+                titleEl.innerHTML = '<i class="material-symbols-rounded me-2 align-middle">schedule</i> Edit Shift';
+                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1 text-sm">update</i> Update';
                 
                 // Populate form fields
                 shiftNameInput.value = button.getAttribute('data-shift-name') || '';
@@ -473,8 +651,8 @@
                 // Create mode (only if button exists)
                 form.action = "{{ route('admin.shift.store') }}";
                 methodInput.value = 'POST';
-                titleEl.innerHTML = '<i class="material-symbols-rounded me-2">schedule</i> Tambah Shift';
-                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1">save</i> Simpan';
+                titleEl.innerHTML = '<i class="material-symbols-rounded me-2 align-middle">schedule</i> Tambah Shift';
+                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1 text-sm">save</i> Simpan';
                 
                 // Clear form fields only if no old values (from validation errors)
                 @if(!old('shift_name'))
@@ -557,5 +735,83 @@
     })();
     </script>
     @endpush
+
+    <style>
+        .text-xxs { font-size: 0.65rem !important; }
+        .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
+        
+        .bg-gradient-info-soft {
+            background: linear-gradient(135deg, rgba(23, 162, 184, .08), rgba(23, 162, 184, .16));
+            color: #138496;
+        }
+
+        .bg-soft-primary { background: rgba(94, 114, 228, 0.10) !important; }
+        .bg-soft-success { background: rgba(40, 167, 69, 0.08) !important; }
+        .bg-soft-warning { background: rgba(255, 193, 7, 0.12) !important; }
+        .bg-soft-info { background: rgba(23, 162, 184, 0.12) !important; }
+        .bg-soft-secondary { background: rgba(108, 117, 125, 0.12) !important; }
+
+        .table-stok thead tr th {
+            border-top: none;
+            font-weight: 600;
+            letter-spacing: .04em;
+        }
+
+        .table-stok tbody tr {
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .table-stok tbody tr:hover {
+            background-color: #f8f9fe;
+        }
+
+        .table td, .table th { vertical-align: middle; }
+        
+        .icon-shape {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .input-group-outline {
+            display: flex;
+            width: 100%;
+        }
+        
+        .cursor-pointer {
+            cursor: pointer;
+        }
+        
+        /* Summary Card Styles */
+        .summary-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+        }
+        .summary-icon {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* User Card Selection */
+        .user-card {
+            transition: all 0.2s ease;
+        }
+        .user-card:hover {
+            background-color: #f8f9fa;
+        }
+        .user-card.border-primary {
+            border-color: #e91e63 !important; /* Material Primary */
+        }
+        .bg-soft-primary.user-card {
+            background-color: rgba(233, 30, 99, 0.05) !important;
+        }
+    </style>
 </div>
 @endsection

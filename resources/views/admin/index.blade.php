@@ -10,89 +10,115 @@
 @endsection
 
 @section('content')
-<div class="row">
-  <div class="ms-3">
-    <h3 class="mb-0 h4 font-weight-bolder">Dashboard Administrator</h3>
-    <p class="mb-4">Kelola seluruh sistem, monitor transaksi, laporan keuangan & stok, serta manajemen pengguna.</p>
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card bg-gradient-dark border-0 shadow-lg rounded-3">
+      <div class="card-body p-4">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <div class="d-flex align-items-center">
+              <div class="icon icon-lg icon-shape bg-white shadow text-center border-radius-xl me-3 d-flex align-items-center justify-content-center">
+                <i class="material-symbols-rounded text-dark">dashboard</i>
+              </div>
+              <div>
+                <h4 class="mb-1 text-white fw-bold">Dashboard Administrator</h4>
+                <p class="text-sm text-white opacity-8 mb-0">Kelola seluruh sistem, monitor transaksi, laporan keuangan & stok, serta manajemen pengguna.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
+
+<div class="row">
   
   {{-- Key Metrics Cards --}}
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-    <div class="card">
-      <div class="card-header p-2 ps-3">
-        <div class="d-flex justify-content-between">
+    <div class="card border-0 shadow-sm rounded-3 summary-card">
+      <div class="card-body p-3">
+        <div class="d-flex justify-content-between align-items-center">
           <div>
-            <p class="text-sm mb-0 text-capitalize">Penjualan Hari Ini</p>
-            <h4 class="mb-0">Rp 8.450.000</h4>
+            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                Penjualan Hari Ini
+            </p>
+            <h4 class="mb-0 text-dark fw-bold">Rp {{ number_format($salesToday, 0, ',', '.') }}</h4>
+            <p class="mb-0 text-xxs text-muted mt-1">
+                <span class="{{ $salesGrowthToday >= 0 ? 'text-success' : 'text-danger' }} font-weight-bold">
+                    {{ $salesGrowthToday >= 0 ? '+' : '' }}{{ number_format($salesGrowthToday, 1) }}% 
+                </span>
+                dari kemarin
+            </p>
           </div>
-          <div class="icon icon-md icon-shape bg-gradient-success shadow-success shadow text-center border-radius-lg">
-            <i class="material-symbols-rounded opacity-10">payments</i>
+          <div class="summary-icon bg-soft-success">
+            <i class="material-symbols-rounded text-success">payments</i>
           </div>
         </div>
-      </div>
-      <hr class="dark horizontal my-0">
-      <div class="card-footer p-2 ps-3">
-        <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+12.5% </span>dari kemarin</p>
       </div>
     </div>
   </div>
 
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-    <div class="card">
-      <div class="card-header p-2 ps-3">
-        <div class="d-flex justify-content-between">
+    <div class="card border-0 shadow-sm rounded-3 summary-card">
+      <div class="card-body p-3">
+        <div class="d-flex justify-content-between align-items-center">
           <div>
-            <p class="text-sm mb-0 text-capitalize">Penjualan Bulan Ini</p>
-            <h4 class="mb-0">Rp 287.500.000</h4>
+            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                Penjualan Bulan Ini
+            </p>
+            <h4 class="mb-0 text-dark fw-bold">Rp {{ number_format($salesMonth, 0, ',', '.') }}</h4>
+            <p class="mb-0 text-xxs text-muted mt-1">
+                <span class="{{ $salesGrowthMonth >= 0 ? 'text-success' : 'text-danger' }} font-weight-bold">
+                    {{ $salesGrowthMonth >= 0 ? '+' : '' }}{{ number_format($salesGrowthMonth, 1) }}% 
+                </span>
+                dari bulan lalu
+            </p>
           </div>
-          <div class="icon icon-md icon-shape bg-gradient-warning shadow-warning shadow text-center border-radius-lg">
-            <i class="material-symbols-rounded opacity-10">calendar_month</i>
+          <div class="summary-icon bg-soft-warning">
+            <i class="material-symbols-rounded text-warning">calendar_month</i>
           </div>
         </div>
-      </div>
-      <hr class="dark horizontal my-0">
-      <div class="card-footer p-2 ps-3">
-        <p class="mb-0 text-sm"><span class="text-success font-weight-bolder">+3% </span>dari bulan lalu</p>
       </div>
     </div>
   </div>
 
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-    <div class="card">
-      <div class="card-header p-2 ps-3">
-        <div class="d-flex justify-content-between">
+    <div class="card border-0 shadow-sm rounded-3 summary-card">
+      <div class="card-body p-3">
+        <div class="d-flex justify-content-between align-items-center">
           <div>
-            <p class="text-sm mb-0 text-capitalize">Total Pengguna</p>
-            <h4 class="mb-0">24 Users</h4>
+            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                Total Pengguna
+            </p>
+            <h4 class="mb-0 text-dark fw-bold">{{ $totalUsers }} Users</h4>
+            <p class="mb-0 text-xxs text-muted mt-1">
+                {{ $adminCount }} Admin | {{ $kasirCount }} Kasir
+            </p>
           </div>
-          <div class="icon icon-md icon-shape bg-gradient-info shadow-info shadow text-center border-radius-lg">
-            <i class="material-symbols-rounded opacity-10">group</i>
+          <div class="summary-icon bg-soft-info">
+            <i class="material-symbols-rounded text-info">group</i>
           </div>
         </div>
-      </div>
-      <hr class="dark horizontal my-0">
-      <div class="card-footer p-2 ps-3">
-        <p class="mb-0 text-sm"><span class="text-muted">8 Admin | 6 Kasir | 10 Karyawan</span></p>
       </div>
     </div>
   </div>
 
   <div class="col-xl-3 col-sm-6">
-    <div class="card">
-      <div class="card-header p-2 ps-3">
-        <div class="d-flex justify-content-between">
+    <div class="card border-0 shadow-sm rounded-3 summary-card">
+      <div class="card-body p-3">
+        <div class="d-flex justify-content-between align-items-center">
           <div>
-            <p class="text-sm mb-0 text-capitalize">Nilai Stok</p>
-            <h4 class="mb-0">Rp 125.400.000</h4>
+            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                Nilai Stok
+            </p>
+            <h4 class="mb-0 text-dark fw-bold">Rp {{ number_format($inventoryValue, 0, ',', '.') }}</h4>
+            <p class="mb-0 text-xxs text-muted mt-1">Total nilai inventory</p>
           </div>
-          <div class="icon icon-md icon-shape bg-gradient-primary shadow-primary shadow text-center border-radius-lg">
-            <i class="material-symbols-rounded opacity-10">inventory</i>
+          <div class="summary-icon bg-soft-primary">
+            <i class="material-symbols-rounded text-primary">inventory</i>
           </div>
         </div>
-      </div>
-      <hr class="dark horizontal my-0">
-      <div class="card-footer p-2 ps-3">
-        <p class="mb-0 text-sm"><span class="text-muted">Total nilai inventory</span></p>
       </div>
     </div>
   </div>
@@ -101,7 +127,7 @@
 {{-- System Management & Quick Actions --}}
 <div class="row mt-4">
   <div class="col-lg-4 mb-4">
-    <div class="card h-100">
+    <div class="card h-100 border-0 shadow-sm rounded-3">
       <div class="card-header pb-0">
         <h6>Manajemen Sistem</h6>
         <p class="text-sm mb-0">Kelola pengguna dan role</p>
@@ -114,7 +140,7 @@
             </span>
             <div class="timeline-content">
               <a href="{{ route('admin.users.index') }}" class="text-dark text-sm font-weight-bold">Kelola Pengguna</a>
-              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">24 pengguna terdaftar</p>
+              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">{{ $totalUsers }} pengguna terdaftar</p>
             </div>
           </div>
           <div class="timeline-block mb-3">
@@ -123,7 +149,7 @@
             </span>
             <div class="timeline-content">
               <a href="{{ route('karyawan.dashboard') }}" class="text-dark text-sm font-weight-bold">Dashboard Karyawan</a>
-              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">10 karyawan aktif</p>
+              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">{{ $karyawanCount }} karyawan aktif</p>
             </div>
           </div>
           <div class="timeline-block mb-3">
@@ -132,7 +158,7 @@
             </span>
             <div class="timeline-content">
               <a href="{{ route('kasir.dashboard') }}" class="text-dark text-sm font-weight-bold">Dashboard Kasir</a>
-              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">6 kasir aktif</p>
+              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">{{ $kasirCount }} kasir aktif</p>
             </div>
           </div>
           <div class="timeline-block">
@@ -140,8 +166,8 @@
               <i class="material-symbols-rounded text-white text-sm">inventory</i>
             </span>
             <div class="timeline-content">
-              <a href="#" class="text-dark text-sm font-weight-bold">Kelola Stok Obat</a>
-              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">1,245 jenis obat</p>
+              <a href="{{ route('admin.obat.index') }}" class="text-dark text-sm font-weight-bold">Kelola Stok Obat</a>
+              <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Manajemen data obat</p>
             </div>
           </div>
         </div>
@@ -150,7 +176,7 @@
   </div>
 
   <div class="col-lg-8 mb-4">
-    <div class="card h-100">
+    <div class="card h-100 border-0 shadow-sm rounded-3">
       <div class="card-header pb-0">
         <div class="d-flex justify-content-between">
           <div>
@@ -158,7 +184,7 @@
             <p class="text-sm mb-0">Real-time transaction monitoring</p>
           </div>
           <div>
-            <a href="#" class="btn btn-sm btn-outline-primary mb-0">Lihat Semua</a>
+            <a href="{{ route('admin.transaksi.riwayat') }}" class="btn btn-sm btn-outline-primary mb-0">Lihat Semua</a>
           </div>
         </div>
       </div>
@@ -166,25 +192,25 @@
         <div class="row">
           <div class="col-md-3 text-center mb-3">
             <div class="p-3 bg-gradient-success border-radius-lg">
-              <h3 class="text-white mb-0">45</h3>
+              <h3 class="text-white mb-0">{{ $todayTransactionsCount }}</h3>
               <p class="text-white text-sm mb-0">Transaksi</p>
             </div>
           </div>
           <div class="col-md-3 text-center mb-3">
             <div class="p-3 bg-gradient-info border-radius-lg">
-              <h3 class="text-white mb-0">8</h3>
+              <h3 class="text-white mb-0">{{ $pendingCartsCount }}</h3>
               <p class="text-white text-sm mb-0">Cart Pending</p>
             </div>
           </div>
           <div class="col-md-3 text-center mb-3">
             <div class="p-3 bg-gradient-warning border-radius-lg">
-              <h3 class="text-white mb-0">12</h3>
+              <h3 class="text-white mb-0">{{ $minStockCount }}</h3>
               <p class="text-white text-sm mb-0">Stok Minimum</p>
             </div>
           </div>
           <div class="col-md-3 text-center mb-3">
             <div class="p-3 bg-gradient-danger border-radius-lg">
-              <h3 class="text-white mb-0">5</h3>
+              <h3 class="text-white mb-0">{{ $expiredCount }}</h3>
               <p class="text-white text-sm mb-0">Obat Expired</p>
             </div>
           </div>
@@ -202,27 +228,19 @@
               </tr>
             </thead>
             <tbody>
+              @forelse($recentTransactions as $trx)
               <tr>
-                <td class="text-sm">TRX-045</td>
-                <td class="text-sm">Siti Kasir</td>
-                <td class="text-xs text-secondary">14:30</td>
-                <td class="text-sm font-weight-bold">Rp 125.000</td>
+                <td class="text-sm">{{ $trx->no_transaksi }}</td>
+                <td class="text-sm">{{ $trx->user->name ?? 'Unknown' }}</td>
+                <td class="text-xs text-secondary">{{ $trx->tgl_transaksi->format('H:i') }}</td>
+                <td class="text-sm font-weight-bold">Rp {{ number_format($trx->total_bayar, 0, ',', '.') }}</td>
                 <td><span class="badge badge-sm bg-gradient-success">Selesai</span></td>
               </tr>
+              @empty
               <tr>
-                <td class="text-sm">TRX-044</td>
-                <td class="text-sm">Budi Kasir</td>
-                <td class="text-xs text-secondary">14:15</td>
-                <td class="text-sm font-weight-bold">Rp 85.000</td>
-                <td><span class="badge badge-sm bg-gradient-success">Selesai</span></td>
+                <td colspan="5" class="text-center text-sm text-muted py-4">Belum ada transaksi hari ini</td>
               </tr>
-              <tr>
-                <td class="text-sm">TRX-043</td>
-                <td class="text-sm">Siti Kasir</td>
-                <td class="text-xs text-secondary">13:45</td>
-                <td class="text-sm font-weight-bold">Rp 250.000</td>
-                <td><span class="badge badge-sm bg-gradient-success">Selesai</span></td>
-              </tr>
+              @endforelse
             </tbody>
           </table>
         </div>
@@ -234,23 +252,23 @@
 {{-- Financial & Stock Reports --}}
 <div class="row mt-4">
   <div class="col-lg-6 mb-4">
-    <div class="card">
+    <div class="card border-0 shadow-sm rounded-3">
       <div class="card-header pb-0">
         <h6>Laporan Keuangan</h6>
-        <p class="text-sm mb-0">Financial performance overview</p>
+        <p class="text-sm mb-0">Financial performance overview (Bulan Ini)</p>
       </div>
       <div class="card-body p-3">
         <div class="row mb-3">
           <div class="col-6 text-center">
             <div class="p-3 bg-light border-radius-md">
               <p class="text-xs mb-0 text-muted">Revenue Bulan Ini</p>
-              <h5 class="mb-0 text-success">Rp 287.5M</h5>
+              <h5 class="mb-0 text-success">Rp {{ number_format($salesMonth, 0, ',', '.') }}</h5>
             </div>
           </div>
           <div class="col-6 text-center">
             <div class="p-3 bg-light border-radius-md">
               <p class="text-xs mb-0 text-muted">Profit Margin</p>
-              <h5 class="mb-0 text-primary">28.5%</h5>
+              <h5 class="mb-0 text-primary">{{ number_format($profitMargin, 1) }}%</h5>
             </div>
           </div>
         </div>
@@ -258,13 +276,13 @@
           <div class="col-6 text-center">
             <div class="p-3 bg-light border-radius-md">
               <p class="text-xs mb-0 text-muted">HPP</p>
-              <h6 class="mb-0">Rp 205.5M</h6>
+              <h6 class="mb-0">Rp {{ number_format($hppMonth, 0, ',', '.') }}</h6>
             </div>
           </div>
           <div class="col-6 text-center">
             <div class="p-3 bg-light border-radius-md">
               <p class="text-xs mb-0 text-muted">Net Profit</p>
-              <h6 class="mb-0 text-success">Rp 82.0M</h6>
+              <h6 class="mb-0 text-success">Rp {{ number_format($netProfit, 0, ',', '.') }}</h6>
             </div>
           </div>
         </div>
@@ -273,7 +291,7 @@
   </div>
 
   <div class="col-lg-6 mb-4">
-    <div class="card h-100">
+    <div class="card h-100 border-0 shadow-sm rounded-3">
       <div class="card-header pb-0">
         <h6>Laporan Stok</h6>
         <p class="text-sm mb-0">Inventory status & alerts</p>
@@ -289,11 +307,11 @@
                 </div>
                 <div>
                   <h6 class="mb-0 text-sm font-weight-bold">Obat Kadaluarsa</h6>
-                  <p class="text-xs text-muted mb-0"><strong>5 item</strong> perlu ditindaklanjuti</p>
+                  <p class="text-xs text-muted mb-0"><strong>{{ $expiredCount }} item</strong> perlu ditindaklanjuti</p>
                 </div>
               </div>
               <div>
-                <button class="btn btn-sm btn-outline-danger mb-0">Lihat</button>
+                <a href="{{ route('admin.obat.index', ['filter' => 'expired']) }}" class="btn btn-sm btn-outline-danger mb-0">Lihat</a>
               </div>
             </div>
           </div>
@@ -307,11 +325,11 @@
                 </div>
                 <div>
                   <h6 class="mb-0 text-sm font-weight-bold">Stok Minimum</h6>
-                  <p class="text-xs text-muted mb-0"><strong>12 item</strong> di bawah minimum</p>
+                  <p class="text-xs text-muted mb-0"><strong>{{ $minStockCount }} item</strong> di bawah minimum</p>
                 </div>
               </div>
               <div>
-                <button class="btn btn-sm btn-outline-warning mb-0">Lihat</button>
+                <a href="{{ route('admin.obat.index', ['filter' => 'min_stock']) }}" class="btn btn-sm btn-outline-warning mb-0">Lihat</a>
               </div>
             </div>
           </div>
@@ -325,11 +343,11 @@
                 </div>
                 <div>
                   <h6 class="mb-0 text-sm font-weight-bold">Stok Opname Pending</h6>
-                  <p class="text-xs text-muted mb-0"><strong>3 laporan</strong> menunggu review</p>
+                  <p class="text-xs text-muted mb-0"><strong>{{ $pendingOpnameCount }} laporan</strong> menunggu review</p>
                 </div>
               </div>
               <div>
-                <button class="btn btn-sm btn-outline-info mb-0">Review</button>
+                <a href="{{ route('admin.stokopname.pending') }}" class="btn btn-sm btn-outline-info mb-0">Review</a>
               </div>
             </div>
           </div>
@@ -342,7 +360,7 @@
 {{-- User Activity Log --}}
 <div class="row mt-4">
   <div class="col-lg-12 mb-4">
-    <div class="card">
+    <div class="card border-0 shadow-sm rounded-3">
       <div class="card-header pb-0">
         <div class="d-flex justify-content-between align-items-center">
           <div>
@@ -372,74 +390,29 @@
               </tr>
             </thead>
             <tbody>
+              @forelse($activities as $activity)
               <tr>
                 <td>
                   <div class="d-flex px-2 py-1">
-                    <div class="avatar avatar-sm bg-gradient-info me-3">
-                      <span class="text-white text-xs">SK</span>
+                    <div class="avatar avatar-sm bg-gradient-{{ $activity['type'] == 'success' ? 'success' : 'info' }} me-3">
+                      <span class="text-white text-xs">{{ substr($activity['user']->name ?? 'U', 0, 2) }}</span>
                     </div>
                     <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">Siti Kasir</h6>
-                      <p class="text-xs text-secondary mb-0">siti@apotek.com</p>
+                      <h6 class="mb-0 text-sm">{{ $activity['user']->name ?? 'Unknown' }}</h6>
+                      <p class="text-xs text-secondary mb-0">{{ $activity['user']->email ?? '' }}</p>
                     </div>
                   </div>
                 </td>
-                <td><span class="badge badge-sm bg-gradient-warning">Kasir</span></td>
-                <td class="text-sm">Melakukan transaksi TRX-045</td>
-                <td class="text-xs text-secondary">2 menit yang lalu</td>
-                <td><span class="badge badge-sm bg-gradient-success">Sukses</span></td>
+                <td><span class="badge badge-sm bg-gradient-{{ ($activity['user']->role->nama_role ?? '') == 'Kasir' ? 'warning' : 'info' }}">{{ $activity['user']->role->nama_role ?? 'User' }}</span></td>
+                <td class="text-sm">{{ $activity['action'] }}</td>
+                <td class="text-xs text-secondary">{{ $activity['time']->diffForHumans() }}</td>
+                <td><span class="badge badge-sm bg-gradient-{{ $activity['type'] == 'success' ? 'success' : 'warning' }}">{{ $activity['status'] }}</span></td>
               </tr>
+              @empty
               <tr>
-                <td>
-                  <div class="d-flex px-2 py-1">
-                    <div class="avatar avatar-sm bg-gradient-success me-3">
-                      <span class="text-white text-xs">AK</span>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">Ahmad Karyawan</h6>
-                      <p class="text-xs text-secondary mb-0">ahmad@apotek.com</p>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="badge badge-sm bg-gradient-info">Karyawan</span></td>
-                <td class="text-sm">Submit cart CART-008 untuk approval</td>
-                <td class="text-xs text-secondary">15 menit yang lalu</td>
-                <td><span class="badge badge-sm bg-gradient-warning">Pending</span></td>
+                <td colspan="5" class="text-center text-sm text-muted py-4">Belum ada aktivitas terbaru</td>
               </tr>
-              <tr>
-                <td>
-                  <div class="d-flex px-2 py-1">
-                    <div class="avatar avatar-sm bg-gradient-warning me-3">
-                      <span class="text-white text-xs">BK</span>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">Budi Kasir</h6>
-                      <p class="text-xs text-secondary mb-0">budi@apotek.com</p>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="badge badge-sm bg-gradient-warning">Kasir</span></td>
-                <td class="text-sm">Approve cart CART-007</td>
-                <td class="text-xs text-secondary">30 menit yang lalu</td>
-                <td><span class="badge badge-sm bg-gradient-success">Sukses</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="d-flex px-2 py-1">
-                    <div class="avatar avatar-sm bg-gradient-success me-3">
-                      <span class="text-white text-xs">DK</span>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">Dewi Karyawan</h6>
-                      <p class="text-xs text-secondary mb-0">dewi@apotek.com</p>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="badge badge-sm bg-gradient-info">Karyawan</span></td>
-                <td class="text-sm">Update stock opname - Gudang A</td>
-                <td class="text-xs text-secondary">1 jam yang lalu</td>
-                <td><span class="badge badge-sm bg-gradient-success">Sukses</span></td>
-              </tr>
+              @endforelse
             </tbody>
           </table>
         </div>
@@ -448,3 +421,40 @@
   </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    .text-xxs { font-size: 0.65rem !important; }
+    .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
+
+    .summary-card {
+        transition: all 0.2s ease-in-out;
+    }
+    .summary-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1.2rem rgba(0,0,0,.07) !important;
+    }
+    .summary-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .bg-soft-success { background: rgba(40, 167, 69, 0.08) !important; }
+    .bg-soft-warning { background: rgba(255, 193, 7, 0.12) !important; }
+    .bg-soft-danger  { background: rgba(220, 53, 69, 0.10) !important; }
+    .bg-soft-primary { background: rgba(94, 114, 228, 0.10) !important; }
+    .bg-soft-secondary { background: rgba(108, 117, 125, 0.08) !important; }
+    .bg-soft-info { background: rgba(23, 162, 184, 0.12) !important; }
+    .bg-soft-dark { background: rgba(52, 71, 103, 0.15) !important; }
+
+    .card {
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .rounded-3 { border-radius: 0.75rem !important; }
+</style>
+@endpush

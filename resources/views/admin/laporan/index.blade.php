@@ -15,38 +15,60 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <x-content-header title="Dashboard Laporan" subtitle="Monitoring dan analisis data apotek">
-        <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary mb-0" onclick="window.print()">
-                <i class="material-symbols-rounded text-sm me-1">print</i> Cetak
-            </button>
-            <button type="button" class="btn btn-outline-success mb-0">
-                <i class="material-symbols-rounded text-sm me-1">download</i> Export Excel
-            </button>
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-dark border-0 shadow-lg rounded-3">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-lg icon-shape bg-white shadow text-center border-radius-xl me-3">
+                                    <i class="material-symbols-rounded text-dark">analytics</i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-1 text-white fw-bold">Dashboard Laporan</h4>
+                                    <p class="text-sm text-white opacity-8 mb-0">Monitoring dan analisis data apotek</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end text-start mt-3 mt-md-0">
+                            <div class="d-flex gap-2 justify-content-md-end">
+                                <button type="button" class="btn btn-outline-white mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1" onclick="window.print()">
+                                    <i class="material-symbols-rounded text-sm">print</i> Cetak
+                                </button>
+                                <button type="button" class="btn bg-white text-dark mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1">
+                                    <i class="material-symbols-rounded text-sm">download</i> Export Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </x-content-header>
+    </div>
 
     <!-- Period Selector -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card">
+            <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-body p-3">
                     <form method="GET" class="row g-3 align-items-end">
                         <div class="col-md-4">
-                            <label class="form-label text-sm font-weight-bold">Tanggal Dari</label>
+                            <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Tanggal Dari</label>
                             <div class="input-group input-group-outline">
-                                <input type="date" name="from" value="{{ request('from', $from->format('Y-m-d')) }}" class="form-control">
+                                <input type="date" name="from" value="{{ request('from', $from->format('Y-m-d')) }}" class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label text-sm font-weight-bold">Tanggal Sampai</label>
+                            <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Tanggal Sampai</label>
                             <div class="input-group input-group-outline">
-                                <input type="date" name="to" value="{{ request('to', $to->format('Y-m-d')) }}" class="form-control">
+                                <input type="date" name="to" value="{{ request('to', $to->format('Y-m-d')) }}" class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary mb-0 w-100">
-                                <i class="material-symbols-rounded me-1">search</i> Tampilkan
+                            <button type="submit" class="btn bg-gradient-dark btn-sm mb-0 w-100 d-flex align-items-center justify-content-center gap-1">
+                                <i class="material-symbols-rounded text-sm">search</i> Filter
                             </button>
                         </div>
                     </form>
@@ -57,69 +79,80 @@
 
     <!-- Summary Statistics -->
     <div class="row mb-4">
-        <div class="col-xl-3 col-sm-6 mb-4">
-            <div class="card">
-                <div class="card-header p-3 pt-2">
-                    <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-                        <i class="material-symbols-rounded opacity-10">trending_up</i>
-                    </div>
-                    <div class="text-end pt-1">
-                        <p class="text-sm mb-0 text-capitalize">Total Pendapatan</p>
-                        <h4 class="mb-0">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h4>
-                        <p class="text-xs mb-0 {{ $revenueChange >= 0 ? 'text-success' : 'text-danger' }}">
-                            <i class="material-symbols-rounded text-xs">{{ $revenueChange >= 0 ? 'arrow_upward' : 'arrow_downward' }}</i> 
-                            {{ number_format(abs($revenueChange), 1) }}% dari periode sebelumnya
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-4">
-            <div class="card">
-                <div class="card-header p-3 pt-2">
-                    <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
-                        <i class="material-symbols-rounded opacity-10">receipt_long</i>
-                    </div>
-                    <div class="text-end pt-1">
-                        <p class="text-sm mb-0 text-capitalize">Total Transaksi</p>
-                        <h4 class="mb-0">{{ number_format($totalTransactions) }}</h4>
-                        <p class="text-xs mb-0 {{ $transactionsChange >= 0 ? 'text-success' : 'text-danger' }}">
-                            <i class="material-symbols-rounded text-xs">{{ $transactionsChange >= 0 ? 'arrow_upward' : 'arrow_downward' }}</i> 
-                            {{ number_format(abs($transactionsChange), 1) }}% dari periode sebelumnya
-                        </p>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card border-0 shadow-sm rounded-3 summary-card">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                                Total Pendapatan
+                            </p>
+                            <h4 class="mb-0 text-dark fw-bold">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h4>
+                            <p class="mb-0 text-xxs mt-1 {{ $revenueChange >= 0 ? 'text-success' : 'text-danger' }}">
+                                <span class="font-weight-bolder">{{ $revenueChange >= 0 ? '+' : '' }}{{ number_format($revenueChange, 1) }}%</span> dari periode lalu
+                            </p>
+                        </div>
+                        <div class="summary-icon bg-soft-success">
+                            <i class="material-symbols-rounded text-success">trending_up</i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-4">
-            <div class="card">
-                <div class="card-header p-3 pt-2">
-                    <div class="icon icon-lg icon-shape bg-gradient-warning shadow-warning text-center border-radius-xl mt-n4 position-absolute">
-                        <i class="material-symbols-rounded opacity-10">shopping_cart</i>
-                    </div>
-                    <div class="text-end pt-1">
-                        <p class="text-sm mb-0 text-capitalize">Total Pembelian</p>
-                        <h4 class="mb-0">Rp {{ number_format($totalPurchases, 0, ',', '.') }}</h4>
-                        <p class="text-xs mb-0 {{ $purchasesChange >= 0 ? 'text-danger' : 'text-success' }}">
-                            <i class="material-symbols-rounded text-xs">{{ $purchasesChange >= 0 ? 'arrow_upward' : 'arrow_downward' }}</i> 
-                            {{ number_format(abs($purchasesChange), 1) }}% dari periode sebelumnya
-                        </p>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card border-0 shadow-sm rounded-3 summary-card">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                                Total Transaksi
+                            </p>
+                            <h4 class="mb-0 text-dark fw-bold">{{ number_format($totalTransactions) }}</h4>
+                            <p class="mb-0 text-xxs mt-1 {{ $transactionsChange >= 0 ? 'text-success' : 'text-danger' }}">
+                                <span class="font-weight-bolder">{{ $transactionsChange >= 0 ? '+' : '' }}{{ number_format($transactionsChange, 1) }}%</span> dari periode lalu
+                            </p>
+                        </div>
+                        <div class="summary-icon bg-soft-primary">
+                            <i class="material-symbols-rounded text-primary">receipt_long</i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-4">
-            <div class="card">
-                <div class="card-header p-3 pt-2">
-                    <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-                        <i class="material-symbols-rounded opacity-10">inventory_2</i>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card border-0 shadow-sm rounded-3 summary-card">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                                Total Pembelian
+                            </p>
+                            <h4 class="mb-0 text-dark fw-bold">Rp {{ number_format($totalPurchases, 0, ',', '.') }}</h4>
+                            <p class="mb-0 text-xxs mt-1 {{ $purchasesChange >= 0 ? 'text-danger' : 'text-success' }}">
+                                <span class="font-weight-bolder">{{ $purchasesChange >= 0 ? '+' : '' }}{{ number_format($purchasesChange, 1) }}%</span> dari periode lalu
+                            </p>
+                        </div>
+                        <div class="summary-icon bg-soft-warning">
+                            <i class="material-symbols-rounded text-warning">shopping_cart</i>
+                        </div>
                     </div>
-                    <div class="text-end pt-1">
-                        <p class="text-sm mb-0 text-capitalize">Jumlah Item Stok</p>
-                        <h4 class="mb-0">{{ number_format($totalStock) }}</h4>
-                        <p class="text-xs text-secondary mb-0">
-                            Total produk tersedia
-                        </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+            <div class="card border-0 shadow-sm rounded-3 summary-card">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
+                                Jumlah Item Stok
+                            </p>
+                            <h4 class="mb-0 text-dark fw-bold">{{ number_format($totalStock) }}</h4>
+                            <p class="mb-0 text-xxs text-muted mt-1">Total produk tersedia</p>
+                        </div>
+                        <div class="summary-icon bg-soft-info">
+                            <i class="material-symbols-rounded text-info">inventory_2</i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,10 +162,10 @@
     <!-- Charts Row -->
     <div class="row mb-4">
         <div class="col-lg-8 mb-4">
-            <div class="card">
-                <div class="card-header pb-0 p-3">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white pb-0 p-3">
                     <div class="d-flex justify-content-between">
-                        <h6 class="mb-0">Grafik Penjualan & Pembelian</h6>
+                        <h6 class="mb-0 fw-bold">Grafik Penjualan & Pembelian</h6>
                         <span class="text-xs text-secondary">{{ $from->format('d M Y') }} - {{ $to->format('d M Y') }}</span>
                     </div>
                 </div>
@@ -144,9 +177,9 @@
             </div>
         </div>
         <div class="col-lg-4 mb-4">
-            <div class="card">
-                <div class="card-header pb-0 p-3">
-                    <h6 class="mb-0">Metode Pembayaran</h6>
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white pb-0 p-3">
+                    <h6 class="mb-0 fw-bold">Metode Pembayaran</h6>
                 </div>
                 <div class="card-body p-3">
                     <div class="chart">
@@ -174,10 +207,10 @@
     <!-- Quick Reports -->
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header pb-0 p-3">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white pb-0 p-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Obat Terlaris</h6>
+                        <h6 class="mb-0 fw-bold">Obat Terlaris</h6>
                         <span class="text-xs text-secondary">Top 5</span>
                     </div>
                 </div>
@@ -205,10 +238,10 @@
             </div>
         </div>
         <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header pb-0 p-3">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white pb-0 p-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Stok Menipis</h6>
+                        <h6 class="mb-0 fw-bold">Stok Menipis</h6>
                         <a href="{{ route('admin.stok.index') }}" class="text-warning text-sm">Lihat Semua</a>
                     </div>
                 </div>
@@ -317,4 +350,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+
+<style>
+    .text-xxs { font-size: 0.65rem !important; }
+    .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
+
+    .summary-card {
+        transition: all 0.2s ease-in-out;
+    }
+    .summary-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1.2rem rgba(0,0,0,.07) !important;
+    }
+    .summary-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .bg-soft-success { background: rgba(40, 167, 69, 0.08) !important; }
+    .bg-soft-warning { background: rgba(255, 193, 7, 0.12) !important; }
+    .bg-soft-danger  { background: rgba(220, 53, 69, 0.10) !important; }
+    .bg-soft-primary { background: rgba(94, 114, 228, 0.10) !important; }
+    .bg-soft-info    { background: rgba(23, 162, 184, 0.10) !important; }
+    .bg-soft-secondary { background: rgba(108, 117, 125, 0.08) !important; }
+</style>
 @endsection

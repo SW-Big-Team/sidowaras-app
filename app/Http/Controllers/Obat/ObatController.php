@@ -38,22 +38,32 @@ class ObatController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $filter = $request->input('filter');
 
-        $obats = Obat::with(['kategori', 'satuan'])
-            ->when($search, function ($query, $search) {
+        $query = Obat::with(['kategori', 'satuan'])
+            ->withSum('stokBatches as total_stok', 'sisa_stok');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
                 $columns = ['nama_obat', 'kode_obat', 'barcode', 'lokasi_rak', 'deskripsi', 'stok_minimum'];
+                foreach ($columns as $col) {
+                    $q->orWhere($col, 'like', "%{$search}%");
+                }
+                $q->orWhereHas('kategori', fn($rel) => $rel->where('nama_kategori', 'like', "%{$search}%"))
+                  ->orWhereHas('satuan', fn($rel) => $rel->where('nama_satuan', 'like', "%{$search}%"));
+            });
+        }
 
-                $query->where(function ($q) use ($columns, $search) {
-                    foreach ($columns as $col) {
-                        $q->orWhere($col, 'like', "%{$search}%");
-                    }
+        if ($filter === 'min_stock') {
+            $query->whereRaw('(select coalesce(sum(sisa_stok), 0) from stok_batch where stok_batch.obat_id = obat.id) <= obat.stok_minimum');
+        } elseif ($filter === 'expired') {
+            $query->whereHas('stokBatches', function ($q) {
+                $q->where('tgl_kadaluarsa', '<', now())
+                  ->where('sisa_stok', '>', 0);
+            });
+        }
 
-                    $q->orWhereHas('kategori', fn($rel) => $rel->where('nama_kategori', 'like', "%{$search}%"))
-                    ->orWhereHas('satuan', fn($rel) => $rel->where('nama_satuan', 'like', "%{$search}%"));
-                });
-            })
-            ->latest()
-            ->paginate(10);
+        $obats = $query->latest()->paginate(10);
 
         return view('admin.obat.index', compact('obats', 'search'));
     }
@@ -92,12 +102,6 @@ class ObatController extends Controller
             'lokasi_rak' => 'nullable|string|max:50',
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
             'deskripsi' => 'nullable|string',
-            // Input tambahan untuk stok awal
-            'harga_beli' => 'required|numeric|min:0',
-            'harga_jual' => 'required|numeric|min:0|gt:harga_beli',
-            'stok_awal' => 'required|integer|min:1',
-            'tgl_kadaluarsa' => 'required|date|after:today',
-            'nama_pengirim' => 'required|string|max:100',
         ]);
     
         DB::beginTransaction();
