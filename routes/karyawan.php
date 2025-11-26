@@ -13,6 +13,13 @@ Route::middleware(['auth', 'role:Karyawan,Admin'])->prefix('karyawan')->name('ka
         Route::post('/add', [CartController::class, 'addItem'])->name('add');
         Route::delete('/item/{id}', [CartController::class, 'removeItem'])->name('remove');
         Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+        Route::get('/{cart}', [CartController::class, 'show'])->name('show');
+    });
+
+    // Riwayat Transaksi
+    Route::prefix('transaksi')->name('transaksi.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Karyawan\TransaksiController::class, 'index'])->name('index');
+        Route::get('/{transaksi}', [App\Http\Controllers\Karyawan\TransaksiController::class, 'show'])->name('show');
     });
 
     // Manajemen Stok (hanya lihat & input via pembelian)

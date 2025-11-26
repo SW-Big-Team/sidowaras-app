@@ -95,4 +95,14 @@ class CartController extends Controller
         return redirect()->route('karyawan.cart.index')
                          ->with('success', 'Keranjang dikirim ke kasir untuk approval.');
     }
+
+    public function show(Cart $cart)
+    {
+        // Ensure the cart belongs to the authenticated user
+        if ($cart->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('karyawan.cart.show', compact('cart'));
+    }
 }

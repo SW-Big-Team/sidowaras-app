@@ -158,7 +158,7 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
                     <h6 class="text-dark font-weight-bold mb-0">Aktivitas Terkini</h6>
-                    <a href="javascript:;" class="text-primary text-sm font-weight-bold">Lihat Semua</a>
+                    <a href="{{ route('karyawan.transaksi.index') }}" class="text-primary text-sm font-weight-bold">Lihat Semua</a>
                 </div>
                 <div class="card-body p-0 pt-3">
                     <div class="table-responsive">
@@ -198,9 +198,9 @@
                                         <span class="text-xs font-weight-bold text-muted">{{ $activity['date']->diffForHumans() }}</span>
                                     </td>
                                     <td class="align-middle">
-                                        <button class="btn btn-link text-secondary mb-0">
+                                        <a href="{{ $activity['type'] == 'cart' ? route('karyawan.cart.show', $activity['id']) : route('karyawan.transaksi.show', $activity['id']) }}" class="btn btn-link text-secondary mb-0">
                                             <i class="material-symbols-rounded text-sm">arrow_forward</i>
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                                 @empty
