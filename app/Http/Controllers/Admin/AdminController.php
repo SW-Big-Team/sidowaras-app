@@ -108,31 +108,35 @@ class AdminController extends Controller
         $pendingOpnameCount = StockOpname::where('status', 'Pending')->count(); // Assuming 'status' column exists
 
         // --- User Activity ---
-        // Proxy: Recent transactions + Stock Opnames + maybe Login logs if available (not seen).
-        // Mixing Transaksi and StockOpname for activity feed.
-        $activities = collect();
+        $roleFilter = request('role');
+        
+        $trxQuery = Transaksi::with('user.role')->latest('tgl_transaksi');
+        $opnameQuery = StockOpname::with('creator.role')->latest('created_at');
 
-        $trxActivities = Transaksi::with('user.role')
-            ->latest('tgl_transaksi')
-            ->take(5)
+        if ($roleFilter && $roleFilter !== 'Semua Role') {
+            $trxQuery->whereHas('user.role', fn($q) => $q->where('nama_role', $roleFilter));
+            $opnameQuery->whereHas('creator.role', fn($q) => $q->where('nama_role', $roleFilter));
+        }
+
+        $trxActivities = $trxQuery->take(5)
             ->get()
+            ->toBase()
             ->map(function($trx) {
                 return [
                     'user' => $trx->user,
-                    'action' => 'Melakukan transaksi ' . $trx->no_transaksi,
+                    'action' => 'Melakukan transaksi #' . $trx->no_transaksi,
                     'time' => $trx->tgl_transaksi,
                     'type' => 'success', // badge color
                     'status' => 'Sukses'
                 ];
             });
 
-        $opnameActivities = StockOpname::with('user.role')
-            ->latest('created_at')
-            ->take(5)
+        $opnameActivities = $opnameQuery->take(5)
             ->get()
+            ->toBase()
             ->map(function($op) {
                 return [
-                    'user' => $op->user,
+                    'user' => $op->creator,
                     'action' => 'Submit stock opname',
                     'time' => $op->created_at,
                     'type' => 'info',
@@ -140,7 +144,7 @@ class AdminController extends Controller
                 ];
             });
         
-        $activities = $trxActivities->merge($opnameActivities)->sortByDesc('time')->take(5);
+        $activities = $trxActivities->merge($opnameActivities)->sortByDesc('time')->take(10);
 
         return view('admin.index', compact(
             'salesToday', 'salesGrowthToday',

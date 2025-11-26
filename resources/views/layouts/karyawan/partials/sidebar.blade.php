@@ -19,19 +19,7 @@
                 ['icon' => 'shopping_cart', 'label' => 'Pembelian Obat', 'route' => 'pembelian.index', 'active' => 'pembelian.*'],
                 ['icon' => 'fact_check', 'label' => 'Stock Opname', 'route' => 'stokopname.index', 'active' => 'stokopname.*'],
             ],
-        ],
-        [
-            'title' => 'Lainnya',
-            'items' => [
-                ['icon' => 'notifications', 'label' => 'Notifikasi', 'route' => 'karyawan.dashboard', 'disabled' => true, 'badge' => 5],
-            ],
-        ],
-        [
-            'title' => 'Akun',
-            'items' => [
-                ['icon' => 'person', 'label' => 'Profil Saya', 'route' => 'karyawan.dashboard', 'disabled' => true],
-            ],
-        ],
+        ]
     ];
 @endphp
 

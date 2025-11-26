@@ -41,28 +41,28 @@
             $metrics = [
                 [
                     'label' => 'Cart Aktif',
-                    'value' => '3',
+                    'value' => $activeCartCount,
                     'sub' => 'Menunggu checkout',
                     'icon' => 'shopping_cart',
                     'color' => 'primary',
                 ],
                 [
                     'label' => 'Stok Opname',
-                    'value' => '85%',
+                    'value' => $stockOpnameProgress . '%',
                     'sub' => 'Progress hari ini',
                     'icon' => 'inventory_2',
                     'color' => 'success',
                 ],
                 [
                     'label' => 'Item Expired',
-                    'value' => '5',
+                    'value' => $expiredItemsCount,
                     'sub' => 'Butuh tindakan',
                     'icon' => 'event_busy',
                     'color' => 'danger',
                 ],
                 [
                     'label' => 'Total Transaksi',
-                    'value' => '128',
+                    'value' => $totalTransactions,
                     'sub' => 'Shift ini',
                     'icon' => 'receipt_long',
                     'color' => 'info',
@@ -131,23 +131,23 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold mb-0">Target Stok Opname</h6>
-                        <span class="badge bg-primary-subtle text-primary rounded-pill">Bulan Ini</span>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill">Hari Ini</span>
                     </div>
                     
                     <div class="d-flex align-items-end gap-2 mb-2">
-                        <h3 class="fw-bold mb-0">980</h3>
-                        <span class="text-muted mb-1">/ 1.245 item</span>
+                        <h3 class="fw-bold mb-0">{{ $stockOpnameChecked }}</h3>
+                        <span class="text-muted mb-1">/ {{ $stockOpnameTotal }} item</span>
                     </div>
                     
                     <div class="progress-wrapper">
                         <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="78.7" aria-valuemin="0" aria-valuemax="100" style="width: 78.7%;"></div>
+                            <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="{{ $stockOpnameProgress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $stockOpnameProgress }}%;"></div>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between text-xs text-muted mt-2">
-                        <span><i class="fas fa-clock me-1"></i> Sisa 7 hari</span>
-                        <span>78.7% Selesai</span>
+                        <span><i class="fas fa-clock me-1"></i> Progress Harian</span>
+                        <span>{{ $stockOpnameProgress }}% Selesai</span>
                     </div>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">ID Cart</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">ID</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu</th>
@@ -173,26 +173,29 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse($recentActivities as $activity)
                                 <tr>
                                     <td class="ps-4">
                                         <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-sm bg-gradient-info me-3 my-auto">
-                                                <i class="material-symbols-rounded text-white text-sm">shopping_bag</i>
+                                            <div class="avatar avatar-sm bg-gradient-{{ $activity['type'] == 'cart' ? 'info' : 'success' }} me-3 my-auto">
+                                                <i class="material-symbols-rounded text-white text-sm">{{ $activity['type'] == 'cart' ? 'shopping_bag' : 'receipt' }}</i>
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">CART-008</h6>
-                                                <p class="text-xs text-secondary mb-0">15 items</p>
+                                                <h6 class="mb-0 text-sm">{{ $activity['type'] == 'cart' ? 'CART-' . substr($activity['uuid'], 0, 8) : $activity['uuid'] }}</h6>
+                                                <p class="text-xs text-secondary mb-0">{{ $activity['items_count'] }} items</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge badge-sm bg-gradient-warning">Pending</span>
+                                        <span class="badge badge-sm bg-gradient-{{ $activity['status'] == 'Completed' || $activity['status'] == 'Approved' ? 'success' : 'warning' }}">
+                                            {{ $activity['status'] }}
+                                        </span>
                                     </td>
                                     <td>
-                                        <p class="text-sm font-weight-bold mb-0">Rp 560.000</p>
+                                        <p class="text-sm font-weight-bold mb-0">Rp {{ number_format($activity['total'], 0, ',', '.') }}</p>
                                     </td>
                                     <td>
-                                        <span class="text-xs font-weight-bold text-muted">15 mnt lalu</span>
+                                        <span class="text-xs font-weight-bold text-muted">{{ $activity['date']->diffForHumans() }}</span>
                                     </td>
                                     <td class="align-middle">
                                         <button class="btn btn-link text-secondary mb-0">
@@ -200,60 +203,13 @@
                                         </button>
                                     </td>
                                 </tr>
+                                @empty
                                 <tr>
-                                    <td class="ps-4">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-sm bg-gradient-success me-3 my-auto">
-                                                <i class="material-symbols-rounded text-white text-sm">check_circle</i>
-                                            </div>
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">CART-007</h6>
-                                                <p class="text-xs text-secondary mb-0">8 items</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-sm bg-gradient-success">Approved</span>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0">Rp 320.000</p>
-                                    </td>
-                                    <td>
-                                        <span class="text-xs font-weight-bold text-muted">1 jam lalu</span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <button class="btn btn-link text-secondary mb-0">
-                                            <i class="material-symbols-rounded text-sm">arrow_forward</i>
-                                        </button>
+                                    <td colspan="5" class="text-center py-4">
+                                        <p class="text-sm text-muted mb-0">Belum ada aktivitas hari ini.</p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="ps-4">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-sm bg-gradient-danger me-3 my-auto">
-                                                <i class="material-symbols-rounded text-white text-sm">error</i>
-                                            </div>
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">CART-006</h6>
-                                                <p class="text-xs text-secondary mb-0">12 items</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-sm bg-gradient-danger">Revisi</span>
-                                    </td>
-                                    <td>
-                                        <p class="text-sm font-weight-bold mb-0">Rp 450.000</p>
-                                    </td>
-                                    <td>
-                                        <span class="text-xs font-weight-bold text-muted">3 jam lalu</span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <button class="btn btn-link text-secondary mb-0">
-                                            <i class="material-symbols-rounded text-sm">arrow_forward</i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

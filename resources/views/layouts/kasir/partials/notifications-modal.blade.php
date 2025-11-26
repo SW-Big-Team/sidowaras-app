@@ -114,10 +114,11 @@
 @push('scripts')
 <script>
   function markAsReadFromModal(notificationId) {
-    fetch('/notifications/' + notificationId + '/mark-read', {
+    fetch('/notifications/' + notificationId + '/read', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
       }
     })
@@ -131,10 +132,11 @@
   }
 
   function markAllAsReadFromModal() {
-    fetch('/notifications/mark-all-read', {
+    fetch('/notifications/read-all', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
       }
     })
@@ -143,6 +145,26 @@
       if (data.success) {
         const modalInstance = bootstrap.Modal.getInstance(document.getElementById('notificationsModal'));
         if (modalInstance) modalInstance.hide();
+        location.reload();
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  function deleteNotification(notificationId) {
+    if (!confirm('Apakah Anda yakin ingin menghapus notifikasi ini?')) return;
+
+    fetch('/notifications/' + notificationId, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
         location.reload();
       }
     })

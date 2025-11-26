@@ -5,7 +5,7 @@ use App\Http\Controllers\Karyawan\CartController;
 use App\Http\Controllers\Shared\StokController;
 
 Route::middleware(['auth', 'role:Karyawan,Admin'])->prefix('karyawan')->name('karyawan.')->group(function () {
-    Route::get('/dashboard', fn() => view('karyawan.index'))->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\Karyawan\KaryawanController::class, 'index'])->name('dashboard');
 
     // Cart & Transaksi
     Route::prefix('cart')->name('cart.')->group(function () {

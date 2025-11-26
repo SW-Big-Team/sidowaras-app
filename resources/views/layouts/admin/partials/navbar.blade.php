@@ -1,160 +1,149 @@
+@php
+    use Illuminate\Support\Facades\Route;
+
+    $notifications = $notifications ?? collect();
+    $unreadNotificationCount = $unreadNotificationCount ?? $notifications->whereNull('read_at')->count();
+
+    // 1) Ambil dari section 'page_title' kalau ada
+    $rawSectionTitle = trim($__env->yieldContent('page_title'));
+
+    // 2) Mapping route → judul fallback
+    $routeName = Route::currentRouteName();
+    $routeTitleMap = [
+        'admin.dashboard'       => 'Dashboard',
+        'admin.obat.index'      => 'Master Obat',
+        'admin.transaksi.riwayat' => 'Riwayat Transaksi',
+        'admin.users.index'     => 'Manajemen User',
+        'admin.laporan.index'   => 'Laporan',
+        // tambahkan route lain di sini kalau perlu
+    ];
+
+    // 3) Susun prioritas:
+    //    section('page_title') > $title > route fallback > 'Dashboard'
+    $pageTitle = $rawSectionTitle
+        ?: ($title ?? ($routeTitleMap[$routeName] ?? 'Dashboard'));
+@endphp
+
 <!-- Navbar -->
-<nav class="navbar navbar-main navbar-expand-lg position-sticky mt-2 top-1 px-0 py-1 mx-3 shadow-sm bg-white border-radius-lg z-index-sticky" id="navbarBlur" data-scroll="true">
-  <div class="container-fluid py-1 px-3">
-    <nav aria-label="breadcrumb">
-      @yield('breadcrumb')
-    </nav>
-    
-    <!-- Mobile & Desktop Navigation Items -->
-    <div class="d-flex align-items-center ms-auto">
-      <!-- Notifications Dropdown - Always Visible -->
-      <div class="nav-item dropdown pe-2 pe-md-3">
-        <a class="nav-link text-body p-0 position-relative cursor-pointer" id="dropdownNotif" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="material-symbols-rounded cursor-pointer">notifications</i>
-          @if($unreadNotificationCount > 0)
-          <span class="position-absolute top-5 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
-            {{ $unreadNotificationCount }}
-          </span>
-          @endif
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end p-2 me-sm-n4" aria-labelledby="dropdownNotif" style="min-width: 320px; max-width: 380px;">
-          <li class="mb-2">
-            <div class="d-flex align-items-center justify-content-between px-2">
-              <h6 class="dropdown-header text-dark font-weight-bolder d-flex align-items-center p-0 m-0">
-                <i class="material-symbols-rounded me-2">notifications_active</i>
-                Notifikasi
-              </h6>
-              <a href="#" class="text-xs text-primary font-weight-bold" data-bs-toggle="modal" data-bs-target="#notificationsModal">
-                Lihat Semua
-              </a>
-            </div>
-          </li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <div style="max-height: 320px; overflow-y: auto; overflow-x: hidden;">
-            @forelse($notifications->take(5) as $notif)
-            <li class="mb-2">
-              <a class="dropdown-item border-radius-md {{ $notif->is_warning ? 'bg-light-warning' : '' }}" href="{{ $notif->link ?? '#' }}" onclick="{{ $notif->is_warning ? 'return true;' : 'markAsRead(' . $notif->id . '); return false;' }}">
-                <div class="d-flex py-1">
-                  <div class="my-auto">
-                    <div class="icon icon-shape bg-gradient-{{ $notif->icon_color }} shadow text-center border-radius-md me-2 d-flex align-items-center justify-content-center">
-                      <i class="material-symbols-rounded text-sm">{{ $notif->icon }}</i>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column justify-content-center">
-                    <h6 class="text-sm font-weight-normal mb-1">
-                      <span class="font-weight-bold">{{ $notif->title }}</span>
-                      @if($notif->is_warning)
-                      <span class="badge badge-sm bg-warning ms-1">!</span>
-                      @endif
-                    </h6>
-                    <p class="text-xs text-secondary mb-0">
-                      <i class="material-symbols-rounded text-xxs">schedule</i>
-                      {{ $notif->message }}
-                    </p>
-                  </div>
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+    <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-sm">
+                    <a class="opacity-5 text-dark" href="javascript:;">Pages</a>
+                </li>
+                <li class="breadcrumb-item text-sm text-dark active" aria-current="page">
+                    {{ $pageTitle }}
+                </li>
+            </ol>
+            <h6 class="font-weight-bolder mb-0">{{ $pageTitle }}</h6>
+        </nav>
+        
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                <!-- Search or other controls could go here -->
+                <div class="input-group input-group-outline">
+                    <label class="form-label">Cari...</label>
+                    <input type="text" class="form-control">
                 </div>
-              </a>
-            </li>
-            @empty
-            <li class="mb-2">
-              <div class="text-center py-3">
-                <i class="material-symbols-rounded text-secondary" style="font-size: 2rem;">notifications_off</i>
-                <p class="text-xs text-secondary mb-0">Tidak ada notifikasi</p>
-              </div>
-            </li>
-            @endforelse
-          </div>
-          @if($notifications->count() > 0)
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <li class="text-center px-2">
-            <div class="d-grid gap-2">
-              <button class="btn btn-sm bg-gradient-primary mb-0" onclick="markAllAsRead()">
-                <i class="material-symbols-rounded text-sm me-1">done_all</i>
-                Tandai Semua Dibaca
-              </button>
-              @if($notifications->count() > 5)
-              <button class="btn btn-sm btn-outline-primary mb-0" data-bs-toggle="modal" data-bs-target="#notificationsModal">
-                <i class="material-symbols-rounded text-sm me-1">list</i>
-                Lihat Semua Notifikasi ({{ $notifications->count() }})
-              </button>
-              @endif
             </div>
-          </li>
-          @endif
-        </ul>
-      </div>
-      
-      <!-- User Profile Dropdown - Always Visible -->
-      <div class="nav-item dropdown">
-        <a href="#" class="nav-link text-body font-weight-bold px-2 px-md-3 d-flex align-items-center" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          <div class="me-2">
-            <div class="avatar avatar-sm bg-gradient-primary">
-              <span class="text-white text-sm">{{ substr(Auth::user()->nama_lengkap ?? 'A', 0, 1) }}</span>
-            </div>
-          </div>
-          <span class="d-sm-inline d-none">{{ Auth::user()->nama_lengkap ?? 'Administrator' }}</span>
-          <i class="material-symbols-rounded opacity-10 ms-2 d-none d-sm-inline">expand_more</i>
-        </a>
-          <i class="material-symbols-rounded opacity-10 ms-2 d-none d-sm-inline">expand_more</i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton" style="min-width: 260px;">
-          <li class="mb-2">
-            <div class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0">
-              <div class="avatar avatar-sm bg-gradient-primary me-2">
-                <span class="text-white text-sm">{{ substr(Auth::user()->nama_lengkap ?? 'A', 0, 1) }}</span>
-              </div>
-              <div>
-                <h6 class="text-sm mb-0">{{ Auth::user()->nama_lengkap ?? 'Administrator' }}</h6>
-                <p class="text-xs text-secondary mb-0">{{ Auth::user()->email ?? 'admin@apotek.com' }}</p>
-              </div>
-            </div>
-          </li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <li class="mb-1">
-            <a class="dropdown-item border-radius-md" href="#">
-              <div class="d-flex align-items-center py-1">
-                <div class="icon icon-shape icon-sm bg-gradient-info shadow text-center me-2">
-                  <i class="material-symbols-rounded opacity-10 text-sm">person</i>
-                </div>
-                <span class="text-sm">Profil Saya</span>
-              </div>
-            </a>
-          </li>
-          <li class="mb-1">
-            <a class="dropdown-item border-radius-md" href="#">
-              <div class="d-flex align-items-center py-1">
-                <div class="icon icon-shape icon-sm bg-gradient-warning shadow text-center me-2">
-                  <i class="material-symbols-rounded opacity-10 text-sm">settings</i>
-                </div>
-                <span class="text-sm">Pengaturan</span>
-              </div>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <li>
-            <a class="dropdown-item border-radius-md" href="#" onclick="event.preventDefault(); document.getElementById('logout-form-navbar').submit();">
-              <div class="d-flex align-items-center py-1">
-                <div class="icon icon-shape icon-sm bg-gradient-danger shadow text-center me-2">
-                  <i class="material-symbols-rounded opacity-10 text-sm">logout</i>
-                </div>
-                <span class="text-sm text-danger font-weight-bold">Logout</span>
-              </div>
-            </a>
-            <form id="logout-form-navbar" action="{{ route('logout') }}" method="POST" class="d-none">
-              @csrf
-            </form>
-          </li>
-        </ul>
-      </div>
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav" onclick="toggleSidebar()">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                        </div>
+                    </a>
+                </li>
+                
+                <!-- Notifications -->
+                <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body p-0 position-relative"
+                       id="dropdownMenuButton"
+                       data-bs-toggle="modal"
+                       data-bs-target="#notificationsModal"
+                       aria-expanded="false">
+                        <i class="material-symbols-rounded cursor-pointer fixed-plugin-button-nav">notifications</i>
+                        @if($unreadNotificationCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white small py-0 px-1" style="font-size: 0.6rem; transform: translate(-50%, -50%) !important;">
+                                {{ $unreadNotificationCount }}
+                            </span>
+                        @endif
+                    </a>
+                </li>
+
+                <!-- Profile Dropdown -->
+                <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body p-0 font-weight-bold px-0 d-flex align-items-center gap-2"
+                       id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="avatar avatar-sm rounded-circle bg-gradient-dark shadow-sm d-flex align-items-center justify-content-center text-white">
+                            <span class="text-xs font-weight-bold">{{ substr(Auth::user()->nama_lengkap ?? 'A', 0, 1) }}</span>
+                        </div>
+                        <span class="d-sm-inline d-none text-sm font-weight-bold">{{ Auth::user()->nama_lengkap ?? 'Administrator' }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4 shadow-lg border-0" aria-labelledby="profileDropdown" style="border-radius: 1rem;">
+                        <li class="mb-2">
+                            <div class="dropdown-item border-radius-md bg-gray-100">
+                                <div class="d-flex py-1">
+                                    <div class="my-auto">
+                                        <div class="avatar avatar-sm bg-gradient-dark me-3 d-flex align-items-center justify-content-center text-white shadow-sm">
+                                            <i class="material-symbols-rounded text-sm">person</i>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="text-sm font-weight-normal mb-1">
+                                            <span class="font-weight-bold">{{ Auth::user()->nama_lengkap ?? 'Administrator' }}</span>
+                                        </h6>
+                                        <p class="text-xs text-secondary mb-0">
+                                            {{ Auth::user()->email ?? 'admin@sidowaras.com' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider my-2"></li>
+                        <li>
+                            <a class="dropdown-item border-radius-md py-2" href="javascript:;">
+                                <div class="d-flex align-items-center">
+                                    <i class="material-symbols-rounded me-2 text-sm opacity-6">person</i>
+                                    <span class="text-sm">Profil Saya</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item border-radius-md py-2" href="javascript:;">
+                                <div class="d-flex align-items-center">
+                                    <i class="material-symbols-rounded me-2 text-sm opacity-6">settings</i>
+                                    <span class="text-sm">Pengaturan</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider my-2"></li>
+                        <li>
+                            <a class="dropdown-item border-radius-md py-2 text-danger" href="javascript:;"
+                               onclick="event.preventDefault(); document.getElementById('logout-form-navbar').submit();">
+                                <div class="d-flex align-items-center">
+                                    <i class="material-symbols-rounded me-2 text-sm">logout</i>
+                                    <span class="text-sm font-weight-bold">Logout</span>
+                                </div>
+                            </a>
+                            <form id="logout-form-navbar" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Settings Toggle (Desktop) -->
+                <li class="nav-item px-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body p-0 fixed-plugin-button-nav">
+                        <i class="material-symbols-rounded fixed-plugin-button-nav cursor-pointer">settings</i>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 <!-- End Navbar -->

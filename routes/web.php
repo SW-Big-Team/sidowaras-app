@@ -24,6 +24,7 @@ Route::middleware('auth')->prefix('notifications')->name('notifications.')->grou
     Route::get('/', [NotificationController::class, 'index'])->name('index');
     Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
     Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('readAll');
+    Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
 });
 
 require __DIR__ . '/auth.php';

@@ -20,7 +20,10 @@ class NotificationController extends Controller
     /**
      * Mark notification as read
      */
-    public function markAsRead($id)
+    /**
+     * Mark notification as read
+     */
+    public function markAsRead(Request $request, $id)
     {
         $notif = Notifikasi::findOrFail($id);
         
@@ -31,25 +34,61 @@ class NotificationController extends Controller
         if ($notif->user_id == $user->id || $notif->role == $role) {
             $notif->markAsRead();
             
+            if ($request->wantsJson()) {
+                return response()->json(['success' => true]);
+            }
+
             if ($notif->link) {
                 return redirect($notif->link);
             }
         }
         
+        if ($request->wantsJson()) {
+            return response()->json(['success' => false], 403);
+        }
+
         return back();
     }
 
     /**
      * Mark all notifications as read
      */
-    public function markAllAsRead()
+    public function markAllAsRead(Request $request)
     {
         $user = Auth::user();
         $role = $user->role->nama_role ?? 'Guest';
         
         $this->notificationService->markAllAsRead($user->id, $role);
         
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
+
         return back()->with('success', 'Semua notifikasi telah ditandai sebagai dibaca');
+    }
+
+    /**
+     * Delete notification
+     */
+    public function destroy(Request $request, $id)
+    {
+        $notif = Notifikasi::findOrFail($id);
+        $user = Auth::user();
+        $role = $user->role->nama_role ?? 'Guest';
+
+        if ($notif->user_id == $user->id || $notif->role == $role) {
+            $notif->delete();
+            
+            if ($request->wantsJson()) {
+                return response()->json(['success' => true]);
+            }
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => false], 403);
+        }
+
+        return back();
     }
 
     /**

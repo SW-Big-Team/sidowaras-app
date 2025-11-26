@@ -22,6 +22,7 @@ class CartController extends Controller
         // Hanya obat non-racikan & stok > 0
         $obats = Obat::where('is_racikan', false)
                      ->whereHas('stokBatches', fn($q) => $q->where('sisa_stok', '>', 0))
+                     ->withSum('stokBatches as sisa_stok', 'sisa_stok')
                      ->get();
 
         return view('karyawan.cart.index', compact('cart', 'obats'));

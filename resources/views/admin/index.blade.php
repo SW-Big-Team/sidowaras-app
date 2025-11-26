@@ -361,56 +361,89 @@
 <div class="row mt-4">
   <div class="col-lg-12 mb-4">
     <div class="card border-0 shadow-sm rounded-3">
-      <div class="card-header pb-0">
+      <div class="card-header pb-0 bg-white rounded-top-3">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6>Aktivitas Pengguna Terbaru</h6>
-            <p class="text-sm mb-0">Real-time user activity monitoring</p>
+            <h6 class="mb-0 font-weight-bold">Aktivitas Pengguna Terbaru</h6>
+            <p class="text-sm mb-0 text-secondary">Real-time monitoring aktivitas sistem</p>
           </div>
           <div>
-            <select class="form-select form-select-sm" style="width: auto;">
-              <option>Semua Role</option>
-              <option>Admin</option>
-              <option>Kasir</option>
-              <option>Karyawan</option>
-            </select>
+            <form action="{{ route('admin.dashboard') }}" method="GET" id="roleFilterForm">
+                <select name="role" class="form-select form-select-sm pe-5" style="width: auto;" onchange="document.getElementById('roleFilterForm').submit()">
+                  <option value="">Semua Role</option>
+                  <option value="Admin" {{ request('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
+                  <option value="Kasir" {{ request('role') == 'Kasir' ? 'selected' : '' }}>Kasir</option>
+                  <option value="Karyawan" {{ request('role') == 'Karyawan' ? 'selected' : '' }}>Karyawan</option>
+                </select>
+            </form>
           </div>
         </div>
       </div>
       <div class="card-body px-0 pb-2">
-        <div class="table-responsive p-3">
+        <div class="table-responsive p-0">
           <table class="table align-items-center mb-0">
-            <thead>
+            <thead class="bg-light">
               <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Pengguna</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aktivitas</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">Pengguna</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Role</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Aktivitas</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status</th>
               </tr>
             </thead>
             <tbody>
               @forelse($activities as $activity)
               <tr>
-                <td>
+                <td class="ps-4">
                   <div class="d-flex px-2 py-1">
-                    <div class="avatar avatar-sm bg-gradient-{{ $activity['type'] == 'success' ? 'success' : 'info' }} me-3">
-                      <span class="text-white text-xs">{{ substr($activity['user']->name ?? 'U', 0, 2) }}</span>
+                    <div class="avatar avatar-sm rounded-circle bg-gradient-{{ $activity['type'] == 'success' ? 'success' : 'info' }} me-3 shadow-sm d-flex align-items-center justify-content-center">
+                      <span class="text-white text-xs font-weight-bold">{{ substr($activity['user']->name ?? 'U', 0, 2) }}</span>
                     </div>
                     <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">{{ $activity['user']->name ?? 'Unknown' }}</h6>
+                      <h6 class="mb-0 text-sm font-weight-bold text-dark">{{ $activity['user']->name ?? 'Unknown' }}</h6>
                       <p class="text-xs text-secondary mb-0">{{ $activity['user']->email ?? '' }}</p>
                     </div>
                   </div>
                 </td>
-                <td><span class="badge badge-sm bg-gradient-{{ ($activity['user']->role->nama_role ?? '') == 'Kasir' ? 'warning' : 'info' }}">{{ $activity['user']->role->nama_role ?? 'User' }}</span></td>
-                <td class="text-sm">{{ $activity['action'] }}</td>
-                <td class="text-xs text-secondary">{{ $activity['time']->diffForHumans() }}</td>
-                <td><span class="badge badge-sm bg-gradient-{{ $activity['type'] == 'success' ? 'success' : 'warning' }}">{{ $activity['status'] }}</span></td>
+                <td>
+                    @php
+                        $role = $activity['user']->role->nama_role ?? 'User';
+                        $badgeClass = match($role) {
+                            'Admin' => 'bg-gradient-primary',
+                            'Kasir' => 'bg-gradient-warning',
+                            'Karyawan' => 'bg-gradient-info',
+                            default => 'bg-gradient-secondary'
+                        };
+                    @endphp
+                    <span class="badge badge-sm {{ $badgeClass }}">{{ $role }}</span>
+                </td>
+                <td>
+                    <p class="text-sm font-weight-bold mb-0 text-dark">{{ $activity['action'] }}</p>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <i class="material-symbols-rounded text-xs text-secondary me-1">schedule</i>
+                        <span class="text-xs text-secondary font-weight-bold">{{ $activity['time']->diffForHumans() }}</span>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <span class="badge badge-sm bg-soft-{{ $activity['type'] == 'success' ? 'success' : 'info' }} text-{{ $activity['type'] == 'success' ? 'success' : 'info' }} d-inline-flex align-items-center gap-1">
+                        <i class="material-symbols-rounded text-xxs">{{ $activity['type'] == 'success' ? 'check_circle' : 'info' }}</i>
+                        {{ $activity['status'] }}
+                    </span>
+                </td>
               </tr>
               @empty
               <tr>
-                <td colspan="5" class="text-center text-sm text-muted py-4">Belum ada aktivitas terbaru</td>
+                <td colspan="5" class="text-center py-5">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <div class="icon icon-lg icon-shape bg-light shadow-sm rounded-circle mb-3">
+                            <i class="material-symbols-rounded text-secondary opacity-5" style="font-size: 2rem;">history</i>
+                        </div>
+                        <h6 class="text-secondary mb-1">Belum ada aktivitas terbaru</h6>
+                        <p class="text-xs text-muted">Aktivitas pengguna akan muncul di sini.</p>
+                    </div>
+                </td>
               </tr>
               @endforelse
             </tbody>

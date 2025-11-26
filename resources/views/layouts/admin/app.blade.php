@@ -177,7 +177,6 @@
     </div>
   </main>
   
-  @include('layouts.admin.partials.configurator')
   @include('layouts.admin.partials.notifications-modal')
   @include('layouts.admin.partials.sidebar-toggle')
   

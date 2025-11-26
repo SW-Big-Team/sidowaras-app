@@ -13,6 +13,17 @@
     {{-- Header --}}
     <div class="row mb-4">
         <div class="col-12">
+            @if(session('warning'))
+                <div class="alert alert-warning alert-dismissible fade show text-white" role="alert">
+                    <span class="alert-icon align-middle">
+                      <i class="material-symbols-rounded text-md">warning</i>
+                    </span>
+                    <span class="alert-text"><strong>Perhatian!</strong> {{ session('warning') }}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card bg-gradient-dark border-0 shadow-lg rounded-3">
                 <div class="card-body p-4">
                     <div class="row align-items-center">
@@ -137,18 +148,18 @@
                     <form method="GET" class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Tanggal Dari</label>
-                            <input type="date" name="from" value="{{ request('from') }}" class="form-control form-control-sm">
+                            <input type="date" name="from" value="{{ $from }}" class="form-control form-control-sm">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Tanggal Sampai</label>
-                            <input type="date" name="to" value="{{ request('to') }}" class="form-control form-control-sm">
+                            <input type="date" name="to" value="{{ $to }}" class="form-control form-control-sm">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Metode Pembayaran</label>
                             <select name="metode" class="form-select form-select-sm">
                                 <option value="">Semua</option>
-                                <option value="tunai" {{ request('metode') == 'tunai' ? 'selected' : '' }}>Tunai</option>
-                                <option value="non_tunai" {{ request('metode') == 'non_tunai' ? 'selected' : '' }}>Non Tunai</option>
+                                <option value="tunai" {{ $metode == 'tunai' ? 'selected' : '' }}>Tunai</option>
+                                <option value="non_tunai" {{ $metode == 'non_tunai' ? 'selected' : '' }}>Non Tunai</option>
                             </select>
                         </div>
                         <div class="col-md-3">

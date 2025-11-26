@@ -41,7 +41,7 @@
                             <i class="material-symbols-rounded text-sm me-2">done</i> Tandai Dibaca
                         </a>
                     @endif
-                    <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;">
+                    <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="deleteNotification({{ $notif->id }})">
                         <i class="material-symbols-rounded text-sm me-2">delete</i> Hapus
                     </a>
                 </div>
