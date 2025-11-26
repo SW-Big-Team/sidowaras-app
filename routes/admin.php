@@ -94,6 +94,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
         Route::get('/', [ShiftController::class, 'index'])->name('index');
         Route::post('/', [ShiftController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [ShiftController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ShiftController::class, 'update'])->name('update');
         Route::delete('/{id}', [ShiftController::class, 'destroy'])->name('destroy');
     });
 
