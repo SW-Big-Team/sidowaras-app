@@ -22,7 +22,7 @@ class ObatSeeder extends Seeder
         for ($i = 0; $i < 12; $i++) {
             $code .= rand(0, 9);
         }
-        
+
         // Calculate check digit
         $sum = 0;
         for ($i = 0; $i < 12; $i++) {
@@ -30,9 +30,9 @@ class ObatSeeder extends Seeder
             // Multiply odd positions by 1, even positions by 3
             $sum += ($i % 2 === 0) ? $digit : $digit * 3;
         }
-        
+
         $checkDigit = (10 - ($sum % 10)) % 10;
-        
+
         return $code . $checkDigit;
     }
 
@@ -176,28 +176,27 @@ class ObatSeeder extends Seeder
         ];
 
         foreach ($obatData as $data) {
-            $obat = Obat::updateOrCreate(
-                [
-                    'kode_obat' => $data['kode_obat'],
-                ],
-                [
-                    'nama_obat' => $data['nama_obat'],
-                    'deskripsi' => $data['deskripsi'],
-                    'kategori_id' => $data['kategori_id'],
-                    'satuan_obat_id' => $data['satuan_obat_id'],
-                    'kandungan_id' => $data['kandungan_id'], // Already an array, will be auto-cast to JSON
-                    'stok_minimum' => $data['stok_minimum'],
-                    'is_racikan' => $data['is_racikan'],
-                    'lokasi_rak' => $data['lokasi_rak'],
-                    'barcode' => $data['barcode'],
-                ]
-            );
-            
-            // Ensure UUID is set if not already present
-            if (empty($obat->uuid)) {
-                $obat->uuid = Str::uuid();
-                $obat->save();
+            $obat = Obat::firstOrNew([
+                'kode_obat' => $data['kode_obat'],
+            ]);
+
+            $obat->fill([
+                'nama_obat' => $data['nama_obat'],
+                'deskripsi' => $data['deskripsi'],
+                'kategori_id' => $data['kategori_id'],
+                'satuan_obat_id' => $data['satuan_obat_id'],
+                'kandungan_id' => $data['kandungan_id'],
+                'stok_minimum' => $data['stok_minimum'],
+                'is_racikan' => $data['is_racikan'],
+                'lokasi_rak' => $data['lokasi_rak'],
+                'barcode' => $data['barcode'],
+            ]);
+
+            if (!$obat->exists) {
+                $obat->uuid = (string) Str::uuid();
             }
+
+            $obat->save();
         }
     }
 }

@@ -1,5 +1,5 @@
 @php
-    $role = Auth::user()->role->nama_role;
+    $role = Auth::user()->role->nama_role; 
     $layoutPath = 'layouts.' . strtolower($role) . '.app';
 @endphp
 
@@ -16,7 +16,6 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    {{-- Header --}}
     <div class="row mb-4">
         <div class="col-12">
             <div class="card bg-gradient-dark border-0 shadow-lg rounded-3">
@@ -29,9 +28,7 @@
                                 </div>
                                 <div>
                                     <h4 class="mb-1 text-white fw-bold">Edit Pembelian</h4>
-                                    <p class="text-sm text-white opacity-8 mb-0">
-                                        Perbarui data pembelian dan detail item obat.
-                                    </p>
+                                    <p class="text-sm text-white opacity-8 mb-0">Perbarui data pembelian dan detail item obat.</p>
                                 </div>
                             </div>
                         </div>
@@ -63,6 +60,7 @@
         </div>
     @endif
 
+    {{-- PERBAIKAN: Gunakan UUID --}}
     <form action="{{ route('pembelian.update', $pembelian->uuid) }}" method="POST" id="formPembelian">
         @csrf
         @method('PUT')
@@ -99,7 +97,7 @@
                         <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', $pembelian->total_harga) }}">
                     </div>
                 </div>
-                <div class="row g-3 mt-1">
+                <div class="row g-2 mt-1">
                     <div class="col-md-6 col-12">
                         <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Nama Pengirim <span class="text-danger">*</span></label>
                         <input type="text" name="nama_pengirim" class="form-control form-control-sm" value="{{ old('nama_pengirim', $pembelian->nama_pengirim) }}" required>
@@ -125,11 +123,11 @@
             </div>
             <div class="card-body">
                 <div class="row g-3" id="containerObat">
-                    {{-- Obat cards will be injected here --}}
+                    {{-- JS injected --}}
                 </div>
             </div>
         </div>
-       
+        
         {{-- Detail Termin --}}
         <div class="card border-0 shadow-sm rounded-3 mb-4" id="cardTermin" style="display: none;">
             <div class="card-header bg-white pb-0 d-flex justify-content-between align-items-center">
@@ -143,7 +141,7 @@
             </div>
             <div class="card-body">
                 <div id="containerTermin">
-                    {{-- Termin rows will be injected here --}}
+                    {{-- JS injected --}}
                 </div>
             </div>
         </div>
@@ -157,30 +155,16 @@
 </div>
 
 <style>
-    .text-xxs { font-size: 0.65rem !important; }
-    .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
-    
     .obat-card { transition: all 0.3s ease; }
     .obat-card .card { height: 100%; border: 1px solid #e9ecef !important; box-shadow: none !important; }
     .obat-card:hover .card { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05) !important; border-color: #dee2e6 !important; }
     .obat-card .card-header { background: #f8f9fa; padding: 0.75rem 1rem; border-bottom: 1px solid #e9ecef; }
-    
-    .termin-row {
-        transition: all 0.3s ease;
-        border-bottom: 1px dashed #e9ecef;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
-    }
-    .termin-row:last-child {
-        border-bottom: 0;
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
+    .termin-row { transition: all 0.3s ease; border-bottom: 1px dashed #e9ecef; padding-bottom: 1rem; margin-bottom: 1rem; }
+    .termin-row:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // === DEKLARASI ELEMEN ===
     const containerObat = document.getElementById('containerObat');
     const btnTambahObat = document.getElementById('btnTambahObat');
     const totalHargaInput = document.getElementById('total_harga');
@@ -188,33 +172,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const formPembelian = document.getElementById('formPembelian');
     let obatCounter = 0;
     let terminCounter = 0;
-
     const obatList = @json($obatList);
-   
     const metodePembayaranSelect = document.getElementById('metode_pembayaran');
     const cardTermin = document.getElementById('cardTermin');
     const containerTermin = document.getElementById('containerTermin');
     const btnTambahTermin = document.getElementById('btnTambahTermin');
 
-    // === FUNGSI UTAMA ===
-
     function formatInputRupiah(displayInput, hiddenInput, callbackOnInput = null) {
         displayInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
             let numericValue = parseInt(value) || 0;
-           
             hiddenInput.value = numericValue;
-           
-            if (value === '') {
-                e.target.value = '';
-            } else {
-                e.target.value = 'Rp ' + numericValue.toLocaleString('id-ID');
-            }
-            if (callbackOnInput) {
-                callbackOnInput();
-            }
+            if (value === '') { e.target.value = ''; } 
+            else { e.target.value = 'Rp ' + numericValue.toLocaleString('id-ID'); }
+            if (callbackOnInput) { callbackOnInput(); }
         });
-       
         let initialValue = hiddenInput.value;
          if (initialValue && parseFloat(initialValue) > 0) {
             let numericValue = parseFloat(initialValue);
@@ -226,14 +198,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'Rp ' + (Number(angka) || 0).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
-    // --- FUNGSI OBAT ---
-
+    // ... (createObatCard, removeObatCard, updateObatNumbers, hitungTotal SAMA SEPERTI create.blade.php) ...
     function createObatCard(data = {}) {
         const index = obatCounter++;
         const col = document.createElement('div');
         col.className = 'col-12 col-md-6 col-lg-4 obat-card';
         col.setAttribute('data-index', index);
-       
+        
         let optionsHtml = '<option value="">-- Pilih Obat --</option>';
         obatList.forEach(obat => {
             const selected = (data.obat_id && data.obat_id == obat.id) ? 'selected' : '';
@@ -251,9 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body p-3">
                     <div class="mb-3">
                         <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Pilih Obat <span class="text-danger">*</span></label>
-                        <select name="obat[${index}][obat_id]" class="form-select form-select-sm" required>
-                            ${optionsHtml}
-                        </select>
+                        <select name="obat[${index}][obat_id]" class="form-select form-select-sm" required>${optionsHtml}</select>
                     </div>
                     <div class="row g-2">
                         <div class="col-6">
@@ -282,19 +251,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         <input type="text" class="form-control form-control-sm subtotal bg-light fw-bold text-success" readonly value="Rp 0">
                     </div>
                 </div>
-            </div>
-        `;
-       
+            </div>`;
         containerObat.appendChild(col);
-       
         const hargaBeliDisplay = col.querySelector('.harga-beli-display');
         const hargaBeliHidden = col.querySelector('.harga-beli');
         formatInputRupiah(hargaBeliDisplay, hargaBeliHidden, hitungTotal);
-       
         const hargaJualDisplay = col.querySelector('.harga-jual-display');
         const hargaJualHidden = col.querySelector('.harga-jual');
         formatInputRupiah(hargaJualDisplay, hargaJualHidden);
-       
         col.querySelector('.jumlah-masuk').addEventListener('input', hitungTotal);
     }
 
@@ -321,54 +285,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const hargaBeli = parseFloat(card.querySelector('.harga-beli').value) || 0;
             const jumlahMasuk = parseInt(card.querySelector('.jumlah-masuk').value) || 0;
             const subtotal = hargaBeli * jumlahMasuk;
-           
             card.querySelector('.subtotal').value = formatRupiah(subtotal);
             total += subtotal;
         });
-       
         totalHargaInput.value = total.toFixed(2);
         totalHargaDisplay.value = formatRupiah(total);
     };
 
-    // --- FUNGSI TERMIN ---
-
+    // --- PERUBAHAN FUNGSI TERMIN DI SINI (HANYA TANGGAL) ---
     function createTerminCard(data = {}) {
         const index = terminCounter++;
         const row = document.createElement('div');
         row.className = 'row g-2 align-items-center termin-row';
         row.setAttribute('data-index', index);
-       
         const tglJatuhTempo = data.tgl_jatuh_tempo ? data.tgl_jatuh_tempo.split('T')[0] : '';
-
         row.innerHTML = `
-            <div class="col-1">
-                <span class="badge bg-secondary badge-number">#${index + 1}</span>
-            </div>
-            <div class="col-5">
-                <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Jumlah Bayar</label>
-                <input type="text" class="form-control form-control-sm termin-jumlah-display" placeholder="Rp 0 (Boleh kosong)">
-                <input type="hidden" name="termin_list[${index}][jumlah_bayar]" class="termin-jumlah-bayar" value="${data.jumlah_bayar || 0}">
-            </div>
-            <div class="col-5">
+            <div class="col-1"><span class="badge bg-secondary badge-number">#${index + 1}</span></div>
+            <div class="col-10">
                 <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Tgl. Jatuh Tempo <span class="text-danger">*</span></label>
                 <input type="date" name="termin_list[${index}][tgl_jatuh_tempo]" class="form-control form-control-sm" value="${tglJatuhTempo}" required>
             </div>
             <div class="col-1 text-end">
-                <button type="button" class="btn btn-link text-danger mb-0 p-0 btn-remove-termin">
-                    <i class="material-symbols-rounded">close</i>
-                </button>
-            </div>
-        `;
-       
+                <button type="button" class="btn btn-link text-danger mb-0 p-0 btn-remove-termin"><i class="material-symbols-rounded">close</i></button>
+            </div>`;
         containerTermin.appendChild(row);
-       
-        const jumlahDisplay = row.querySelector('.termin-jumlah-display');
-        const jumlahHidden = row.querySelector('.termin-jumlah-bayar');
-        formatInputRupiah(jumlahDisplay, jumlahHidden);
-       
-        row.querySelector('.btn-remove-termin').addEventListener('click', function() {
-            removeTerminCard(this);
-        });
+        row.querySelector('.btn-remove-termin').addEventListener('click', function() { removeTerminCard(this); });
     }
 
     function removeTerminCard(btn) {
@@ -385,15 +326,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleTerminCard() {
         if (metodePembayaranSelect.value === 'termin') {
             cardTermin.style.display = 'block';
-        } else {
-            cardTermin.style.display = 'none';
-        }
+            if (containerTermin.querySelectorAll('.termin-row').length === 0 && !window.oldTermin) { createTerminCard(); }
+        } else { cardTermin.style.display = 'none'; }
     }
 
     function validasiForm(e) {
         if (metodePembayaranSelect.value === 'termin') {
             if (containerTermin.querySelectorAll('.termin-row').length === 0) {
-                 e.preventDefault();
+                 e.preventDefault(); 
                 alert('Validasi Gagal!\nAnda memilih metode TERMIN, tapi belum menambahkan baris termin.');
                 cardTermin.scrollIntoView({ behavior: 'smooth' });
                 return false;
@@ -402,36 +342,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // === EVENT LISTENERS ===
-   
-    btnTambahObat.addEventListener('click', function() {
-        createObatCard();
-    });
-
+    btnTambahObat.addEventListener('click', function() { createObatCard(); });
     metodePembayaranSelect.addEventListener('change', toggleTerminCard);
-    btnTambahTermin.addEventListener('click', function() {
-        createTerminCard();
-    });
+    btnTambahTermin.addEventListener('click', function() { createTerminCard(); });
     formPembelian.addEventListener('submit', validasiForm);
 
-    // === INISIALISASI (LOAD DATA) ===
-   
     const pembelian = @json($pembelian);
-   
     if (pembelian.stok_batches && pembelian.stok_batches.length > 0) {
-        pembelian.stok_batches.forEach(batchData => {
-            createObatCard(batchData);
-        });
-    } else {
-         createObatCard();
-    }
-   
+        pembelian.stok_batches.forEach(batchData => { createObatCard(batchData); });
+    } else { createObatCard(); }
+    
      if (pembelian.pembayaran_termin && pembelian.pembayaran_termin.length > 0) {
-        pembelian.pembayaran_termin.forEach(terminData => {
-            createTerminCard(terminData);
-        });
+        pembelian.pembayaran_termin.forEach(terminData => { createTerminCard(terminData); });
     }
-
     hitungTotal();
     toggleTerminCard();
 });

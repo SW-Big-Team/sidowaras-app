@@ -7,15 +7,14 @@ use App\Models\StokBatch;
 use App\Models\Obat;
 use App\Models\LogPerubahanStok;
 use App\Models\PembayaranTermin;
-use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
 class PembelianController extends Controller
 {
+    // ... (__construct, index, create, show tetap sama) ...
     public function __construct()
     {
         $this->middleware('auth');
@@ -25,9 +24,7 @@ class PembelianController extends Controller
 
     public function index()
     {
-        $pembelian = Pembelian::with(['user', 'pembayaranTermin']) 
-                            ->orderByDesc('created_at')
-                            ->paginate(15);
+        $pembelian = Pembelian::with(['user', 'pembayaranTermin'])->orderByDesc('created_at')->paginate(15);
         return view('shared.pembelian.index', compact('pembelian'));
     }
 
@@ -35,6 +32,19 @@ class PembelianController extends Controller
     {
         $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
         return view('shared.pembelian.create', compact('obatList'));
+    }
+
+    public function show(Pembelian $pembelian)
+    {
+        $pembelian->load(['user', 'stokBatches.obat', 'pembayaranTermin']);
+        return view('shared.pembelian.show', compact('pembelian'));
+    }
+
+    public function edit(Pembelian $pembelian)
+    {
+        $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
+        $pembelian->load('stokBatches', 'pembayaranTermin');
+        return view('shared.pembelian.edit', compact('pembelian', 'obatList'));
     }
 
     public function store(Request $request)
@@ -52,8 +62,9 @@ class PembelianController extends Controller
             'obat.*.harga_jual' => 'required|numeric|min:0',
             'obat.*.jumlah_masuk' => 'required|integer|min:1',
             'obat.*.tgl_kadaluarsa' => 'required|date|after:today',
+            
+            // PERUBAHAN: Hapus validasi jumlah_bayar, hanya validasi tanggal
             'termin_list' => 'nullable|required_if:metode_pembayaran,termin|array|min:1',
-            'termin_list.*.jumlah_bayar' => 'nullable|numeric|min:0',
             'termin_list.*.tgl_jatuh_tempo' => 'required_if:metode_pembayaran,termin|date|after_or_equal:tgl_pembelian',
         ]);
 
@@ -104,7 +115,7 @@ class PembelianController extends Controller
                     PembayaranTermin::create([
                         'pembelian_id' => $pembelian->id,
                         'termin_ke' => $index + 1,
-                        'jumlah_bayar' => $terminData['jumlah_bayar'] ?? 0,
+                        'jumlah_bayar' => 0, // PERUBAHAN: Default 0
                         'tgl_jatuh_tempo' => $terminData['tgl_jatuh_tempo'],
                         'status' => 'belum_lunas',
                     ]);
@@ -112,42 +123,16 @@ class PembelianController extends Controller
             }
 
             DB::commit();
-            
-            // Generate notification
-            app(NotificationService::class)->notifyPembelianBaru($pembelian);
-            
-            // Update system notifications (stok menipis mungkin berubah)
-            app(NotificationService::class)->generateSystemNotifications();
-            
-            return redirect()->route('pembelian.index')->with('success', '✅ Pembelian dengan ' . count($request->obat) . ' item obat berhasil disimpan!');
+            return redirect()->route('pembelian.index')->with('success', '✅ Pembelian berhasil disimpan!');
         } catch (\Throwable $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()])->withInput();
         }
     }
 
-    public function show(Pembelian $pembelian)
-    {
-        $pembelian->load(['user', 'stokBatches.obat', 'pembayaranTermin']);
-        return view('shared.pembelian.show', compact('pembelian'));
-    }
-
-    public function edit(Pembelian $pembelian)
-    {
-        $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
-        $pembelian->load('stokBatches', 'pembayaranTermin');
-        return view('shared.pembelian.edit', compact('pembelian', 'obatList'));
-    }
-
-    /**
-     * PERBAIKAN: Gunakan Route Model Binding (Pembelian $pembelian)
-     * Ini akan otomatis menemukan pembelian berdasarkan 'uuid' (jika Anda set di model)
-     * atau 'id' (default). Ini akan memperbaiki inkonsistensi.
-     */
     public function update(Request $request, Pembelian $pembelian)
     {
         $request->validate([
-            // PERBAIKAN: Gunakan $pembelian->id (primary key) untuk rule unique
             'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur,' . $pembelian->id,
             'nama_pengirim' => 'required|string|max:100',
             'no_telepon_pengirim' => 'nullable|string|max:20',
@@ -160,8 +145,9 @@ class PembelianController extends Controller
             'obat.*.harga_jual' => 'required|numeric|min:0',
             'obat.*.jumlah_masuk' => 'required|integer|min:1',
             'obat.*.tgl_kadaluarsa' => 'required|date|after:today',
+            
+            // PERUBAHAN: Hapus validasi jumlah_bayar
             'termin_list' => 'nullable|required_if:metode_pembayaran,termin|array|min:1',
-            'termin_list.*.jumlah_bayar' => 'nullable|numeric|min:0',
             'termin_list.*.tgl_jatuh_tempo' => 'required_if:metode_pembayaran,termin|date|after_or_equal:tgl_pembelian',
         ]);
         
@@ -176,9 +162,9 @@ class PembelianController extends Controller
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,
                 'total_harga' => $request->total_harga,
-                // 'user_id' => Auth::id(), // Sebaiknya jangan update user_id
             ]);
 
+            // Hapus stok lama & buat baru (seperti sebelumnya)
             foreach ($pembelian->stokBatches as $batch) {
                 LogPerubahanStok::where('batch_id', $batch->id)->delete();
                 $batch->delete();
@@ -218,9 +204,9 @@ class PembelianController extends Controller
                     PembayaranTermin::create([
                         'pembelian_id' => $pembelian->id,
                         'termin_ke' => $index + 1,
-                        'jumlah_bayar' => $terminData['jumlah_bayar'] ?? 0,
+                        'jumlah_bayar' => 0, // PERUBAHAN: Default 0
                         'tgl_jatuh_tempo' => $terminData['tgl_jatuh_tempo'],
-                        'status' => $terminData['status'] ?? 'belum_lunas', // Pertahankan status jika ada
+                        'status' => 'belum_lunas',
                     ]);
                 }
             }
@@ -251,60 +237,101 @@ class PembelianController extends Controller
         }
     }
 
-    /**
-     * BARU: Method untuk memproses pembayaran termin
-     */
     public function bayarTermin(Request $request, Pembelian $pembelian)
     {
+        // 1. Load data & Hitung Posisi Keuangan
         $pembelian->load('pembayaranTermin');
+        
         $total_utang = $pembelian->total_harga;
         $total_terbayar = $pembelian->pembayaranTermin->sum('jumlah_bayar');
-        $sisa_utang = $total_utang - $total_terbayar;
+        // Gunakan round untuk memastikan presisi angka (misal 1000.00)
+        $sisa_utang = round($total_utang - $total_terbayar, 2);
 
-        $request->validate([
-            'jumlah_bayar' => ['required', 'numeric', 'min:1', 'max:' . $sisa_utang],
-            'tgl_bayar' => ['required', 'date'],
-            'keterangan' => ['nullable', 'string', 'max:255'],
-        ]);
+        // 2. Cari "Termin Aktif" (Termin urutan terdepan yang belum diisi uang)
+        // Kita gunakan logika: cari yang jumlah_bayar == 0 pertama kali.
+        $termin_aktif = $pembelian->pembayaranTermin
+                                  ->where('jumlah_bayar', 0)
+                                  ->sortBy('termin_ke')
+                                  ->first();
 
+        // Validasi: Jika tidak ada termin kosong tersisa, tapi masih ada request masuk
+        if (!$termin_aktif) {
+            return back()->withErrors(['error' => 'Semua slot termin sudah terisi. Tidak bisa menambah pembayaran lagi.']);
+        }
+
+        // 3. Cek apakah ini Termin Terakhir?
+        $max_termin = $pembelian->pembayaranTermin->max('termin_ke');
+        $is_last_termin = ($termin_aktif->termin_ke == $max_termin);
+
+        // 4. Validasi Input Berdasarkan Case Anda
+        $input_bayar = (float) $request->jumlah_bayar;
+
+        // --- CASE: TERMIN TERAKHIR (Strict / Ketat) ---
+        if ($is_last_termin) {
+            // Logika: Nilai harus sama persis dengan sisa hutang.
+            // Gunakan abs() < 100 perak untuk toleransi koma/pembulatan
+            if (abs($input_bayar - $sisa_utang) > 100) {
+                if ($input_bayar < $sisa_utang) {
+                    return back()->withErrors([
+                        'jumlah_bayar' => 'Ini termin terakhir. Pembayaran KURANG! Anda wajib melunasi sisa: Rp ' . number_format($sisa_utang, 0, ',', '.')
+                    ])->withInput();
+                } else {
+                    return back()->withErrors([
+                        'jumlah_bayar' => 'Ini termin terakhir. Pembayaran LEBIH! Anda hanya perlu membayar: Rp ' . number_format($sisa_utang, 0, ',', '.')
+                    ])->withInput();
+                }
+            }
+        } 
+        // --- CASE: TERMIN 1, 2, dst (Loose / Bebas) ---
+        else {
+            // Validasi umum: Tidak boleh bayar lebih dari total sisa hutang
+            if ($input_bayar > $sisa_utang) {
+                return back()->withErrors([
+                    'jumlah_bayar' => 'Pembayaran melebihi total sisa hutang (Rp ' . number_format($sisa_utang, 0, ',', '.') . ').'
+                ])->withInput();
+            }
+            if ($input_bayar <= 0) {
+                 return back()->withErrors(['jumlah_bayar' => 'Jumlah bayar harus lebih dari 0.'])->withInput();
+            }
+        }
+
+        // 5. Simpan Data
         DB::beginTransaction();
         try {
-            $termin_untuk_dicatat = $pembelian->pembayaranTermin
-                                        ->where('status', 'belum_lunas')
-                                        ->sortBy('termin_ke')
-                                        ->first();
-
-            if (!$termin_untuk_dicatat) {
-                 return back()->withErrors(['error' => 'Tidak dapat menemukan termin yang belum lunas.']);
-            }
-
-            // Logika Akumulasi
-            $termin_untuk_dicatat->jumlah_bayar += $request->jumlah_bayar;
-            $termin_untuk_dicatat->tgl_bayar = $request->tgl_bayar;
-            $termin_untuk_dicatat->keterangan = ($termin_untuk_dicatat->keterangan ?? '') . "\n" 
-                . 'Dibayar Rp ' . number_format($request->jumlah_bayar) . ' oleh ' . Auth::user()->nama_lengkap . ' pada ' . $request->tgl_bayar . '. Ket: ' . $request->keterangan;
+            // Update HANYA termin aktif (tidak looping ke termin lain)
+            $termin_aktif->jumlah_bayar = $input_bayar;
+            $termin_aktif->tgl_bayar = $request->tgl_bayar;
+            $termin_aktif->keterangan = $request->keterangan;
             
-            $total_terbayar_baru = $total_terbayar + $request->jumlah_bayar;
-
-            // Cek Lunas
-            if (abs($total_terbayar_baru - $total_utang) < 0.01) {
-                foreach($pembelian->pembayaranTermin as $termin) {
-                    $termin->status = 'lunas';
-                    if(is_null($termin->tgl_bayar)) {
-                        $termin->tgl_bayar = $request->tgl_bayar;
-                    }
-                    $termin->save();
-                }
+            // Tentukan status baris termin ini
+            // Jika termin terakhir -> pasti lunas (karena validasi di atas)
+            // Jika termin awal -> tetap dianggap 'belum_lunas' kecuali user melunasi seluruh hutang di termin awal
+            
+            if ($is_last_termin) {
+                $termin_aktif->status = 'lunas';
             } else {
-                $termin_untuk_dicatat->save();
+                // Jika user melunasi TOTAL hutang di termin 1 (misal), maka termin ini lunas
+                // Tapi termin 2 & 3 akan tetap 0 dan belum lunas (sesuai logika slot).
+                // Atau Anda bisa membiarkannya 'belum_lunas' sebagai penanda ini cicilan.
+                // Disini saya set 'belum_lunas' agar konsisten sebagai cicilan.
+                $termin_aktif->status = 'belum_lunas'; 
             }
             
+            $termin_aktif->save();
+
+            // 6. Cek Pelunasan Global
+            // Jika termin terakhir sudah dibayar, otomatis semua dianggap lunas
+            if ($is_last_termin) {
+                // Update semua termin menjadi 'lunas' agar data bersih
+                $pembelian->pembayaranTermin()->update(['status' => 'lunas']);
+            }
+
             DB::commit();
-            return redirect()->route('pembelian.show', $pembelian->uuid)->with('success', 'Pembayaran berhasil dicatat!');
+            return redirect()->route('pembelian.show', $pembelian->uuid)->with('success', 'Pembayaran termin ke-' . $termin_aktif->termin_ke . ' berhasil disimpan!');
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Gagal menyimpan pembayaran: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Gagal menyimpan: ' . $e->getMessage()]);
         }
     }
 }

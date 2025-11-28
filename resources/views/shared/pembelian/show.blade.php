@@ -1,5 +1,5 @@
 @php
-    $role = Auth::user()->role->nama_role;
+    $role = Auth::user()->role->nama_role; 
     $layoutPath = 'layouts.' . strtolower($role) . '.app';
 @endphp
 
@@ -29,9 +29,7 @@
                                 </div>
                                 <div>
                                     <h4 class="mb-1 text-white fw-bold">Detail Pembelian</h4>
-                                    <p class="text-sm text-white opacity-8 mb-0">
-                                        Informasi lengkap faktur, item obat, dan status pembayaran.
-                                    </p>
+                                    <p class="text-sm text-white opacity-8 mb-0">Informasi lengkap faktur, item obat, dan status pembayaran.</p>
                                 </div>
                             </div>
                         </div>
@@ -52,24 +50,20 @@
         <div class="alert alert-success alert-dismissible fade show text-white" role="alert">
             <span class="alert-icon"><i class="material-symbols-rounded align-middle">check_circle</i></span>
             <span class="alert-text"><strong>Sukses!</strong> {{ session('success') }}</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
     @endif
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
             <span class="alert-icon"><i class="material-symbols-rounded align-middle">error</i></span>
-            <span class="alert-text"><strong>Error!</strong>
+            <span class="alert-text"><strong>Gagal!</strong>
                 <ul class="mb-0">
                     @foreach($errors->all() as $err)
                         <li>{{ $err }}</li>
                     @endforeach
                 </ul>
             </span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
     @endif
 
@@ -79,8 +73,7 @@
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-header bg-white pb-0">
                     <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
-                        <i class="material-symbols-rounded text-primary">info</i>
-                        Informasi Utama
+                        <i class="material-symbols-rounded text-primary">info</i> Informasi Utama
                     </h6>
                 </div>
                 <div class="card-body">
@@ -135,8 +128,7 @@
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-header bg-white pb-0">
                     <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
-                        <i class="material-symbols-rounded text-success">medication</i>
-                        Detail Item Obat
+                        <i class="material-symbols-rounded text-success">medication</i> Detail Item Obat
                     </h6>
                 </div>
                 <div class="card-body px-0 pb-2">
@@ -154,28 +146,14 @@
                             <tbody>
                                 @forelse($pembelian->stokBatches as $batch)
                                 <tr>
-                                    <td class="ps-4">
-                                        <p class="text-sm font-weight-bold mb-0 text-dark">{{ $batch->obat->nama_obat ?? 'Obat Dihapus' }}</p>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="text-sm text-secondary">Rp {{ number_format($batch->harga_beli, 0, ',', '.') }}</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="text-sm text-dark font-weight-bold">{{ $batch->jumlah_masuk }}</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="text-sm fw-bold text-dark">Rp {{ number_format($batch->harga_beli * $batch->jumlah_masuk, 0, ',', '.') }}</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="text-xs font-weight-bold text-secondary">{{ \Carbon\Carbon::parse($batch->tgl_kadaluarsa)->format('d M Y') }}</span>
-                                    </td>
+                                    <td class="ps-4"><p class="text-sm font-weight-bold mb-0 text-dark">{{ $batch->obat->nama_obat ?? 'Obat Dihapus' }}</p></td>
+                                    <td class="text-end"><span class="text-sm text-secondary">Rp {{ number_format($batch->harga_beli, 0, ',', '.') }}</span></td>
+                                    <td class="text-center"><span class="text-sm text-dark font-weight-bold">{{ $batch->jumlah_masuk }}</span></td>
+                                    <td class="text-end"><span class="text-sm fw-bold text-dark">Rp {{ number_format($batch->harga_beli * $batch->jumlah_masuk, 0, ',', '.') }}</span></td>
+                                    <td class="text-center"><span class="text-xs font-weight-bold text-secondary">{{ \Carbon\Carbon::parse($batch->tgl_kadaluarsa)->format('d M Y') }}</span></td>
                                 </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="5" class="text-center py-4">
-                                        <p class="text-sm text-secondary mb-0">Tidak ada item obat.</p>
-                                    </td>
-                                </tr>
+                                <tr><td colspan="5" class="text-center py-4"><p class="text-sm text-secondary mb-0">Tidak ada item obat.</p></td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -184,7 +162,7 @@
             </div>
         </div>
 
-        {{-- Detail Pembayaran Termin --}}
+        {{-- Detail Pembayaran Termin & Modal --}}
         @if($pembelian->metode_pembayaran == 'termin')
         @php
             $total_terbayar = $pembelian->pembayaranTermin->sum('jumlah_bayar');
@@ -194,8 +172,7 @@
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-header bg-white pb-0 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
-                        <i class="material-symbols-rounded text-warning">payments</i>
-                        Detail Pembayaran Termin
+                        <i class="material-symbols-rounded text-warning">payments</i> Detail Pembayaran Termin
                     </h6>
                     @if($sisa_utang > 0.01)
                         <button type="button" class="btn btn-sm bg-gradient-success mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalBayarTermin">
@@ -220,18 +197,10 @@
                                 <tbody>
                                     @foreach($pembelian->pembayaranTermin->sortBy('termin_ke') as $termin)
                                         <tr>
-                                            <td class="text-center ps-4">
-                                                <span class="text-sm font-weight-bold text-dark">{{ $termin->termin_ke }}</span>
-                                            </td>
-                                            <td class="text-end">
-                                                <span class="text-sm text-dark">Rp {{ number_format($termin->jumlah_bayar, 0, ',', '.') }}</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="text-xs font-weight-bold text-secondary">{{ $termin->tgl_jatuh_tempo->format('d M Y') }}</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="text-xs font-weight-bold text-secondary">{{ $termin->tgl_bayar ? \Carbon\Carbon::parse($termin->tgl_bayar)->format('d M Y') : '-' }}</span>
-                                            </td>
+                                            <td class="text-center ps-4"><span class="text-sm font-weight-bold text-dark">{{ $termin->termin_ke }}</span></td>
+                                            <td class="text-end"><span class="text-sm text-dark">Rp {{ number_format($termin->jumlah_bayar, 0, ',', '.') }}</span></td>
+                                            <td class="text-center"><span class="text-xs font-weight-bold text-secondary">{{ $termin->tgl_jatuh_tempo->format('d M Y') }}</span></td>
+                                            <td class="text-center"><span class="text-xs font-weight-bold text-secondary">{{ $termin->tgl_bayar ? \Carbon\Carbon::parse($termin->tgl_bayar)->format('d M Y') : '-' }}</span></td>
                                             <td class="text-center">
                                                 @if($termin->status == 'lunas')
                                                     <span class="badge badge-sm bg-soft-success text-success">Lunas</span>
@@ -239,9 +208,7 @@
                                                     <span class="badge badge-sm bg-soft-danger text-danger">Belum Lunas</span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <p class="text-xs text-secondary mb-0 text-truncate" style="max-width: 150px;">{{ $termin->keterangan ?? '-' }}</p>
-                                            </td>
+                                            <td><p class="text-xs text-secondary mb-0 text-truncate" style="max-width: 150px;">{{ $termin->keterangan ?? '-' }}</p></td>
                                         </tr>
                                     @endforeach
                                     <tr class="bg-light">
@@ -265,53 +232,51 @@
                 </div>
             </div>
         </div>
+
+        {{-- Modal Pembayaran --}}
+        @if($sisa_utang > 0.01)
+        <div class="modal fade" id="modalBayarTermin" tabindex="-1" aria-labelledby="modalBayarTerminLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-3 border-0 shadow-lg">
+                    <div class="modal-header bg-white border-bottom-0 pb-0">
+                        <h5 class="modal-title font-weight-bold" id="modalBayarTerminLabel">Bayar Cicilan Termin</h5>
+                        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {{-- Form pointing to bayarTermin route --}}
+                    <form action="{{ route('pembelian.bayarTermin', $pembelian->uuid) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Sisa Utang</label>
+                                <input type="text" class="form-control bg-light fw-bold text-danger" value="Rp {{ number_format($sisa_utang, 0, ',', '.') }}" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Tanggal Bayar</label>
+                                <input type="date" name="tgl_bayar" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Jumlah Bayar</label>
+                                <input type="number" name="jumlah_bayar" class="form-control" placeholder="Maks: Rp {{ number_format($sisa_utang, 0, ',', '.') }}" max="{{ $sisa_utang }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Keterangan (Opsional)</label>
+                                <input type="text" name="keterangan" class="form-control" placeholder="Misal: Transfer Bank ABC">
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn bg-gradient-light mb-0" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn bg-gradient-primary mb-0">Simpan Pembayaran</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
         @endif
     </div>
 </div>
-
-{{-- Modal Pembayaran Termin --}}
-@if($pembelian->metode_pembayaran == 'termin' && $sisa_utang > 0.01)
-<div class="modal fade" id="modalBayarTermin" tabindex="-1" aria-labelledby="modalBayarTerminLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-3 border-0 shadow-lg">
-            <div class="modal-header bg-white border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold" id="modalBayarTerminLabel">Bayar Cicilan Termin</h5>
-                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('pembelian.bayarTermin', $pembelian->uuid) }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Sisa Utang</label>
-                        <input type="text" class="form-control bg-light fw-bold text-danger" value="Rp {{ number_format($sisa_utang, 0, ',', '.') }}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Tanggal Bayar</label>
-                        <input type="date" name="tgl_bayar" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Jumlah Bayar</label>
-                        <input type="number" name="jumlah_bayar" class="form-control"
-                            placeholder="Maks: Rp {{ number_format($sisa_utang, 0, ',', '.') }}"
-                            max="{{ $sisa_utang }}"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Keterangan (Opsional)</label>
-                        <input type="text" name="keterangan" class="form-control" placeholder="Misal: Transfer Bank ABC">
-                    </div>
-                </div>
-                <div class="modal-footer border-top-0 pt-0">
-                    <button type="button" class="btn bg-gradient-light mb-0" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn bg-gradient-primary mb-0">Simpan Pembayaran</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endif
 
 <style>
     .text-xxs { font-size: 0.65rem !important; }
@@ -326,4 +291,38 @@
     .table-stok tbody tr:hover { background-color: #f8f9fe; }
     .table td, .table th { vertical-align: middle; }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalBayar = document.getElementById('modalBayarTermin');
+        if (modalBayar) {
+
+            const terminList = @json($pembelian->pembayaranTermin); 
+            const totalUtang = {{ $pembelian->total_harga }};
+            let totalTerbayar = 0;
+            terminList.forEach(t => totalTerbayar += parseFloat(t.jumlah_bayar));
+            const sisaUtang = totalUtang - totalTerbayar;
+            
+
+            terminList.sort((a, b) => a.termin_ke - b.termin_ke);
+            
+            const maxTerminKe = terminList[terminList.length - 1].termin_ke;
+            
+            const activeTermin = terminList.find(t => t.status === 'belum_lunas');
+
+            const inputJumlah = modalBayar.querySelector('input[name="jumlah_bayar"]');
+
+            if (activeTermin && activeTermin.termin_ke === maxTerminKe) {
+                inputJumlah.value = sisaUtang;
+                inputJumlah.setAttribute('min', sisaUtang);
+                const helperText = document.createElement('small');
+                helperText.className = 'text-danger fw-bold d-block mt-1';
+                helperText.innerText = '* Ini termin terakhir. Harap lunasi sisa hutang.';
+                if(!inputJumlah.parentNode.querySelector('.text-danger')) {
+                    inputJumlah.parentNode.appendChild(helperText);
+                }
+            }
+        }
+    });
+</script>
 @endsection

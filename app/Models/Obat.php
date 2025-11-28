@@ -13,7 +13,7 @@ class Obat extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'kandungan_id' => 'array', 
+        'kandungan_id' => 'array',
     ];
 
     public function kategori()
@@ -55,7 +55,7 @@ class Obat extends Model
         })->values();
     }
     public function getStokTersediaAttribute()
-{
-    return $this->stokBatches()->where('sisa_stok', '>', 0)->sum('sisa_stok');
-}
+    {
+        return $this->stokBatches()->where('sisa_stok', '>', 0)->sum('sisa_stok');
+    }
 }

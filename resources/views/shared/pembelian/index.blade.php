@@ -86,10 +86,6 @@
                                 </span>
                             </div>
                         </div>
-                        {{-- Search Placeholder --}}
-                        <div class="d-flex gap-2">
-                             {{-- Search form can be added here if needed, similar to stok --}}
-                        </div>
                     </div>
                 </div>
 
@@ -143,12 +139,15 @@
                                             <span class="text-secondary text-xs font-weight-bold">{{ $p->tgl_pembelian->format('d/m/Y H:i') }}</span>
                                         </td>
                                         <td class="text-center">
+                                            {{-- PERBAIKAN: Gunakan UUID --}}
                                             <form action="{{ route('pembelian.destroy', $p->uuid) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
+                                                
                                                 @if($p->metode_pembayaran == 'termin')
                                                     @php
                                                         $belum_lunas = $p->pembayaranTermin->where('status', 'belum_lunas')->isNotEmpty();
                                                     @endphp
                                                     @if($belum_lunas)
+                                                        {{-- Tombol bayar mengarah ke SHOW/Detail --}}
                                                         <a href="{{ route('pembelian.show', $p->uuid) }}" class="btn btn-link text-success text-gradient px-1 mb-0" title="Bayar Termin">
                                                             <i class="material-symbols-rounded text-sm me-2">payments</i>
                                                         </a>
@@ -161,7 +160,7 @@
                                                 <a href="{{ route('pembelian.edit', $p->uuid) }}" class="btn btn-link text-warning text-gradient px-1 mb-0" title="Edit">
                                                     <i class="material-symbols-rounded text-sm me-2">edit</i>
                                                 </a>
-                                               
+                                                
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-link text-danger text-gradient px-1 mb-0" title="Hapus">
