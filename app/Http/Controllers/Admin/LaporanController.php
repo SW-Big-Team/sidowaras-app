@@ -11,14 +11,33 @@ use App\Models\DetailTransaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Exports\LaporanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        // Date range from request or default to this month
-        $from = $request->from ? Carbon::parse($request->from) : now()->startOfMonth();
-        $to = $request->to ? Carbon::parse($request->to) : now();
+        // Date range logic based on filter type
+        $filterType = $request->filter_type ?? 'custom';
+
+        if ($filterType == 'daily') {
+            $date = $request->date ? Carbon::parse($request->date) : now();
+            $from = $date->copy()->startOfDay();
+            $to = $date->copy()->endOfDay();
+        } elseif ($filterType == 'monthly') {
+            $month = $request->month ? Carbon::parse($request->month) : now();
+            $from = $month->copy()->startOfMonth();
+            $to = $month->copy()->endOfMonth();
+        } elseif ($filterType == 'yearly') {
+            $year = $request->year ?? now()->year;
+            $from = Carbon::createFromDate($year, 1, 1)->startOfYear();
+            $to = Carbon::createFromDate($year, 12, 31)->endOfYear();
+        } else {
+            // Custom or default
+            $from = $request->from ? Carbon::parse($request->from) : now()->startOfMonth();
+            $to = $request->to ? Carbon::parse($request->to) : now();
+        }
 
         // Get previous period for comparison
         $daysInPeriod = $from->diffInDays($to);
@@ -29,32 +48,32 @@ class LaporanController extends Controller
         // Total Revenue (Pendapatan)
         $totalRevenue = Transaksi::whereBetween('tgl_transaksi', [$from, $to])
             ->sum('total_harga');
-        
+
         $previousRevenue = Transaksi::whereBetween('tgl_transaksi', [$previousFrom, $previousTo])
             ->sum('total_harga');
-        
-        $revenueChange = $previousRevenue > 0 
-            ? (($totalRevenue - $previousRevenue) / $previousRevenue) * 100 
+
+        $revenueChange = $previousRevenue > 0
+            ? (($totalRevenue - $previousRevenue) / $previousRevenue) * 100
             : 0;
 
         // Total Transactions
         $totalTransactions = Transaksi::whereBetween('tgl_transaksi', [$from, $to])->count();
-        
+
         $previousTransactions = Transaksi::whereBetween('tgl_transaksi', [$previousFrom, $previousTo])->count();
-        
-        $transactionsChange = $previousTransactions > 0 
-            ? (($totalTransactions - $previousTransactions) / $previousTransactions) * 100 
+
+        $transactionsChange = $previousTransactions > 0
+            ? (($totalTransactions - $previousTransactions) / $previousTransactions) * 100
             : 0;
 
         // Total Purchases (Pembelian)
         $totalPurchases = Pembelian::whereBetween('tgl_pembelian', [$from, $to])
             ->sum('total_harga');
-        
+
         $previousPurchases = Pembelian::whereBetween('tgl_pembelian', [$previousFrom, $previousTo])
             ->sum('total_harga');
-        
-        $purchasesChange = $previousPurchases > 0 
-            ? (($totalPurchases - $previousPurchases) / $previousPurchases) * 100 
+
+        $purchasesChange = $previousPurchases > 0
+            ? (($totalPurchases - $previousPurchases) / $previousPurchases) * 100
             : 0;
 
         // Total Stock Items
@@ -69,7 +88,7 @@ class LaporanController extends Controller
         $tunai = $paymentMethods->where('metode_pembayaran', 'tunai')->first()->count ?? 0;
         $nonTunai = $paymentMethods->where('metode_pembayaran', 'non tunai')->first()->count ?? 0;
         $totalPayments = $tunai + $nonTunai;
-        
+
         $tunaiPercentage = $totalPayments > 0 ? ($tunai / $totalPayments) * 100 : 0;
         $nonTunaiPercentage = $totalPayments > 0 ? ($nonTunai / $totalPayments) * 100 : 0;
 
@@ -93,7 +112,7 @@ class LaporanController extends Controller
             ->groupBy('obat_id')
             ->with('obat')
             ->get()
-            ->filter(function($batch) {
+            ->filter(function ($batch) {
                 return $batch->obat && $batch->total_stock <= $batch->obat->stok_minimum;
             })
             ->sortBy('total_stock')
@@ -103,7 +122,7 @@ class LaporanController extends Controller
         // CHART DATA - Monthly sales and purchases
         $monthlyData = [];
         $monthlyLabels = [];
-        
+
         // If period is less than 60 days, show daily data grouped by week
         // Otherwise show monthly data
         if ($daysInPeriod <= 60) {
@@ -111,13 +130,13 @@ class LaporanController extends Controller
             for ($i = 0; $i <= $daysInPeriod; $i += 7) {
                 $weekStart = $from->copy()->addDays($i);
                 $weekEnd = $from->copy()->addDays(min($i + 6, $daysInPeriod));
-                
+
                 $salesData = Transaksi::whereBetween('tgl_transaksi', [$weekStart, $weekEnd])
                     ->sum('total_harga');
-                
+
                 $purchasesData = Pembelian::whereBetween('tgl_pembelian', [$weekStart, $weekEnd])
                     ->sum('total_harga');
-                
+
                 $monthlyData['sales'][] = $salesData / 1000000; // Convert to millions
                 $monthlyData['purchases'][] = $purchasesData / 1000000;
                 $monthlyLabels[] = $weekStart->format('d M');
@@ -127,17 +146,38 @@ class LaporanController extends Controller
             for ($month = $from->copy(); $month <= $to; $month->addMonth()) {
                 $monthStart = $month->copy()->startOfMonth();
                 $monthEnd = $month->copy()->endOfMonth();
-                
+
                 $salesData = Transaksi::whereBetween('tgl_transaksi', [$monthStart, $monthEnd])
                     ->sum('total_harga');
-                
+
                 $purchasesData = Pembelian::whereBetween('tgl_pembelian', [$monthStart, $monthEnd])
                     ->sum('total_harga');
-                
+
                 $monthlyData['sales'][] = $salesData / 1000000; // Convert to millions
                 $monthlyData['purchases'][] = $purchasesData / 1000000;
                 $monthlyLabels[] = $month->format('M Y');
             }
+        }
+
+        if ($request->export == 'excel') {
+            $data = compact(
+                'totalRevenue',
+                'revenueChange',
+                'totalTransactions',
+                'transactionsChange',
+                'totalPurchases',
+                'purchasesChange',
+                'totalStock',
+                'tunaiPercentage',
+                'nonTunaiPercentage',
+                'topSelling',
+                'lowStock',
+                'monthlyData',
+                'monthlyLabels',
+                'from',
+                'to'
+            );
+            return Excel::download(new LaporanExport($data), 'Laporan_Apotek_' . $from->format('Y-m-d') . '_to_' . $to->format('Y-m-d') . '.xlsx');
         }
 
         return view('admin.laporan.index', compact(
