@@ -35,8 +35,8 @@ class LaporanController extends Controller
             $to = Carbon::createFromDate($year, 12, 31)->endOfYear();
         } else {
             // Custom or default
-            $from = $request->from ? Carbon::parse($request->from) : now()->startOfMonth();
-            $to = $request->to ? Carbon::parse($request->to) : now();
+            $from = $request->from ? Carbon::parse($request->from)->startOfDay() : now()->startOfMonth();
+            $to = $request->to ? Carbon::parse($request->to)->endOfDay() : now()->endOfDay();
         }
 
         // Get previous period for comparison
