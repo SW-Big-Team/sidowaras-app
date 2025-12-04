@@ -27,8 +27,8 @@
                                     <i class="material-symbols-rounded text-dark text-3xl">add_task</i>
                                 </div>
                                 <div>
-                                    <h4 class="mb-0 text-white font-weight-bolder">Stock Opname Harian</h4>
-                                    <p class="text-sm text-white opacity-8 mb-0">Input stok fisik untuk pengecekan harian</p>
+                                    <h4 class="mb-0 text-white font-weight-bolder">Stock Opname Bulanan</h4>
+                                    <p class="text-sm text-white opacity-8 mb-0">Input stok fisik untuk pengecekan bulanan</p>
                                 </div>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                                 <div class="icon icon-sm bg-white-10 rounded-circle me-2 d-flex align-items-center justify-content-center">
                                     <i class="material-symbols-rounded text-sm">calendar_today</i>
                                 </div>
-                                <span class="font-weight-bold">{{ now()->isoFormat('dddd, D MMMM Y') }}</span>
+                                <span class="font-weight-bold">{{ now()->isoFormat('MMMM Y') }}</span>
                             </div>
                         </div>
                     </div>

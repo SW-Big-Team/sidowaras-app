@@ -35,14 +35,15 @@ class StokOpnameController extends Controller
             'notes.*' => 'nullable|string|max:500',
         ]);
 
-        // Cegah duplikasi opname hari ini oleh user yang sama
-        $existingOpname = StockOpname::where('tanggal', today())
+        // Cegah duplikasi opname bulan ini oleh user yang sama
+        $existingOpname = StockOpname::whereMonth('tanggal', now()->month)
+            ->whereYear('tanggal', now()->year)
             ->where('created_by', auth()->id())
             ->whereIn('status', ['pending', 'approved'])
             ->exists();
             
         if ($existingOpname) {
-            return back()->withErrors('Anda sudah melakukan stock opname hari ini yang masih pending atau sudah disetujui!');
+            return back()->withErrors('Anda sudah melakukan stock opname bulan ini yang masih pending atau sudah disetujui!');
         }
 
         DB::beginTransaction();

@@ -98,8 +98,14 @@
                 </div>
                 <div class="row g-3 mt-1">
                     <div class="col-md-6 col-12">
-                        <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Nama Pengirim <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_pengirim" class="form-control form-control-sm" value="{{ old('nama_pengirim') }}" required>
+                        <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Supplier <span class="text-danger">*</span></label>
+                        <select name="supplier_id" class="form-select form-select-sm" required>
+                            <option value="">-- Pilih Supplier --</option>
+                            @foreach($suppliers as $supplier)
+                                <option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>{{ $supplier->supplier_name }}</option>
+                            @endforeach
+                        </select>
+                         {{-- Hidden input for backward compatibility if needed, or just let controller handle it --}}
                     </div>
                     <div class="col-md-6 col-12">
                         <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">No Telepon Pengirim</label>

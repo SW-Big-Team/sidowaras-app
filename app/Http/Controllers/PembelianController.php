@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pembelian;
 use App\Models\StokBatch;
 use App\Models\Obat;
+use App\Models\Supplier;
 use App\Models\LogPerubahanStok;
 use App\Models\PembayaranTermin;
 use Illuminate\Http\Request;
@@ -31,7 +32,8 @@ class PembelianController extends Controller
     public function create()
     {
         $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
-        return view('shared.pembelian.create', compact('obatList'));
+        $suppliers = Supplier::orderBy('supplier_name')->get();
+        return view('shared.pembelian.create', compact('obatList', 'suppliers'));
     }
 
     public function show(Pembelian $pembelian)
@@ -43,15 +45,17 @@ class PembelianController extends Controller
     public function edit(Pembelian $pembelian)
     {
         $obatList = Obat::select('id', 'nama_obat', 'barcode')->orderBy('nama_obat')->get();
+        $suppliers = Supplier::orderBy('supplier_name')->get();
         $pembelian->load('stokBatches', 'pembayaranTermin');
-        return view('shared.pembelian.edit', compact('pembelian', 'obatList'));
+        return view('shared.pembelian.edit', compact('pembelian', 'obatList', 'suppliers'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur',
-            'nama_pengirim' => 'required|string|max:100',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'nama_pengirim' => 'nullable|string|max:100', // Optional now
             'no_telepon_pengirim' => 'nullable|string|max:20',
             'metode_pembayaran' => 'required|in:tunai,non tunai,termin',
             'tgl_pembelian' => 'required|date',
@@ -75,7 +79,8 @@ class PembelianController extends Controller
             $pembelian = Pembelian::create([
                 'uuid' => (string) Str::uuid(),
                 'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
-                'nama_pengirim' => $request->nama_pengirim,
+                'supplier_id' => $request->supplier_id,
+                'nama_pengirim' => $request->nama_pengirim ?? Supplier::find($request->supplier_id)->nama_supplier,
                 'no_telepon_pengirim' => $request->no_telepon_pengirim,
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,
@@ -134,7 +139,8 @@ class PembelianController extends Controller
     {
         $request->validate([
             'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur,' . $pembelian->id,
-            'nama_pengirim' => 'required|string|max:100',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'nama_pengirim' => 'nullable|string|max:100',
             'no_telepon_pengirim' => 'nullable|string|max:20',
             'metode_pembayaran' => 'required|in:tunai,non tunai,termin',
             'tgl_pembelian' => 'required|date',
@@ -157,7 +163,8 @@ class PembelianController extends Controller
 
             $pembelian->update([
                 'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
-                'nama_pengirim' => $request->nama_pengirim,
+                'supplier_id' => $request->supplier_id,
+                'nama_pengirim' => $request->nama_pengirim ?? Supplier::find($request->supplier_id)->nama_supplier,
                 'no_telepon_pengirim' => $request->no_telepon_pengirim,
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,
