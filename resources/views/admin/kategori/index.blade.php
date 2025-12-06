@@ -9,365 +9,277 @@
 @endsection
 
 @section('content')
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card bg-gradient-dark border-0 shadow-lg rounded-3">
-                <div class="card-body p-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <div class="d-flex align-items-center">
-                                <div class="icon icon-lg icon-shape bg-white shadow text-center border-radius-xl me-3">
-                                    <i class="material-symbols-rounded text-dark">category</i>
-                                </div>
-                                <div>
-                                    <h4 class="mb-1 text-white fw-bold">Daftar Kategori Obat</h4>
-                                    <p class="text-sm text-white opacity-8 mb-0">Kelola kategori dan klasifikasi obat</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-md-end text-start mt-3 mt-md-0">
-                            <button type="button" 
-                                    class="btn bg-white text-dark mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#kategoriModal" 
-                                    data-mode="create">
-                                <i class="material-symbols-rounded text-sm">add_circle</i> Tambah Kategori
-                            </button>
-                        </div>
-                    </div>
+{{-- Welcome Header --}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="welcome-banner">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <span class="greeting-badge"><i class="material-symbols-rounded">category</i> Manajemen Kategori</span>
+                    <h2 class="welcome-title">Kategori Obat</h2>
+                    <p class="welcome-subtitle">Kelola kategori dan klasifikasi obat untuk memudahkan pengelompokan.</p>
                 </div>
+                <div class="welcome-stats">
+                    <button type="button" class="stat-pill success" data-bs-toggle="modal" data-bs-target="#kategoriModal" data-mode="create">
+                        <i class="material-symbols-rounded">add_circle</i><span>Tambah Kategori</span>
+                    </button>
+                </div>
+            </div>
+            <div class="welcome-illustration">
+                <div class="floating-icon icon-1"><i class="material-symbols-rounded">folder</i></div>
+                <div class="floating-icon icon-2"><i class="material-symbols-rounded">label</i></div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-6 col-sm-6 mb-xl-0 mb-4">
-            <div class="card border-0 shadow-sm rounded-3 summary-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
-                                Total Kategori
-                            </p>
-                            <h4 class="mb-0 text-dark fw-bold">{{ $kategori->total() }}</h4>
-                            <p class="mb-0 text-xxs text-muted mt-1">Jenis kategori terdaftar</p>
-                        </div>
-                        <div class="summary-icon bg-soft-primary">
-                            <i class="material-symbols-rounded text-primary">category</i>
-                        </div>
-                    </div>
-                </div>
+{{-- Metric Cards --}}
+<div class="row g-3 mb-4">
+    <div class="col-xl-6 col-md-6">
+        <div class="metric-card primary">
+            <div class="metric-icon"><i class="material-symbols-rounded">category</i></div>
+            <div class="metric-content">
+                <span class="metric-label">Total Kategori</span>
+                <h3 class="metric-value">{{ $kategori->total() }}</h3>
+                <div class="metric-change neutral"><i class="material-symbols-rounded">folder</i><span>Kategori terdaftar</span></div>
             </div>
-        </div>
-        <div class="col-xl-6 col-sm-6">
-            <div class="card border-0 shadow-sm rounded-3 summary-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
-                                Kategori Baru
-                            </p>
-                            <h4 class="mb-0 text-dark fw-bold">
-                                {{ \App\Models\KategoriObat::where('created_at', '>=', now()->subDays(7))->count() }}
-                            </h4>
-                            <p class="mb-0 text-xxs text-muted mt-1">Ditambahkan 7 hari terakhir</p>
-                        </div>
-                        <div class="summary-icon bg-soft-success">
-                            <i class="material-symbols-rounded text-success">new_releases</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="metric-glow"></div>
         </div>
     </div>
+    <div class="col-xl-6 col-md-6">
+        <div class="metric-card success">
+            <div class="metric-icon"><i class="material-symbols-rounded">new_releases</i></div>
+            <div class="metric-content">
+                <span class="metric-label">Kategori Baru</span>
+                <h3 class="metric-value">{{ \App\Models\KategoriObat::where('created_at', '>=', now()->subDays(7))->count() }}</h3>
+                <div class="metric-change neutral"><i class="material-symbols-rounded">calendar_today</i><span>7 hari terakhir</span></div>
+            </div>
+            <div class="metric-glow"></div>
+        </div>
+    </div>
+</div>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show text-white" role="alert">
-            <span class="alert-icon"><i class="material-symbols-rounded align-middle">check_circle</i></span>
-            <span class="alert-text fw-bold">{{ session('success') }}</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show text-white" role="alert">
+        <span class="alert-icon"><i class="material-symbols-rounded align-middle">check_circle</i></span>
+        <span class="alert-text fw-bold">{{ session('success') }}</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    </div>
+@endif
+
+{{-- Data Table --}}
+<div class="card pro-card">
+    <div class="card-header pro-card-header">
+        <div class="header-left">
+            <div class="header-icon"><i class="material-symbols-rounded">list_alt</i></div>
+            <div><h6 class="header-title">Data Kategori</h6><p class="header-subtitle">{{ $kategori->total() }} kategori terdaftar</p></div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <form action="{{ route('admin.kategori.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-nowrap">
+                <div class="input-group" style="width: 220px;">
+                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;"><i class="material-symbols-rounded text-secondary" style="font-size: 18px;">search</i></span>
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control ps-0" style="border-radius: 0 8px 8px 0; border-left: 0;" placeholder="Cari kategori...">
+                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
+                </div>
+                <button type="submit" class="btn-pro-sm"><i class="material-symbols-rounded">search</i></button>
+                @if(request('search'))<a href="{{ route('admin.kategori.index') }}" class="btn-outline-pro-sm" title="Hapus Filter"><i class="material-symbols-rounded">close</i></a>@endif
+            </form>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table pro-table mb-0">
+                <thead><tr><th>Nama Kategori</th><th>Dibuat Pada</th><th class="text-center">Aksi</th></tr></thead>
+                <tbody>
+                    @forelse ($kategori as $item)
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="item-icon"><i class="material-symbols-rounded">folder</i></div>
+                                    <span class="fw-bold">{{ $item->nama_kategori }}</span>
+                                </div>
+                            </td>
+                            <td><span class="text-secondary">{{ $item->created_at->format('d M Y') }}</span></td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    <button type="button" class="action-btn edit" data-bs-toggle="modal" data-bs-target="#kategoriModal" data-mode="edit" data-id="{{ $item->id }}" data-nama="{{ $item->nama_kategori }}" title="Edit"><i class="material-symbols-rounded">edit</i></button>
+                                    <form action="{{ route('admin.kategori.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus kategori {{ $item->nama_kategori }}?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="action-btn delete" title="Hapus"><i class="material-symbols-rounded">delete</i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="3" class="text-center py-5"><div class="empty-state"><div class="empty-icon"><i class="material-symbols-rounded">category</i></div><h6>Belum ada data kategori</h6><p>Tambahkan kategori baru untuk memulai</p></div></td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if($kategori->hasPages())
+        <div class="card-footer bg-white border-top py-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-xs text-secondary">Tampilkan</span>
+                    <select class="form-select form-select-sm" style="width: 70px;" onchange="window.location.href='{{ route('admin.kategori.index') }}?per_page='+this.value+'&search={{ request('search') }}'">
+                        @foreach([10, 25, 50, 100] as $size)<option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>{{ $size }}</option>@endforeach
+                    </select>
+                    <span class="text-xs text-secondary">data</span>
+                </div>
+                <p class="text-xs text-secondary mb-0"><span class="fw-bold">{{ $kategori->firstItem() ?? 0 }}</span> - <span class="fw-bold">{{ $kategori->lastItem() ?? 0 }}</span> dari <span class="fw-bold">{{ $kategori->total() }}</span></p>
+                {{ $kategori->appends(request()->query())->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     @endif
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-header bg-white pb-0">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <div>
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <h6 class="mb-0 fw-bold">Data Kategori</h6>
-                                <span class="badge bg-soft-primary text-primary text-xs fw-bold rounded-pill">
-                                    {{ $kategori->total() }} data
-                                </span>
-                            </div>
-                        </div>
-                        {{-- Search UI --}}
-                        <div class="d-flex align-items-center gap-2">
-                            <form action="{{ route('admin.kategori.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-nowrap">
-                                {{-- Search Input with Icon --}}
-                                <div class="input-group" style="width: 220px;">
-                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
-                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">search</i>
-                                    </span>
-                                    <input type="text" 
-                                           name="search" 
-                                           value="{{ request('search') }}" 
-                                           class="form-control ps-0" 
-                                           style="border-radius: 0 8px 8px 0; border-left: 0;"
-                                           placeholder="Cari kategori...">
-                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
-                                </div>
-                                {{-- Search Button --}}
-                                <button type="submit" class="btn bg-gradient-dark mb-0 px-3" style="border-radius: 8px;">
-                                    <i class="material-symbols-rounded" style="font-size: 18px;">search</i>
-                                </button>
-                                {{-- Clear Filter --}}
-                                @if(request('search'))
-                                    <a href="{{ route('admin.kategori.index') }}" class="btn btn-outline-secondary mb-0 px-3" style="border-radius: 8px;" title="Hapus Filter">
-                                        <i class="material-symbols-rounded" style="font-size: 18px;">close</i>
-                                    </a>
-                                @endif
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body px-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0 table-stok">
-                            <thead class="bg-gradient-dark">
-                                <tr>
-                                    <th class="text-uppercase text-white text-xxs font-weight-bolder opacity-9 ps-4">Nama Kategori</th>
-                                    <th class="text-uppercase text-white text-xxs font-weight-bolder opacity-9 ps-2">Dibuat Pada</th>
-                                    <th class="text-center text-uppercase text-white text-xxs font-weight-bolder opacity-9">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($kategori as $item)
-                                    <tr>
-                                        <td class="ps-4">
-                                            <div class="d-flex px-2 py-1">
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm fw-bold text-dark">{{ $item->nama_kategori }}</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs text-secondary mb-0">{{ $item->created_at->format('d M Y') }}</p>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="d-flex gap-2 justify-content-center">
-                                                <button type="button"
-                                                    class="btn btn-link text-warning px-3 mb-0"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#kategoriModal"
-                                                    data-mode="edit"
-                                                    data-id="{{ $item->id }}"
-                                                    data-nama="{{ $item->nama_kategori }}"
-                                                    title="Edit">
-                                                    <i class="material-symbols-rounded text-sm">edit</i>
-                                                </button>
-                                                <form action="{{ route('admin.kategori.destroy', $item->id) }}" method="POST" class="d-inline m-0" onsubmit="return confirm('Yakin ingin menghapus kategori {{ $item->nama_kategori }}?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" 
-                                                            class="btn btn-link text-danger px-3 mb-0"
-                                                            title="Hapus">
-                                                        <i class="material-symbols-rounded text-sm">delete</i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center py-5">
-                                            <div class="d-flex flex-column align-items-center justify-content-center">
-                                                <div class="icon icon-lg icon-shape bg-light shadow-sm rounded-circle mb-3">
-                                                    <i class="material-symbols-rounded text-secondary opacity-5" style="font-size: 2rem;">category</i>
-                                                </div>
-                                                <h6 class="text-secondary mb-1">Belum ada data kategori</h6>
-                                                <p class="text-xs text-secondary">Silakan tambahkan kategori baru</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="px-4 py-3 border-top">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                            {{-- Left: Per Page Selector --}}
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-xs text-secondary">Tampilkan</span>
-                                <select class="form-select form-select-sm border rounded-2 px-2 py-1" 
-                                        style="width: auto; min-width: 65px;" 
-                                        onchange="window.location.href='{{ route('admin.kategori.index') }}?per_page='+this.value">
-                                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
-                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
-                                </select>
-                                <span class="text-xs text-secondary">data per halaman</span>
-                            </div>
-                            {{-- Center: Info --}}
-                            <p class="text-xs text-secondary mb-0">
-                                <span class="fw-bold">{{ $kategori->firstItem() ?? 0 }}</span> - 
-                                <span class="fw-bold">{{ $kategori->lastItem() ?? 0 }}</span> dari 
-                                <span class="fw-bold">{{ $kategori->total() }}</span> data
-                            </p>
-                            {{-- Right: Pagination --}}
-                            <div>
-                                {{ $kategori->links('pagination::bootstrap-5') }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Create/Edit Kategori -->
-    <div class="modal fade" id="kategoriModal" tabindex="-1" aria-labelledby="kategoriModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-gradient-dark">
-                    <h5 class="modal-title text-white" id="kategoriModalLabel">
-                        <i class="material-symbols-rounded me-2 align-middle">category</i>
-                        Tambah Kategori
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="kategoriForm" method="POST" action="{{ route('admin.kategori.store') }}">
-                    @csrf
-                    <input type="hidden" name="_method" id="kategoriFormMethod" value="POST">
-                    <div class="modal-body p-4">
-                        <div class="mb-3">
-                            <label class="form-label text-xs fw-bold text-uppercase text-secondary mb-1">Nama Kategori <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-outline">
-                                <input type="text" 
-                                       class="form-control" 
-                                       name="nama_kategori" 
-                                       id="nama_kategori" 
-                                       placeholder="Masukkan nama kategori" 
-                                       required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-top p-3">
-                        <button type="button" class="btn btn-outline-secondary mb-0 d-flex align-items-center gap-1" data-bs-dismiss="modal">
-                            <i class="material-symbols-rounded text-sm">close</i> Batal
-                        </button>
-                        <button type="submit" class="btn bg-gradient-primary mb-0 d-flex align-items-center gap-1" id="kategoriSubmitBtn">
-                            <i class="material-symbols-rounded text-sm">save</i> Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    @push('scripts')
-    <script>
-    (function() {
-        const modalEl = document.getElementById('kategoriModal');
-        if (!modalEl) return;
-        
-        modalEl.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const mode = button?.getAttribute('data-mode') || 'create';
-            const form = document.getElementById('kategoriForm');
-            const methodInput = document.getElementById('kategoriFormMethod');
-            const titleEl = document.getElementById('kategoriModalLabel');
-            const submitBtn = document.getElementById('kategoriSubmitBtn');
-            const namaInput = document.getElementById('nama_kategori');
-
-            if (mode === 'edit') {
-                const id = button.getAttribute('data-id');
-                form.action = "{{ url('adminx/kategori') }}/" + id;
-                methodInput.value = 'PUT';
-                titleEl.innerHTML = '<i class="material-symbols-rounded me-2 align-middle">category</i> Edit Kategori';
-                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1 text-sm">update</i> Update';
-                namaInput.value = button.getAttribute('data-nama') || '';
-            } else {
-                form.action = "{{ route('admin.kategori.store') }}";
-                methodInput.value = 'POST';
-                titleEl.innerHTML = '<i class="material-symbols-rounded me-2 align-middle">category</i> Tambah Kategori';
-                submitBtn.innerHTML = '<i class="material-symbols-rounded me-1 text-sm">save</i> Simpan';
-                namaInput.value = '';
-            }
-        });
-    })();
-    </script>
-    @endpush
-
-    <style>
-        .text-xxs { font-size: 0.65rem !important; }
-        .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
-        
-        .bg-gradient-info-soft {
-            background: linear-gradient(135deg, rgba(23, 162, 184, .08), rgba(23, 162, 184, .16));
-            color: #138496;
-        }
-
-        .bg-soft-primary { background: rgba(94, 114, 228, 0.10) !important; }
-        .bg-soft-success { background: rgba(40, 167, 69, 0.08) !important; }
-        .bg-soft-warning { background: rgba(255, 193, 7, 0.12) !important; }
-        .bg-soft-info { background: rgba(23, 162, 184, 0.12) !important; }
-        .bg-soft-secondary { background: rgba(108, 117, 125, 0.12) !important; }
-
-        .table-stok thead tr th {
-            border-top: none;
-            font-weight: 600;
-            letter-spacing: .04em;
-        }
-
-        .table-stok tbody tr {
-            transition: background-color 0.15s ease, box-shadow 0.15s ease;
-        }
-        .table-stok tbody tr:hover {
-            background-color: #f8f9fe;
-        }
-
-        .table td, .table th { vertical-align: middle; }
-        
-        .icon-shape {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .input-group-outline {
-            display: flex;
-            width: 100%;
-        }
-        
-        .cursor-pointer {
-            cursor: pointer;
-        }
-        
-        /* Summary Card Styles */
-        .summary-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .summary-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
-        }
-        .summary-icon {
-            width: 48px;
-            height: 48px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
 </div>
+
+{{-- Modal --}}
+<div class="modal fade" id="kategoriModal" tabindex="-1" aria-labelledby="kategoriModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content pro-modal">
+            <div class="modal-header">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="modal-icon"><i class="material-symbols-rounded">category</i></div>
+                    <h5 class="modal-title" id="kategoriModalLabel">Tambah Kategori</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="kategoriForm" method="POST" action="{{ route('admin.kategori.store') }}">
+                @csrf
+                <input type="hidden" name="_method" id="kategoriFormMethod" value="POST">
+                <div class="modal-body p-4">
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">Nama Kategori <span class="required">*</span></label>
+                        <div class="input-modern"><i class="material-symbols-rounded input-icon">label</i><input type="text" class="form-control" name="nama_kategori" id="nama_kategori" placeholder="Contoh: Obat Bebas" required></div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn-outline-pro" data-bs-dismiss="modal"><i class="material-symbols-rounded">close</i> Batal</button><button type="submit" class="btn-pro primary" id="kategoriSubmitBtn"><i class="material-symbols-rounded">save</i> Simpan</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+<style>
+:root { --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --primary: #8b5cf6; --secondary: #64748b; }
+.welcome-banner { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-radius: 16px; padding: 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
+.welcome-content { position: relative; z-index: 2; }
+.greeting-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 500; margin-bottom: 12px; }
+.welcome-title { font-size: 1.75rem; font-weight: 700; color: white; margin: 0 0 8px; }
+.welcome-subtitle { color: rgba(255,255,255,0.85); font-size: 0.9rem; margin: 0 0 16px; max-width: 500px; }
+.welcome-stats { display: flex; gap: 10px; }
+.stat-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; color: white; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s; }
+.stat-pill:hover { background: rgba(255,255,255,0.3); color: white; transform: translateY(-2px); }
+.stat-pill.success { background: rgba(16, 185, 129, 0.6); }
+.welcome-illustration { position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); display: flex; gap: 1rem; }
+.floating-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite; }
+.floating-icon i { color: white; font-size: 24px; }
+.floating-icon.icon-2 { animation-delay: 0.5s; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.metric-card { background: white; border-radius: 16px; padding: 1.25rem; display: flex; gap: 1rem; position: relative; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: all 0.3s ease; }
+.metric-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.metric-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.metric-icon i { font-size: 26px; }
+.metric-card.success .metric-icon { background: rgba(16,185,129,0.12); }
+.metric-card.success .metric-icon i { color: var(--success); }
+.metric-card.primary .metric-icon { background: rgba(139,92,246,0.12); }
+.metric-card.primary .metric-icon i { color: var(--primary); }
+.metric-content { flex: 1; }
+.metric-label { font-size: 0.7rem; color: var(--secondary); text-transform: uppercase; font-weight: 600; }
+.metric-value { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 4px 0; }
+.metric-change { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 500; }
+.metric-change i { font-size: 16px; }
+.metric-change.neutral { color: var(--secondary); }
+.metric-glow { position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -30px; bottom: -30px; opacity: 0.1; }
+.metric-card.success .metric-glow { background: var(--success); }
+.metric-card.primary .metric-glow { background: var(--primary); }
+.pro-card { background: white; border-radius: 16px; border: none; box-shadow: 0 4px 16px rgba(0,0,0,0.06); overflow: hidden; }
+.pro-card-header { padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; gap: 12px; }
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: flex; align-items: center; justify-content: center; }
+.header-icon i { color: white; font-size: 20px; }
+.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.btn-pro-sm { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; background: linear-gradient(135deg, #1e293b, #475569); color: white; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; }
+.btn-pro-sm:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,41,59,0.4); }
+.btn-pro-sm i { font-size: 18px; }
+.btn-outline-pro-sm { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; background: white; color: var(--secondary); border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
+.btn-outline-pro-sm:hover { background: #f8fafc; color: #1e293b; }
+.btn-outline-pro-sm i { font-size: 18px; }
+.pro-table { margin: 0; }
+.pro-table thead { background: linear-gradient(135deg, #1e293b, #334155); }
+.pro-table th { font-size: 0.7rem; font-weight: 600; color: white; text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 16px; border: none; }
+.pro-table td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.pro-table tbody tr:hover { background: #f8fafc; }
+.item-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: flex; align-items: center; justify-content: center; }
+.item-icon i { color: white; font-size: 18px; }
+.action-buttons { display: flex; gap: 6px; justify-content: center; }
+.action-btn { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: all 0.2s; }
+.action-btn i { font-size: 18px; }
+.action-btn.edit { background: rgba(245,158,11,0.12); color: var(--warning); }
+.action-btn.edit:hover { background: var(--warning); color: white; }
+.action-btn.delete { background: rgba(239,68,68,0.12); color: var(--danger); }
+.action-btn.delete:hover { background: var(--danger); color: white; }
+.empty-state { text-align: center; padding: 2rem; }
+.empty-icon { width: 60px; height: 60px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.empty-icon i { font-size: 28px; color: var(--secondary); }
+.empty-state h6 { color: #475569; margin-bottom: 4px; }
+.empty-state p { font-size: 0.8rem; color: var(--secondary); margin: 0; }
+.pro-modal { border-radius: 16px; border: none; overflow: hidden; }
+.pro-modal .modal-header { background: linear-gradient(135deg, #8b5cf6, #7c3aed); padding: 1.25rem 1.5rem; border: none; }
+.pro-modal .modal-title { color: white; font-weight: 600; margin: 0; }
+.modal-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; }
+.modal-icon i { color: white; font-size: 20px; }
+.pro-modal .modal-footer { border-top: 1px solid #f1f5f9; padding: 1rem 1.5rem; }
+.pro-modal .btn-close { filter: brightness(0) invert(1); opacity: 0.8; }
+.pro-modal .btn-close:hover { opacity: 1; }
+.form-group-modern { margin-bottom: 0; }
+.form-label-modern { display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-label-modern .required { color: var(--danger); }
+.input-modern { position: relative; }
+.input-modern .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--secondary); font-size: 20px; z-index: 2; }
+.input-modern .form-control { padding-left: 46px; height: 48px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; transition: all 0.2s; }
+.input-modern .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+.btn-pro { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; font-size: 0.875rem; font-weight: 500; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; }
+.btn-pro:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.btn-pro i { font-size: 18px; }
+.btn-outline-pro { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: var(--secondary); font-size: 0.875rem; font-weight: 500; border-radius: 10px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s; }
+.btn-outline-pro:hover { background: #f8fafc; color: #1e293b; }
+.btn-outline-pro i { font-size: 18px; }
+@media (max-width: 768px) { .welcome-banner { flex-direction: column; text-align: center; } .welcome-stats { justify-content: center; } .welcome-illustration { display: none; } .pro-card-header { flex-direction: column; align-items: stretch; } }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+(function() {
+    const modalEl = document.getElementById('kategoriModal');
+    if (!modalEl) return;
+    modalEl.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const mode = button?.getAttribute('data-mode') || 'create';
+        const form = document.getElementById('kategoriForm');
+        const methodInput = document.getElementById('kategoriFormMethod');
+        const titleEl = document.getElementById('kategoriModalLabel');
+        const submitBtn = document.getElementById('kategoriSubmitBtn');
+        const namaInput = document.getElementById('nama_kategori');
+        if (mode === 'edit') {
+            const id = button.getAttribute('data-id');
+            form.action = "{{ url('adminx/kategori') }}/" + id;
+            methodInput.value = 'PUT';
+            titleEl.innerHTML = 'Edit Kategori';
+            submitBtn.innerHTML = '<i class="material-symbols-rounded">update</i> Update';
+            namaInput.value = button.getAttribute('data-nama') || '';
+        } else {
+            form.action = "{{ route('admin.kategori.store') }}";
+            methodInput.value = 'POST';
+            titleEl.innerHTML = 'Tambah Kategori';
+            submitBtn.innerHTML = '<i class="material-symbols-rounded">save</i> Simpan';
+            namaInput.value = '';
+        }
+    });
+})();
+</script>
+@endpush
 @endsection

@@ -15,69 +15,169 @@
 @endsection
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-lg rounded-3">
-                <div class="card-header bg-gradient-dark p-4 rounded-top-3">
-                    <div class="d-flex align-items-center">
-                        <div class="icon icon-lg icon-shape bg-white shadow text-center border-radius-xl me-3">
-                            <i class="material-symbols-rounded text-dark">scale</i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0 text-white fw-bold">Tambah Satuan Obat</h5>
-                            <p class="text-sm text-white opacity-8 mb-0">Isi form berikut untuk menambahkan satuan obat baru</p>
-                        </div>
-                    </div>
+{{-- Welcome Header --}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="welcome-banner">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <span class="greeting-badge">
+                        <i class="material-symbols-rounded">scale</i>
+                        Satuan Baru
+                    </span>
+                    <h2 class="welcome-title">Tambah Satuan Obat</h2>
+                    <p class="welcome-subtitle">Lengkapi form berikut untuk menambahkan satuan obat baru ke sistem.</p>
                 </div>
-                <div class="card-body p-4">
-                    <form action="{{ route('admin.satuan.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="nama_satuan" class="form-label text-sm fw-bold text-uppercase text-secondary mb-1">Nama Satuan <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-outline">
-                                <input type="text" name="nama_satuan" id="nama_satuan" class="form-control" placeholder="Contoh: Tablet, Kapsul, Box" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="faktor_konversi" class="form-label text-sm fw-bold text-uppercase text-secondary mb-1">Faktor Konversi <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-outline">
-                                <input type="number" name="faktor_konversi" class="form-control" placeholder="Masukkan nilai konversi" required min="1">
-                            </div>
-                            <small class="text-xs text-muted mt-1 d-block">Nilai konversi satuan terkecil (misal: 1 box = 10 strip)</small>
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a href="{{ route('admin.satuan.index') }}" class="btn btn-outline-secondary mb-0 d-flex align-items-center gap-1">
-                                <i class="material-symbols-rounded text-sm">arrow_back</i> Kembali
-                            </a>
-                            <button type="submit" class="btn bg-gradient-primary mb-0 d-flex align-items-center gap-1">
-                                <i class="material-symbols-rounded text-sm">save</i> Simpan
-                            </button>
-                        </div>
-                    </form>
+                <div class="welcome-stats">
+                    <a href="{{ route('admin.satuan.index') }}" class="stat-pill">
+                        <i class="material-symbols-rounded">arrow_back</i>
+                        <span>Kembali</span>
+                    </a>
                 </div>
+            </div>
+            <div class="welcome-illustration">
+                <div class="floating-icon icon-1"><i class="material-symbols-rounded">straighten</i></div>
+                <div class="floating-icon icon-2"><i class="material-symbols-rounded">add_box</i></div>
             </div>
         </div>
     </div>
 </div>
 
+{{-- Form Card --}}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card pro-card">
+            <div class="card-header pro-card-header">
+                <div class="header-left">
+                    <div class="header-icon success">
+                        <i class="material-symbols-rounded">edit_note</i>
+                    </div>
+                    <div>
+                        <h6 class="header-title">Form Satuan</h6>
+                        <p class="header-subtitle">Isi data satuan obat</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ route('admin.satuan.store') }}" method="POST">
+                    @csrf
+                    
+                    <div class="form-section">
+                        <div class="section-header">
+                            <div class="section-icon success">
+                                <i class="material-symbols-rounded">scale</i>
+                            </div>
+                            <div>
+                                <h6 class="section-title">Informasi Satuan</h6>
+                                <p class="section-subtitle">Detail satuan yang akan dibuat</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group-modern">
+                                    <label class="form-label-modern">Nama Satuan <span class="required">*</span></label>
+                                    <div class="input-modern">
+                                        <i class="material-symbols-rounded input-icon">label</i>
+                                        <input type="text" name="nama_satuan" id="nama_satuan" 
+                                               class="form-control @error('nama_satuan') is-invalid @enderror" 
+                                               placeholder="Contoh: Tablet, Kapsul, Box" 
+                                               value="{{ old('nama_satuan') }}" required>
+                                    </div>
+                                    @error('nama_satuan')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group-modern">
+                                    <label class="form-label-modern">Faktor Konversi <span class="required">*</span></label>
+                                    <div class="input-modern">
+                                        <i class="material-symbols-rounded input-icon">calculate</i>
+                                        <input type="number" name="faktor_konversi" 
+                                               class="form-control @error('faktor_konversi') is-invalid @enderror" 
+                                               placeholder="Contoh: 10" 
+                                               value="{{ old('faktor_konversi') }}" required min="1">
+                                    </div>
+                                    <small class="text-xs text-secondary mt-1 d-block">Nilai konversi satuan terkecil (misal: 1 box = 10 strip)</small>
+                                    @error('faktor_konversi')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{{ route('admin.satuan.index') }}" class="btn-outline-pro">
+                            <i class="material-symbols-rounded">close</i>
+                            Batal
+                        </a>
+                        <button type="submit" class="btn-pro success">
+                            <i class="material-symbols-rounded">save</i>
+                            Simpan Satuan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('styles')
 <style>
-    .text-xxs { font-size: 0.65rem !important; }
-    .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
-    
-    .icon-shape {
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .input-group-outline {
-        display: flex;
-        width: 100%;
-    }
+:root { --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --primary: #8b5cf6; --secondary: #64748b; }
+
+.welcome-banner { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px; padding: 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
+.welcome-content { position: relative; z-index: 2; }
+.greeting-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 500; margin-bottom: 12px; }
+.welcome-title { font-size: 1.75rem; font-weight: 700; color: white; margin: 0 0 8px; }
+.welcome-subtitle { color: rgba(255,255,255,0.85); font-size: 0.9rem; margin: 0 0 16px; max-width: 500px; }
+.welcome-stats { display: flex; gap: 10px; }
+.stat-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; color: white; font-weight: 500; text-decoration: none; transition: all 0.2s; }
+.stat-pill:hover { background: rgba(255,255,255,0.3); color: white; }
+.welcome-illustration { position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); display: flex; gap: 1rem; }
+.floating-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite; }
+.floating-icon i { color: white; font-size: 24px; }
+.floating-icon.icon-2 { animation-delay: 0.5s; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+.pro-card { background: white; border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; }
+.pro-card-header { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.header-icon.success { background: linear-gradient(135deg, #10b981, #059669); }
+.header-icon i { color: white; font-size: 22px; }
+.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+
+.form-section { margin-bottom: 2rem; }
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px dashed #e2e8f0; }
+.section-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.section-icon i { font-size: 20px; }
+.section-icon.success { background: rgba(16,185,129,0.12); }
+.section-icon.success i { color: var(--success); }
+.section-title { font-size: 0.95rem; font-weight: 600; color: #1e293b; margin: 0; }
+.section-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+
+.form-group-modern { margin-bottom: 1.25rem; }
+.form-label-modern { display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-label-modern .required { color: var(--danger); }
+.input-modern { position: relative; }
+.input-modern .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--secondary); font-size: 20px; z-index: 2; }
+.input-modern .form-control { padding-left: 46px; height: 48px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; transition: all 0.2s; }
+.input-modern .form-control:focus { border-color: var(--success); box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; padding-top: 1.5rem; border-top: 1px solid #f1f5f9; }
+.btn-pro { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; font-size: 0.875rem; font-weight: 500; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; }
+.btn-pro.success { background: linear-gradient(135deg, #10b981, #059669); }
+.btn-pro:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.btn-pro i { font-size: 18px; }
+.btn-outline-pro { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: white; color: var(--secondary); font-size: 0.875rem; font-weight: 500; border-radius: 10px; border: 1px solid #e2e8f0; text-decoration: none; transition: all 0.2s; }
+.btn-outline-pro:hover { background: #f8fafc; color: #1e293b; }
+.btn-outline-pro i { font-size: 18px; }
+
+@media (max-width: 768px) { .welcome-banner { flex-direction: column; text-align: center; } .welcome-stats { justify-content: center; } .welcome-illustration { display: none; } }
 </style>
+@endpush
 @endsection

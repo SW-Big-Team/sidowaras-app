@@ -15,103 +15,137 @@
 @endsection
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-lg rounded-3">
-                <div class="card-header bg-gradient-dark p-4 rounded-top-3">
-                    <div class="d-flex align-items-center">
-                        <div class="icon icon-lg icon-shape bg-white shadow text-center border-radius-xl me-3">
-                            <i class="material-symbols-rounded text-dark">science</i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0 text-white fw-bold">Edit Kandungan Obat</h5>
-                            <p class="text-sm text-white opacity-8 mb-0">Perbarui data kandungan obat</p>
-                        </div>
-                    </div>
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="welcome-banner warning">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <span class="greeting-badge"><i class="material-symbols-rounded">edit</i> Edit Kandungan</span>
+                    <h2 class="welcome-title">{{ is_array($kandungan->nama_kandungan) ? implode(', ', $kandungan->nama_kandungan) : $kandungan->nama_kandungan }}</h2>
+                    <p class="welcome-subtitle">Perbarui informasi kandungan obat sesuai kebutuhan.</p>
                 </div>
-                <div class="card-body p-4">
-                    <form action="{{ route('admin.kandungan.update', $kandungan->id) }}" method="POST">
-                        @csrf 
-                        @method('PUT')
-                        <div class="mb-4">
-                            <label for="nama_kandungan" class="form-label text-sm fw-bold text-uppercase text-secondary mb-1">Nama Kandungan <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-outline">
-                                <input type="text" name="nama_kandungan" id="nama_kandungan" value="{{ $kandungan->nama_kandungan_text }}" class="form-control" required>
-                            </div>
-                            <small class="text-xs text-muted mt-1 d-block">Pisahkan dengan koma jika lebih dari satu</small>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="dosis_kandungan" class="form-label text-sm fw-bold text-uppercase text-secondary mb-1">Dosis Kandungan <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-outline">
-                                <input type="text" name="dosis_kandungan" value="{{ $kandungan->dosis_kandungan }}" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a href="{{ route('admin.kandungan.index') }}" class="btn btn-outline-secondary mb-0 d-flex align-items-center gap-1">
-                                <i class="material-symbols-rounded text-sm">arrow_back</i> Kembali
-                            </a>
-                            <button type="submit" class="btn bg-gradient-primary mb-0 d-flex align-items-center gap-1">
-                                <i class="material-symbols-rounded text-sm">update</i> Update
-                            </button>
-                        </div>
-                    </form>
+                <div class="welcome-stats">
+                    <a href="{{ route('admin.kandungan.index') }}" class="stat-pill"><i class="material-symbols-rounded">arrow_back</i><span>Kembali</span></a>
                 </div>
+            </div>
+            <div class="welcome-illustration">
+                <div class="floating-icon icon-1"><i class="material-symbols-rounded">science</i></div>
+                <div class="floating-icon icon-2"><i class="material-symbols-rounded">edit_note</i></div>
             </div>
         </div>
     </div>
 </div>
 
-@push('scripts')
-<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card pro-card">
+            <div class="card-header pro-card-header">
+                <div class="header-left">
+                    <div class="header-icon warning"><i class="material-symbols-rounded">edit_note</i></div>
+                    <div><h6 class="header-title">Edit Kandungan</h6><p class="header-subtitle">ID: #{{ $kandungan->id }}</p></div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ route('admin.kandungan.update', $kandungan->id) }}" method="POST">
+                    @csrf @method('PUT')
+                    
+                    <div class="form-section">
+                        <div class="section-header">
+                            <div class="section-icon warning"><i class="material-symbols-rounded">science</i></div>
+                            <div><h6 class="section-title">Informasi Kandungan</h6><p class="section-subtitle">Perbarui detail kandungan</p></div>
+                        </div>
 
-<script>
-var input = document.querySelector('#nama_kandungan');
-var tagify = new Tagify(input, {
-    delimiters: ",",
-    placeholder: "Ketik nama kandungan",
-    dropdown: {
-        enabled: 0
-    }
-});
-</script>
-@endpush
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group-modern">
+                                    <label class="form-label-modern">Nama Kandungan <span class="required">*</span></label>
+                                    <div class="input-modern">
+                                        <i class="material-symbols-rounded input-icon">label</i>
+                                        @php
+                                            $namaKandungan = is_array($kandungan->nama_kandungan) 
+                                                ? implode(', ', $kandungan->nama_kandungan) 
+                                                : $kandungan->nama_kandungan;
+                                        @endphp
+                                        <input type="text" name="nama_kandungan" id="nama_kandungan" 
+                                               class="form-control @error('nama_kandungan') is-invalid @enderror" 
+                                               value="{{ old('nama_kandungan', $namaKandungan) }}" required>
+                                    </div>
+                                    @error('nama_kandungan')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group-modern">
+                                    <label class="form-label-modern">Dosis Kandungan <span class="required">*</span></label>
+                                    <div class="input-modern">
+                                        <i class="material-symbols-rounded input-icon">medication</i>
+                                        <input type="text" name="dosis_kandungan" 
+                                               class="form-control @error('dosis_kandungan') is-invalid @enderror" 
+                                               value="{{ old('dosis_kandungan', $kandungan->dosis_kandungan) }}" required>
+                                    </div>
+                                    @error('dosis_kandungan')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="form-actions">
+                        <a href="{{ route('admin.kandungan.index') }}" class="btn-outline-pro"><i class="material-symbols-rounded">close</i> Batal</a>
+                        <button type="submit" class="btn-pro warning"><i class="material-symbols-rounded">update</i> Update Kandungan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('styles')
 <style>
-    .text-xxs { font-size: 0.65rem !important; }
-    .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
-    
-    .icon-shape {
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .input-group-outline {
-        display: flex;
-        width: 100%;
-    }
-    
-    /* Tagify Customization */
-    .tagify {
-        --tagify-dd-color-primary: rgb(53,149,246);
-        --tagify-bg: transparent;
-        width: 100%;
-        border: 1px solid #d2d6da;
-        border-radius: 0.375rem;
-        padding: 0.3rem 0.5rem;
-    }
-    .tagify:hover {
-        border-color: #b1b7c1;
-    }
-    .tagify.tagify--focus {
-        border-color: #e91e63;
-        box-shadow: inset 0 0 0 1px #e91e63;
-    }
+:root { --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --primary: #8b5cf6; --secondary: #64748b; }
+.welcome-banner.warning { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 16px; padding: 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
+.welcome-content { position: relative; z-index: 2; }
+.greeting-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.25); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 500; margin-bottom: 12px; }
+.welcome-title { font-size: 1.5rem; font-weight: 700; color: white; margin: 0 0 8px; }
+.welcome-subtitle { color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0 0 16px; }
+.welcome-stats { display: flex; gap: 10px; }
+.stat-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; color: white; font-weight: 500; text-decoration: none; transition: all 0.2s; }
+.stat-pill:hover { background: rgba(255,255,255,0.3); color: white; }
+.welcome-illustration { position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); display: flex; gap: 1rem; }
+.floating-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite; }
+.floating-icon i { color: white; font-size: 24px; }
+.floating-icon.icon-2 { animation-delay: 0.5s; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.pro-card { background: white; border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; }
+.pro-card-header { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.header-icon.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.header-icon i { color: white; font-size: 22px; }
+.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.form-section { margin-bottom: 2rem; }
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px dashed #e2e8f0; }
+.section-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.section-icon i { font-size: 20px; }
+.section-icon.warning { background: rgba(245,158,11,0.12); }
+.section-icon.warning i { color: var(--warning); }
+.section-title { font-size: 0.95rem; font-weight: 600; color: #1e293b; margin: 0; }
+.section-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.form-group-modern { margin-bottom: 1.25rem; }
+.form-label-modern { display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-label-modern .required { color: var(--danger); }
+.input-modern { position: relative; }
+.input-modern .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--secondary); font-size: 20px; z-index: 2; }
+.input-modern .form-control { padding-left: 46px; height: 48px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; transition: all 0.2s; }
+.input-modern .form-control:focus { border-color: var(--warning); box-shadow: 0 0 0 3px rgba(245,158,11,0.15); }
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; padding-top: 1.5rem; border-top: 1px solid #f1f5f9; }
+.btn-pro { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; font-size: 0.875rem; font-weight: 500; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; }
+.btn-pro.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.btn-pro:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.btn-pro i { font-size: 18px; }
+.btn-outline-pro { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: white; color: var(--secondary); font-size: 0.875rem; font-weight: 500; border-radius: 10px; border: 1px solid #e2e8f0; text-decoration: none; transition: all 0.2s; }
+.btn-outline-pro:hover { background: #f8fafc; color: #1e293b; }
+.btn-outline-pro i { font-size: 18px; }
+@media (max-width: 768px) { .welcome-banner.warning { flex-direction: column; text-align: center; } .welcome-stats { justify-content: center; } .welcome-illustration { display: none; } }
 </style>
+@endpush
 @endsection

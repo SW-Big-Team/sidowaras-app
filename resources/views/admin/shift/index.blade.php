@@ -10,105 +10,56 @@
 @endsection
 
 @section('content')
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card bg-gradient-dark border-0 shadow-lg rounded-3">
-                <div class="card-body p-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <div class="d-flex align-items-center">
-                                <div class="icon icon-lg icon-shape bg-white shadow text-center border-radius-xl me-3">
-                                    <i class="material-symbols-rounded text-dark">schedule</i>
-                                </div>
-                                <div>
-                                    <h4 class="mb-1 text-white fw-bold">Daftar Shift</h4>
-                                    <p class="text-sm text-white opacity-8 mb-0">Kelola jadwal shift dan penugasan karyawan</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-md-end text-start mt-3 mt-md-0">
-                            <div class="d-flex gap-2 justify-content-md-end">
-                                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-white mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1">
-                                    <i class="material-symbols-rounded text-sm">group</i> User
-                                </a>
-                                <button type="button" 
-                                        class="btn bg-white text-dark mb-0 shadow-sm-sm d-inline-flex align-items-center gap-1" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#shiftModal" 
-                                        data-mode="create">
-                                    <i class="material-symbols-rounded text-sm">add</i> Tambah Shift
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+{{-- Welcome Header --}}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="welcome-banner shift">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <span class="greeting-badge"><i class="material-symbols-rounded">schedule</i> Manajemen Shift</span>
+                    <h2 class="welcome-title">Daftar Shift</h2>
+                    <p class="welcome-subtitle">Kelola jadwal shift dan penugasan karyawan apotek.</p>
                 </div>
+                <div class="welcome-stats">
+                    <a href="{{ route('admin.users.index') }}" class="stat-pill"><i class="material-symbols-rounded">group</i><span>User</span></a>
+                    <button type="button" class="stat-pill primary" data-bs-toggle="modal" data-bs-target="#shiftModal" data-mode="create">
+                        <i class="material-symbols-rounded">add</i><span>Tambah Shift</span>
+                    </button>
+                </div>
+            </div>
+            <div class="welcome-illustration">
+                <div class="floating-icon icon-1"><i class="material-symbols-rounded">schedule</i></div>
+                <div class="floating-icon icon-2"><i class="material-symbols-rounded">person</i></div>
+                <div class="floating-icon icon-3"><i class="material-symbols-rounded">calendar_today</i></div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <div class="card border-0 shadow-sm rounded-3 summary-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
-                                Total Shift
-                            </p>
-                            <h4 class="mb-0 text-dark fw-bold">{{ $shifts->count() }}</h4>
-                            <p class="mb-0 text-xxs text-muted mt-1">Seluruh shift terdaftar</p>
-                        </div>
-                        <div class="summary-icon bg-soft-primary">
-                            <i class="material-symbols-rounded text-primary">list_alt</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <div class="card border-0 shadow-sm rounded-3 summary-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
-                                Shift Aktif
-                            </p>
-                            <h4 class="mb-0 text-dark fw-bold">
-                                {{ $shifts->where('shift_status', true)->count() }}
-                            </h4>
-                            <p class="mb-0 text-xxs text-muted mt-1">Shift yang sedang berjalan</p>
-                        </div>
-                        <div class="summary-icon bg-soft-success">
-                            <i class="material-symbols-rounded text-success">toggle_on</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4 col-sm-6">
-            <div class="card border-0 shadow-sm rounded-3 summary-card">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-sm mb-1 text-secondary text-uppercase fw-bold text-xxs">
-                                Karyawan Terjadwal
-                            </p>
-                            <h4 class="mb-0 text-dark fw-bold">
-                                {{ $shifts->sum(function($shift) { return count($shift->user_list ?? []); }) }}
-                            </h4>
-                            <p class="mb-0 text-xxs text-muted mt-1">Total penugasan karyawan</p>
-                        </div>
-                        <div class="summary-icon bg-soft-info">
-                            <i class="material-symbols-rounded text-info">groups</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+{{-- Metric Cards --}}
+<div class="row g-3 mb-4">
+    <div class="col-xl-4 col-md-6">
+        <div class="metric-card primary">
+            <div class="metric-icon"><i class="material-symbols-rounded">list_alt</i></div>
+            <div class="metric-content"><span class="metric-label">Total Shift</span><h3 class="metric-value">{{ $shifts->count() }}</h3><span class="metric-subtext">Seluruh shift terdaftar</span></div>
+            <div class="metric-glow"></div>
         </div>
     </div>
+    <div class="col-xl-4 col-md-6">
+        <div class="metric-card success">
+            <div class="metric-icon"><i class="material-symbols-rounded">toggle_on</i></div>
+            <div class="metric-content"><span class="metric-label">Shift Aktif</span><h3 class="metric-value">{{ $shifts->where('shift_status', true)->count() }}</h3><span class="metric-subtext">Shift sedang berjalan</span></div>
+            <div class="metric-glow"></div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6">
+        <div class="metric-card info">
+            <div class="metric-icon"><i class="material-symbols-rounded">groups</i></div>
+            <div class="metric-content"><span class="metric-label">Karyawan Terjadwal</span><h3 class="metric-value">{{ $shifts->sum(function($shift) { return count($shift->user_list ?? []); }) }}</h3><span class="metric-subtext">Total penugasan</span></div>
+            <div class="metric-glow"></div>
+        </div>
+    </div>
+</div>
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show text-white" role="alert">
@@ -737,42 +688,39 @@
     @endpush
 
     <style>
-        .text-xxs { font-size: 0.65rem !important; }
-        .shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
-        
-        .bg-gradient-info-soft {
-            background: linear-gradient(135deg, rgba(23, 162, 184, .08), rgba(23, 162, 184, .16));
-            color: #138496;
-        }
-
-        .bg-soft-primary { background: rgba(94, 114, 228, 0.10) !important; }
-        .bg-soft-success { background: rgba(40, 167, 69, 0.08) !important; }
-        .bg-soft-warning { background: rgba(255, 193, 7, 0.12) !important; }
-        .bg-soft-info { background: rgba(23, 162, 184, 0.12) !important; }
-        .bg-soft-secondary { background: rgba(108, 117, 125, 0.12) !important; }
-
-        .table-stok thead tr th {
-            border-top: none;
-            font-weight: 600;
-            letter-spacing: .04em;
-        }
-
-        .table-stok tbody tr {
-            transition: background-color 0.15s ease, box-shadow 0.15s ease;
-        }
-        .table-stok tbody tr:hover {
-            background-color: #f8f9fe;
-        }
-
-        .table td, .table th { vertical-align: middle; }
-        
-        .icon-shape {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+:root { --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --primary: #8b5cf6; --secondary: #64748b; }
+.welcome-banner.shift { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-radius: 16px; padding: 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
+.welcome-content { position: relative; z-index: 2; }
+.greeting-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 500; margin-bottom: 12px; }
+.welcome-title { font-size: 1.75rem; font-weight: 700; color: white; margin: 0 0 8px; }
+.welcome-subtitle { color: rgba(255,255,255,0.85); font-size: 0.9rem; margin: 0 0 16px; max-width: 500px; }
+.welcome-stats { display: flex; gap: 10px; }
+.stat-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; color: white; font-weight: 500; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+.stat-pill:hover { background: rgba(255,255,255,0.3); color: white; }
+.stat-pill.primary { background: rgba(255,255,255,0.3); }
+.welcome-illustration { position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); display: flex; gap: 1rem; }
+.floating-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite; }
+.floating-icon i { color: white; font-size: 24px; }
+.floating-icon.icon-2 { animation-delay: 0.5s; }
+.floating-icon.icon-3 { animation-delay: 1s; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.metric-card { background: white; border-radius: 16px; padding: 1.25rem; display: flex; gap: 1rem; position: relative; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: all 0.3s ease; }
+.metric-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.metric-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.metric-icon i { font-size: 26px; color: white; }
+.metric-card.primary .metric-icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.metric-card.success .metric-icon { background: linear-gradient(135deg, #10b981, #059669); }
+.metric-card.info .metric-icon { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.metric-content { flex: 1; }
+.metric-label { font-size: 0.7rem; color: var(--secondary); text-transform: uppercase; font-weight: 600; }
+.metric-value { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 4px 0; }
+.metric-subtext { font-size: 0.75rem; color: var(--secondary); }
+.metric-glow { position: absolute; top: -50%; right: -50%; width: 100%; height: 200%; border-radius: 50%; opacity: 0.08; }
+.metric-card.primary .metric-glow { background: var(--primary); }
+.metric-card.success .metric-glow { background: var(--success); }
+.metric-card.info .metric-glow { background: var(--info); }
+.text-xxs { font-size: 0.65rem !important; }
+.shadow-sm-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
         
         .input-group-outline {
             display: flex;
