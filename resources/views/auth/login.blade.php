@@ -9,171 +9,193 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <style>
-        :root {
-            /* Brand Colors */
-            --primary: #1AB262;
-            --primary-dark: #148F4E;
-            --primary-soft: rgba(26, 178, 98, 0.1);
-            --primary-shadow: rgba(26, 178, 98, 0.25);
-            
-            /* UI Colors */
-            --bg-gradient-1: #f0fdf4;
-            --bg-gradient-2: #dcfce7;
-            
-            --surface: rgba(255, 255, 255, 0.85);
-            --surface-border: rgba(255, 255, 255, 0.9);
-            
-            --text-main: #0F172A;
-            --text-muted: #64748B;
-            --text-light: #94A3B8;
-            --border: #E2E8F0;
-            
-            --error: #EF4444;
-            --error-bg: #FEF2F2;
-            
-            --shadow-xl: 
-                0 20px 25px -5px rgba(0, 0, 0, 0.05), 
-                0 8px 10px -6px rgba(0, 0, 0, 0.01),
-                0 0 0 1px rgba(0, 0, 0, 0.02);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --primary-soft: rgba(139, 92, 246, 0.1);
+            --primary-glow: rgba(139, 92, 246, 0.25);
+            --success: #10b981;
+            --error: #ef4444;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --surface: rgba(255, 255, 255, 0.9);
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at top left, var(--bg-gradient-1), transparent 60%),
-                        radial-gradient(circle at bottom right, var(--bg-gradient-2), transparent 60%),
-                        #f8fafc;
-            overflow: hidden;
-            color: var(--text-main);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             position: relative;
+            overflow: hidden;
             padding: 24px;
         }
 
-        /* Floating Background Shapes */
-        .blob {
+        /* Animated Background */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.1), transparent 40%),
+                radial-gradient(circle at 60% 40%, rgba(59, 130, 246, 0.08), transparent 50%);
+            z-index: -1;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .shape {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
-            z-index: -1;
-            animation: float 20s infinite alternate;
+            filter: blur(60px);
+            animation: float 20s ease-in-out infinite;
         }
-        .blob-1 { width: 400px; height: 400px; background: #bbf7d0; top: -100px; left: -100px; }
-        .blob-2 { width: 300px; height: 300px; background: #86efac; bottom: -50px; right: -50px; animation-delay: -5s; }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.1));
+            top: -200px;
+            left: -100px;
+        }
+
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -10s;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.05));
+            top: 50%;
+            right: 10%;
+            animation-delay: -5s;
+        }
 
         @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(40px, 60px) rotate(10deg); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
         }
 
-        /* Layout */
-        .auth-wrapper {
+        /* Login Card */
+        .login-wrapper {
             width: 100%;
-            max-width: 420px;
-            perspective: 1000px;
+            max-width: 440px;
         }
 
-        .auth-card {
+        .login-card {
             background: var(--surface);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--surface-border);
             border-radius: 24px;
-            padding: 40px 32px;
-            box-shadow: var(--shadow-xl);
-            animation: cardEnter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            opacity: 0;
-            transform: translateY(30px);
+            padding: 48px 40px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(0, 0, 0, 0.03);
+            animation: cardSlide 0.6s ease-out;
             position: relative;
             overflow: hidden;
         }
 
-        /* Top Gradient Line */
-        .auth-card::before {
+        .login-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), #34d399);
+            background: linear-gradient(90deg, var(--primary), var(--success), var(--primary));
+            background-size: 200% 100%;
+            animation: gradient 3s ease infinite;
         }
 
-        @keyframes cardEnter {
+        @keyframes cardSlide {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Header Section */
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .logo-container {
-            width: 56px;
-            height: 56px;
-            background: var(--primary-soft);
-            border-radius: 16px;
-            display: grid;
-            place-items: center;
-            margin: 0 auto 16px;
-            color: var(--primary);
+        /* Header */
+        .login-header { text-align: center; margin-bottom: 36px; }
+
+        .logo-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px var(--primary-glow);
         }
 
-        .header h1 {
-            font-size: 24px;
+        .logo-icon i { font-size: 36px; color: white; }
+
+        .login-header h1 {
+            font-size: 1.75rem;
             font-weight: 700;
+            color: var(--text-dark);
             margin-bottom: 8px;
-            color: var(--text-main);
         }
 
-        .header p {
-            font-size: 14px;
+        .login-header p {
+            font-size: 0.95rem;
             color: var(--text-muted);
-            line-height: 1.5;
         }
 
         /* Alert */
-        .alert {
-            background: var(--error-bg);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            color: var(--error);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 24px;
+        .alert-error {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            padding: 14px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            color: var(--error);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 24px;
         }
 
-        /* Forms */
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .alert-error i { font-size: 20px; }
+
+        /* Form */
+        .form-group { margin-bottom: 20px; }
 
         .form-label {
             display: block;
-            font-size: 14px;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: var(--text-main);
+            color: var(--text-dark);
             margin-bottom: 8px;
         }
 
-        .input-group {
+        .input-wrapper {
             position: relative;
         }
 
@@ -188,182 +210,152 @@
             transition: color 0.2s;
         }
 
-        .form-control {
+        .form-input {
             width: 100%;
-            height: 50px;
+            height: 52px;
+            padding: 0 16px 0 48px;
+            border: 2px solid var(--border);
             border-radius: 14px;
-            border: 1px solid var(--border);
-            background: white;
-            padding: 0 16px 0 48px; /* padding left for icon */
             font-family: inherit;
-            font-size: 15px;
-            color: var(--text-main);
-            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            background: white;
+            transition: all 0.2s;
         }
 
-        .form-control:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px var(--primary-soft);
         }
 
-        .form-control:focus + .input-icon {
-            color: var(--primary);
-        }
+        .form-input:focus + .input-icon { color: var(--primary); }
 
-        .form-control.is-invalid {
-            border-color: var(--error);
-            background-image: none; /* remove default icon */
-        }
+        .form-input.is-invalid { border-color: var(--error); }
 
-        .form-control.is-invalid:focus {
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
-        }
-
-        .invalid-feedback {
-            color: var(--error);
-            font-size: 13px;
-            margin-top: 6px;
-            display: block;
-        }
-
-        /* Password Toggle */
-        .btn-toggle-password {
+        .password-toggle {
             position: absolute;
-            right: 12px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
+            background: none;
             border: none;
-            background: transparent;
             color: var(--text-muted);
             cursor: pointer;
             padding: 4px;
-            display: flex;
-            border-radius: 8px;
-        }
-        
-        .btn-toggle-password:hover {
-            background: #F1F5F9;
-            color: var(--text-main);
+            border-radius: 6px;
+            transition: all 0.2s;
         }
 
-        /* Checkbox */
+        .password-toggle:hover { background: #f1f5f9; color: var(--text-dark); }
+
+        /* Remember Row */
         .remember-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin: 8px 0 24px;
-            font-size: 14px;
+            margin: 24px 0;
         }
 
-        .custom-checkbox {
+        .checkbox-wrapper {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
-            color: var(--text-muted);
-            user-select: none;
         }
 
-        .custom-checkbox input {
-            display: none;
-        }
+        .checkbox-wrapper input { display: none; }
 
-        .checkmark {
+        .checkbox-custom {
             width: 20px;
             height: 20px;
             border: 2px solid var(--border);
             border-radius: 6px;
-            background: white;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s;
         }
 
-        .custom-checkbox input:checked + .checkmark {
+        .checkbox-custom i { font-size: 14px; color: white; opacity: 0; transform: scale(0); transition: all 0.2s; }
+
+        .checkbox-wrapper input:checked + .checkbox-custom {
             background: var(--primary);
             border-color: var(--primary);
         }
 
-        .checkmark::after {
-            content: '✓';
-            color: white;
-            font-size: 12px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.2s;
-            font-weight: bold;
-        }
+        .checkbox-wrapper input:checked + .checkbox-custom i { opacity: 1; transform: scale(1); }
 
-        .custom-checkbox input:checked + .checkmark::after {
-            transform: translate(-50%, -50%) scale(1);
-        }
+        .checkbox-label { font-size: 0.9rem; color: var(--text-muted); }
 
-        /* Button */
-        .primary-btn {
+        /* Submit Button */
+        .btn-submit {
             width: 100%;
-            height: 52px;
-            border: none;
-            border-radius: 14px;
-            background: var(--primary);
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px var(--primary-shadow);
+            height: 54px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 24px var(--primary-glow);
+            transition: all 0.3s;
         }
 
-        .primary-btn:hover {
-            background: var(--primary-dark);
+        .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px var(--primary-shadow);
+            box-shadow: 0 12px 32px var(--primary-glow);
         }
 
-        .primary-btn:active {
-            transform: translateY(0);
-        }
+        .btn-submit:active { transform: translateY(0); }
+
+        .btn-submit i { font-size: 20px; }
 
         /* Footer */
-        .footer {
+        .login-footer {
             text-align: center;
-            margin-top: 24px;
-            font-size: 13px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
             color: var(--text-muted);
         }
 
+        .login-footer span { color: var(--primary); font-weight: 600; }
+
         @media (max-width: 480px) {
-            .auth-card {
-                padding: 32px 24px;
-            }
-            .blob { display: none; } /* Improve performance on cheap mobile */
+            .login-card { padding: 36px 24px; }
+            .floating-shapes { display: none; }
         }
     </style>
 </head>
 
 <body>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
+    <div class="bg-gradient"></div>
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
 
-    <div class="auth-wrapper">
-        <div class="auth-card">
-            
-            <div class="header">
-                <div class="logo-container">
-                    <span class="material-symbols-rounded" style="font-size: 32px;">local_pharmacy</span>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-icon">
+                    <i class="material-symbols-rounded">local_pharmacy</i>
                 </div>
                 <h1>Selamat Datang</h1>
                 <p>Masuk ke dashboard Sidowaras POS</p>
             </div>
 
             @if ($errors->any())
-                <div class="alert">
-                    <span class="material-symbols-rounded" style="font-size: 20px;">error</span>
+                <div class="alert-error">
+                    <i class="material-symbols-rounded">error</i>
                     <span>Email atau password tidak valid.</span>
                 </div>
             @endif
@@ -373,53 +365,48 @@
 
                 <div class="form-group">
                     <label class="form-label" for="email">Email</label>
-                    <div class="input-group">
-                        <span class="material-symbols-rounded input-icon">mail</span>
+                    <div class="input-wrapper">
                         <input id="email" type="email" name="email" 
-                               class="form-control @error('email') is-invalid @enderror" 
+                               class="form-input @error('email') is-invalid @enderror" 
                                value="{{ old('email') }}" 
                                placeholder="nama@email.com" 
                                required autofocus>
+                        <i class="material-symbols-rounded input-icon">mail</i>
                     </div>
-                    @error('email')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
-                    <div class="input-group">
-                        <span class="material-symbols-rounded input-icon">lock</span>
+                    <div class="input-wrapper">
                         <input id="password" type="password" name="password" 
-                               class="form-control @error('password') is-invalid @enderror" 
+                               class="form-input @error('password') is-invalid @enderror" 
                                placeholder="••••••••"
                                required autocomplete="current-password">
-                        
-                        <button type="button" class="btn-toggle-password" id="togglePassword" title="Tampilkan password">
-                            <span class="material-symbols-rounded" id="eyeIcon">visibility</span>
+                        <i class="material-symbols-rounded input-icon">lock</i>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="material-symbols-rounded" id="eyeIcon">visibility</i>
                         </button>
                     </div>
-                    @error('password')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
                 </div>
 
                 <div class="remember-row">
-                    <label class="custom-checkbox" for="remember">
+                    <label class="checkbox-wrapper" for="remember">
                         <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                        <span class="checkmark"></span>
-                        <span>Ingat saya</span>
+                        <span class="checkbox-custom">
+                            <i class="material-symbols-rounded">check</i>
+                        </span>
+                        <span class="checkbox-label">Ingat saya</span>
                     </label>
-                    </div>
+                </div>
 
-                <button type="submit" class="primary-btn">
+                <button type="submit" class="btn-submit">
                     Masuk Sekarang
-                    <span class="material-symbols-rounded">arrow_forward</span>
+                    <i class="material-symbols-rounded">arrow_forward</i>
                 </button>
             </form>
 
-            <div class="footer">
-                © {{ now()->year }} Apotek Sidowaras. 
+            <div class="login-footer">
+                © {{ now()->year }} <span>Apotek Sidowaras</span>. All rights reserved.
             </div>
         </div>
     </div>
@@ -433,11 +420,8 @@
             if (toggleBtn && passwordInput && eyeIcon) {
                 toggleBtn.addEventListener('click', function() {
                     const isPassword = passwordInput.getAttribute('type') === 'password';
-                    
                     passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
                     eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
-                    
-                    // UX: Keep focus on input
                     passwordInput.focus();
                 });
             }
