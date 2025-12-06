@@ -1,139 +1,122 @@
 @php
     use Illuminate\Support\Facades\Route;
-
     $notifications = $notifications ?? collect();
     $unreadNotificationCount = $unreadNotificationCount ?? $notifications->whereNull('read_at')->count();
-
-    // 1) Ambil dari section 'page_title' kalau ada
     $rawSectionTitle = trim($__env->yieldContent('page_title'));
-
-    // 2) Mapping route → judul fallback
     $routeName = Route::currentRouteName();
     $routeTitleMap = [
-        'karyawan.dashboard'    => 'Dashboard',
-        'karyawan.cart.index'   => 'Cart / Scanner',
-        'stok.index'            => 'Daftar Stok',
-        'pembelian.index'       => 'Pembelian Obat',
-        'stokopname.index'      => 'Stock Opname',
-        // tambahkan route lain di sini kalau perlu
+        'karyawan.dashboard' => 'Dashboard',
+        'karyawan.cart.index' => 'Cart & Scanner',
+        'karyawan.transaksi.index' => 'Riwayat Transaksi',
+        'stok.index' => 'Daftar Stok',
+        'pembelian.index' => 'Pembelian Obat',
+        'stokopname.index' => 'Stock Opname',
     ];
-
-    // 3) Susun prioritas:
-    //    section('page_title') > $title > route fallback > 'Dashboard'
-    $pageTitle = $rawSectionTitle
-        ?: ($title ?? ($routeTitleMap[$routeName] ?? 'Dashboard'));
+    $pageTitle = $rawSectionTitle ?: ($title ?? ($routeTitleMap[$routeName] ?? 'Dashboard'));
 @endphp
 
-<!-- Navbar -->
-<nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
-    <div class="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm">
-                    <a class="opacity-5 text-dark" href="javascript:;">Pages</a>
-                </li>
-                <li class="breadcrumb-item text-sm text-dark active" aria-current="page">
-                    {{ $pageTitle }}
-                </li>
-            </ol>
-            <h6 class="font-weight-bolder mb-0">{{ $pageTitle }}</h6>
-        </nav>
-        
-        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                <!-- Spacer -->
+<!-- Modern Navbar -->
+<nav class="navbar-modern" id="navbarBlur">
+    <div class="navbar-inner">
+        <!-- Left: Breadcrumb & Title -->
+        <div class="navbar-left">
+            <div class="page-info">
+                <div class="breadcrumb-modern">
+                    <span class="breadcrumb-item"><i class="material-symbols-rounded">home</i> Pages</span>
+                    <span class="breadcrumb-sep"><i class="material-symbols-rounded">chevron_right</i></span>
+                    <span class="breadcrumb-current">{{ $pageTitle }}</span>
+                </div>
+                <h4 class="page-title">{{ $pageTitle }}</h4>
             </div>
-            <ul class="navbar-nav justify-content-end">
-                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-                    <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav" onclick="toggleSidebar()">
-                        <div class="sidenav-toggler-inner">
-                            <i class="sidenav-toggler-line"></i>
-                            <i class="sidenav-toggler-line"></i>
-                            <i class="sidenav-toggler-line"></i>
-                        </div>
-                    </a>
-                </li>
-                
-                <!-- Notifications -->
-                <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                    <a href="javascript:;" class="nav-link text-body p-0 position-relative"
-                       id="dropdownMenuButton"
-                       data-bs-toggle="modal"
-                       data-bs-target="#notificationsModal"
-                       aria-expanded="false">
-                        <i class="material-symbols-rounded cursor-pointer fixed-plugin-button-nav">notifications</i>
-                        @if($unreadNotificationCount > 0)
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white small py-0 px-1" style="font-size: 0.6rem; transform: translate(-50%, -50%) !important;">
-                                {{ $unreadNotificationCount }}
-                            </span>
-                        @endif
-                    </a>
-                </li>
+        </div>
 
-                <!-- Profile Dropdown -->
-                <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                    <a href="javascript:;" class="nav-link text-body p-0 font-weight-bold px-0 d-flex align-items-center gap-2"
-                       id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div class="avatar avatar-sm rounded-circle bg-gradient-dark shadow-sm d-flex align-items-center justify-content-center text-white">
-                            <span class="text-xs font-weight-bold">{{ substr(Auth::user()->nama ?? 'K', 0, 1) }}</span>
-                        </div>
-                        <span class="d-sm-inline d-none text-sm font-weight-bold">{{ Auth::user()->nama ?? 'Karyawan' }}</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4 shadow-lg border-0" aria-labelledby="profileDropdown" style="border-radius: 1rem;">
-                        <li class="mb-2">
-                            <div class="dropdown-item border-radius-md bg-gray-100">
-                                <div class="d-flex py-1">
-                                    <div class="my-auto">
-                                        <div class="avatar avatar-sm bg-gradient-dark me-3 d-flex align-items-center justify-content-center text-white shadow-sm">
-                                            <i class="material-symbols-rounded text-sm">person</i>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="text-sm font-weight-normal mb-1">
-                                            <span class="font-weight-bold">{{ Auth::user()->nama ?? 'Karyawan' }}</span>
-                                        </h6>
-                                        <p class="text-xs text-secondary mb-0">
-                                            {{ Auth::user()->email ?? 'karyawan@sidowaras.com' }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li><hr class="dropdown-divider my-2"></li>
-                        <li>
-                            <a class="dropdown-item border-radius-md py-2" href="javascript:;">
-                                <div class="d-flex align-items-center">
-                                    <i class="material-symbols-rounded me-2 text-sm opacity-6">person</i>
-                                    <span class="text-sm">Profil Saya</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item border-radius-md py-2" href="javascript:;">
-                                <div class="d-flex align-items-center">
-                                    <i class="material-symbols-rounded me-2 text-sm opacity-6">settings</i>
-                                    <span class="text-sm">Pengaturan</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider my-2"></li>
-                        <li>
-                            <a class="dropdown-item border-radius-md py-2 text-danger" href="javascript:;"
-                               onclick="event.preventDefault(); document.getElementById('logout-form-navbar').submit();">
-                                <div class="d-flex align-items-center">
-                                    <i class="material-symbols-rounded me-2 text-sm">logout</i>
-                                    <span class="text-sm font-weight-bold">Logout</span>
-                                </div>
-                            </a>
-                            <form id="logout-form-navbar" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
-                </li>
+        <!-- Right: Actions -->
+        <div class="navbar-right">
+            <!-- Mobile Toggle -->
+            <button class="nav-btn mobile-toggle d-xl-none" onclick="toggleSidebar()">
+                <i class="material-symbols-rounded">menu</i>
+            </button>
 
-            </ul>
+            <!-- Notifications -->
+            <button class="nav-btn notification-btn" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                <i class="material-symbols-rounded">notifications</i>
+                @if($unreadNotificationCount > 0)
+                    <span class="notification-badge">{{ $unreadNotificationCount > 9 ? '9+' : $unreadNotificationCount }}</span>
+                @endif
+            </button>
+
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown">
+                <button class="profile-btn" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="profile-avatar">
+                        <span>{{ substr(Auth::user()->nama_lengkap ?? 'K', 0, 1) }}</span>
+                    </div>
+                    <div class="profile-info d-none d-md-block">
+                        <span class="profile-name">{{ Auth::user()->nama_lengkap ?? 'Karyawan' }}</span>
+                        <span class="profile-role">{{ Auth::user()->role->nama_role ?? 'Karyawan / Staff' }}</span>
+                    </div>
+                    <i class="material-symbols-rounded dropdown-arrow d-none d-md-block">expand_more</i>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end profile-menu" aria-labelledby="profileDropdown">
+                    <li class="menu-header">
+                        <div class="header-avatar">
+                            <span>{{ substr(Auth::user()->nama_lengkap ?? 'K', 0, 1) }}</span>
+                        </div>
+                        <div class="header-info">
+                            <span class="header-name">{{ Auth::user()->nama_lengkap ?? 'Karyawan' }}</span>
+                            <span class="header-email">{{ Auth::user()->email ?? 'karyawan@sidowaras.com' }}</span>
+                        </div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="menu-item" href="#"><i class="material-symbols-rounded">person</i> Profil Saya</a></li>
+                    <li><a class="menu-item" href="#"><i class="material-symbols-rounded">settings</i> Pengaturan</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="menu-item logout" href="javascript:;" onclick="event.preventDefault(); document.getElementById('logout-form-navbar').submit();">
+                            <i class="material-symbols-rounded">logout</i> Logout
+                        </a>
+                        <form id="logout-form-navbar" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
-<!-- End Navbar -->
+
+<style>
+.navbar-modern { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; padding: 0.75rem 1.5rem; position: sticky; top: 0; z-index: 100; }
+.navbar-inner { display: flex; align-items: center; justify-content: space-between; }
+.navbar-left { display: flex; align-items: center; gap: 1rem; }
+.breadcrumb-modern { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #64748b; margin-bottom: 2px; }
+.breadcrumb-modern i { font-size: 14px; }
+.breadcrumb-current { color: #1e293b; font-weight: 500; }
+.page-title { font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0; }
+.navbar-right { display: flex; align-items: center; gap: 12px; }
+.nav-btn { width: 40px; height: 40px; border-radius: 10px; border: none; background: #f1f5f9; color: #475569; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; position: relative; }
+.nav-btn:hover { background: #e2e8f0; color: #1e293b; }
+.nav-btn i { font-size: 22px; }
+.notification-badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-size: 0.65rem; font-weight: 700; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid white; box-shadow: 0 2px 4px rgba(239,68,68,0.4); }
+.profile-dropdown { position: relative; }
+.profile-btn { display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+.profile-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.profile-avatar { width: 34px; height: 34px; background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem; }
+.profile-info { display: flex; flex-direction: column; text-align: left; }
+.profile-name { font-size: 0.8rem; font-weight: 600; color: #1e293b; line-height: 1.2; }
+.profile-role { font-size: 0.7rem; color: #64748b; }
+.dropdown-arrow { font-size: 18px; color: #64748b; transition: transform 0.2s; }
+.profile-btn[aria-expanded="true"] .dropdown-arrow { transform: rotate(180deg); }
+.profile-menu { min-width: 240px; padding: 0.75rem; border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); margin-top: 8px; }
+.menu-header { display: flex; align-items: center; gap: 12px; padding: 0.75rem; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 12px; margin-bottom: 8px; }
+.header-avatar { width: 44px; height: 44px; background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+.header-info { display: flex; flex-direction: column; }
+.header-name { font-size: 0.85rem; font-weight: 600; color: #1e293b; }
+.header-email { font-size: 0.75rem; color: #64748b; }
+.menu-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-size: 0.85rem; color: #475569; text-decoration: none; transition: all 0.2s; }
+.menu-item i { font-size: 20px; color: #64748b; }
+.menu-item:hover { background: #f1f5f9; color: #1e293b; }
+.menu-item.logout { color: #ef4444; }
+.menu-item.logout:hover { background: rgba(239,68,68,0.1); }
+.menu-item.logout i { color: #ef4444; }
+@media (max-width: 768px) { .navbar-modern { padding: 0.5rem 1rem; } .page-title { font-size: 1rem; } .breadcrumb-modern { display: none; } }
+</style>

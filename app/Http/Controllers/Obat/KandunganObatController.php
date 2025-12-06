@@ -17,8 +17,16 @@ class KandunganObatController extends Controller
 
     public function index(Request $request)
     {
+        $query = KandunganObat::query();
+
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('nama_kandungan', 'like', "%{$search}%")
+                  ->orWhere('dosis_kandungan', 'like', "%{$search}%");
+        }
+
         $perPage = $request->input('per_page', 10);
-        $data = KandunganObat::latest()->paginate($perPage)->withQueryString();
+        $data = $query->latest()->paginate($perPage)->withQueryString();
         return view('admin.kandungan.index', compact('data'));
     }
 

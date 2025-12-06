@@ -17,8 +17,15 @@ class SatuanObatController extends Controller
 
     public function index(Request $request)
     {
+        $query = SatuanObat::query();
+
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('nama_satuan', 'like', "%{$search}%");
+        }
+
         $perPage = $request->input('per_page', 10);
-        $satuan = SatuanObat::latest()->paginate($perPage)->withQueryString();
+        $satuan = $query->latest()->paginate($perPage)->withQueryString();
         return view('admin.satuan.index', compact('satuan'));
     }
 

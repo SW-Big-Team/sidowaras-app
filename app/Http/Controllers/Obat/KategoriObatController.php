@@ -17,8 +17,15 @@ class KategoriObatController extends Controller
 
     public function index(Request $request)
     {
+        $query = KategoriObat::query();
+
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('nama_kategori', 'like', "%{$search}%");
+        }
+
         $perPage = $request->input('per_page', 10);
-        $kategori = KategoriObat::latest()->paginate($perPage)->withQueryString();
+        $kategori = $query->latest()->paginate($perPage)->withQueryString();
         return view('admin.kategori.index', compact('kategori'));
     }
 

@@ -23,78 +23,125 @@
   <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.2.0') }}" rel="stylesheet" />
 
   <style>
-    :root {
-      --sw-primary: #3b82f6;
-      --sw-primary-dark: #2563eb;
-      --sw-primary-soft: #eff6ff;
-      --sw-text: #1e293b;
-      --sw-surface: #ffffff;
-      --sw-surface-alt: #f8fafc;
-      --sw-border: #e2e8f0;
-      --sw-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    }
-
+    /* Custom Professional Styles */
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--sw-surface-alt);
-      color: var(--sw-text);
-      overflow-x: hidden; /* Prevent horizontal scroll */
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
     }
-
-    /* --- SIDEBAR LOGIC --- */
+    
+    /* Sidebar Toggle Styles */
     .sidenav {
-      z-index: 3000 !important; /* High, but below the toggle button */
-      transition: transform 0.3s ease-in-out;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 1050;
+      transition: transform 0.3s ease;
     }
-
-    /* Mobile: Hidden by default (Off-screen left) */
-    @media (max-width: 1199px) {
-        body:not(.g-sidenav-show) .sidenav {
-            transform: translateX(-120%) !important;
-        }
-        body.g-sidenav-show .sidenav {
-            transform: translateX(0) !important;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        }
-        
-        /* Dark Backdrop for Mobile */
-        body.g-sidenav-show::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2999; /* Behind sidebar */
-            backdrop-filter: blur(2px);
-        }
-    }
-
-    /* Desktop: Standard Behavior */
+    
+    /* Desktop Behavior */
     @media (min-width: 1200px) {
-      body.g-sidenav-show .main-content {
-        margin-left: 17.125rem;
+      .g-sidenav-show .sidenav {
+        transform: translateX(0);
       }
-      body.g-sidenav-hidden .main-content {
+      
+      .g-sidenav-hidden .sidenav {
+        transform: translateX(-100%);
+      }
+      
+      .g-sidenav-hidden .main-content {
         margin-left: 0 !important;
       }
-      body.g-sidenav-hidden .sidenav {
-        transform: translateX(-120%);
+      
+      .g-sidenav-show .main-content {
+        margin-left: 17.125rem;
       }
     }
-
-    /* Navbar Styling */
-    .navbar-main {
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 1030 !important;
-        background: rgba(255, 255, 255, 0.85) !important;
-        backdrop-filter: blur(12px) !important;
+    
+    /* Mobile/Tablet Behavior */
+    @media (max-width: 1199px) {
+      .sidenav {
+        transform: translateX(-100%);
+      }
+      
+      .g-sidenav-show .sidenav {
+        transform: translateX(0) !important;
+      }
+      
+      .g-sidenav-hidden .sidenav {
+        transform: translateX(-100%) !important;
+      }
+      
+      .main-content {
+        margin-left: 0 !important;
+      }
+      
+      /* Backdrop overlay when sidebar is open on mobile */
+      .g-sidenav-show::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1049;
+        animation: fadeIn 0.3s ease;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
     }
-
-    /* Utility */
-    .text-primary { color: var(--sw-primary) !important; }
-    .bg-primary { background-color: var(--sw-primary) !important; }
-    a, button, .card, .nav-link { transition: all 0.2s ease-in-out; }
+    
+    .main-content {
+      background: transparent;
+      transition: margin-left 0.3s ease;
+      position: relative;
+    }
+    
+    .card {
+      border: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(6, 182, 212, 0.3);
+    }
+    
+    .page-header {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      color: white;
+    }
+    
+    /* Sidebar Hover Effects */
+    .sidenav .nav-link {
+      transition: all 0.2s ease;
+      border-radius: 0.5rem;
+      margin: 0 0.5rem;
+    }
+    
+    .sidenav .nav-link:not(.active):hover {
+      background-color: #f8f9fa;
+      transform: translateX(5px);
+    }
   </style>
 
   @stack('styles')
@@ -126,116 +173,45 @@
   @stack('scripts')
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+    
+    // Notification functions
+    function markAsRead(notifId) {
+      const link = event.currentTarget.href;
+      event.preventDefault();
       
-      // 1. CONFIGURATION
-      const body = document.body;
-      const className = 'g-sidenav-show';
-      const mobileBreakPoint = 1200;
-
-      // 2. HELPER: UPDATE ICON
-      function updateToggleIcon(isShown) {
-         const icon = document.querySelector('#sidebarToggleBtn i');
-         if(icon) {
-             icon.textContent = isShown ? 'close' : 'menu';
-             icon.style.transform = isShown ? 'rotate(90deg)' : 'rotate(0deg)';
-         }
-      }
-
-      // 3. INITIAL STATE (On Load)
-      function initSidebarState() {
-        const savedState = localStorage.getItem('sidebarState');
-        const isMobile = window.innerWidth < mobileBreakPoint;
-
-        if (isMobile) {
-          // Mobile default: HIDDEN unless explicitly shown
-          // However, usually on mobile load we want it hidden regardless of last state to save space
-          body.classList.remove(className);
-          updateToggleIcon(false);
-        } else {
-          // Desktop: Respect saved state
-          if (savedState === 'hidden') {
-            body.classList.remove(className);
-          } else {
-            body.classList.add(className);
-          }
+      fetch(`/notifications/${notifId}/read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         }
-      }
-
-      // 4. GLOBAL TOGGLE FUNCTION
-      window.toggleSidebar = function () {
-        const isShown = body.classList.contains(className);
-        
-        if (isShown) {
-          body.classList.remove(className);
-          localStorage.setItem('sidebarState', 'hidden');
-          updateToggleIcon(false);
+      }).then(() => {
+        if (link && link !== '#' && !link.includes('#')) {
+          window.location.href = link;
         } else {
-          body.classList.add(className);
-          localStorage.setItem('sidebarState', 'show');
-          updateToggleIcon(true);
-        }
-      };
-
-      // 5. CLICK OUTSIDE TO CLOSE (Mobile Only)
-      document.addEventListener('click', function (event) {
-        const isMobile = window.innerWidth < mobileBreakPoint;
-        if (!isMobile) return; // Do nothing on desktop
-
-        // Only if sidebar is currently open
-        if (body.classList.contains(className)) {
-            const sidebar = document.querySelector('.sidenav');
-            const toggleBtn = document.getElementById('sidebarToggleBtn');
-
-            // Check if the click was OUTSIDE sidebar AND OUTSIDE toggle button
-            const clickedInsideSidebar = sidebar && sidebar.contains(event.target);
-            const clickedToggle = toggleBtn && toggleBtn.contains(event.target);
-
-            if (!clickedInsideSidebar && !clickedToggle) {
-                window.toggleSidebar(); // Reuse the toggle function to close it
-            }
+          location.reload();
         }
       });
+      return false;
+    }
 
-      // 6. INIT
-      initSidebarState();
-
-      // --- OTHER UTILITIES ---
-
-      // Resize Handler
-      let resizeTimer;
-      window.addEventListener('resize', function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(initSidebarState, 200);
-      });
-
-      // Notification Logic
-      window.markAsRead = function (notifId) {
-        const link = event.currentTarget.href;
-        event.preventDefault();
-        fetch(`/notifications/${notifId}/read`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-          }
-        }).then(() => {
-           if (link && link !== '#' && !link.includes('#')) window.location.href = link;
-           else location.reload();
-        });
-      };
-
-      // Session Check
-      setInterval(() => {
-        fetch("/session/check")
-          .then(res => res.json())
-          .then(data => {
-            if (!data.authenticated) {
-              window.location.href = "/login";
-            }
-          }).catch(() => { });
-      }, 30000); // Changed to 30s to reduce server load
-    });
+    // Session Check
+    setInterval(() => {
+    fetch("/session/check")
+        .then(res => res.json())
+        .then(data => {
+        if (!data.authenticated) {
+            window.location.href = "/login";
+        }
+        }).catch(() => { });
+    }, 30000);
   </script>
 </body>
 </html>

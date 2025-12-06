@@ -174,11 +174,14 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-2">
                     <span class="text-xs text-secondary">Tampilkan</span>
-                    <select class="form-select form-select-sm" style="width: 70px;" onchange="window.location.href='{{ route('admin.kandungan.index') }}?per_page='+this.value+'&search={{ request('search') }}'">
-                        @foreach([10, 25, 50, 100] as $size)
-                            <option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>{{ $size }}</option>
-                        @endforeach
-                    </select>
+                    <form method="GET" action="{{ route('admin.kandungan.index') }}" class="d-inline">
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                        <select name="per_page" class="form-select form-select-sm" style="width: 70px;" onchange="this.form.submit()">
+                            @foreach([10, 25, 50, 100] as $size)
+                                <option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>{{ $size }}</option>
+                            @endforeach
+                        </select>
+                    </form>
                     <span class="text-xs text-secondary">data</span>
                 </div>
                 <p class="text-xs text-secondary mb-0">

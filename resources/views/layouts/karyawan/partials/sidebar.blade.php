@@ -1,32 +1,31 @@
-{{--
-  Karyawan Sidebar Component - ENHANCED
-  Description: Premium modern navigation sidebar for karyawan panel
-  Features: Glassmorphism, user profile, animated hover states, section headers
---}}
-
 @php
-    $navGroups = [
+    // Menu configuration - centralized for easy maintenance
+    $menuItems = [
         [
-            'title' => 'Utama',
-            'items' => [
-                ['icon' => 'dashboard', 'label' => 'Dashboard', 'route' => 'karyawan.dashboard'],
-            ],
+            'type' => 'single',
+            'route' => 'karyawan.dashboard',
+            'icon' => 'dashboard',
+            'label' => 'Dashboard',
         ],
         [
-            'title' => 'Operasional',
+            'type' => 'section',
+            'label' => 'Operasional',
+            'sectionIcon' => 'qr_code_scanner',
             'items' => [
-                ['icon' => 'qr_code_scanner', 'label' => 'Cart / Scanner', 'route' => 'karyawan.cart.index'],
-                ['icon' => 'receipt_long', 'label' => 'Riwayat Transaksi', 'route' => 'karyawan.transaksi.index', 'active' => 'karyawan.transaksi.*'],
-            ],
+                ['route' => 'karyawan.cart.index', 'routeIndex' => 'karyawan.cart.index', 'icon' => 'qr_code_scanner', 'label' => 'Cart / Scanner'],
+                ['route' => 'karyawan.transaksi.index', 'routeIndex' => 'karyawan.transaksi.index', 'icon' => 'receipt_long', 'label' => 'Riwayat Transaksi'],
+            ]
         ],
-        [w
-            'title' => 'Manajemen Stok',
+        [
+            'type' => 'section',
+            'label' => 'Manajemen Stok',
+            'sectionIcon' => 'inventory_2',
             'items' => [
-                ['icon' => 'inventory_2', 'label' => 'Daftar Stok', 'route' => 'stok.index'],
-                ['icon' => 'shopping_cart', 'label' => 'Pembelian Obat', 'route' => 'pembelian.index', 'active' => 'pembelian.*'],
-                ['icon' => 'fact_check', 'label' => 'Stock Opname', 'route' => 'stokopname.index', 'active' => 'stokopname.*'],
-            ],
-        ]
+                ['route' => 'stok.index', 'routeIndex' => 'stok.index', 'icon' => 'inventory_2', 'label' => 'Daftar Stok'],
+                ['route' => 'pembelian.*', 'routeIndex' => 'pembelian.index', 'icon' => 'shopping_cart', 'label' => 'Pembelian Obat'],
+                ['route' => 'stokopname.*', 'routeIndex' => 'stokopname.index', 'icon' => 'fact_check', 'label' => 'Stock Opname'],
+            ]
+        ],
     ];
 @endphp
 
@@ -49,11 +48,12 @@
         id="iconSidenav"
         role="button"
         tabindex="0"
-        onclick="toggleSidebar()"
+        onclick="toggleSidenav()"
     >close</i>
     
-    {{-- Sidebar Header with Brand --}}
+    {{-- Sidebar Header with User Profile --}}
     <div class="sidenav-header" style="padding: 1.5rem 1.25rem 1rem;">
+        {{-- Brand Logo --}}
         <a class="navbar-brand m-0 p-0" href="{{ route('karyawan.dashboard') }}" style="text-decoration: none;">
             <div class="d-flex align-items-center">
                 <div style="
@@ -110,7 +110,7 @@
                     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
                 ">
                     <span style="color: white; font-weight: 600; font-size: 0.9rem;">
-                        {{ strtoupper(substr(Auth::user()->name ?? 'K', 0, 1)) }}
+                        {{ strtoupper(substr(Auth::user()->nama_lengkap ?? 'K', 0, 1)) }}
                     </span>
                 </div>
                 <div style="flex: 1; min-width: 0;">
@@ -121,19 +121,19 @@
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
-                    ">{{ Auth::user()->name ?? 'Karyawan' }}</div>
+                    ">{{ Auth::user()->nama_lengkap ?? 'Karyawan' }}</div>
                     <div style="
                         font-size: 0.7rem;
                         color: #3b82f6;
                         font-weight: 500;
-                    ">{{ Auth::user()->role->nama_role ?? 'Karyawan' }}</div>
+                    ">Karyawan Staff</div>
                 </div>
                 <div style="
                     width: 8px;
                     height: 8px;
-                    background: #22c55e;
+                    background: #3b82f6;
                     border-radius: 50%;
-                    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+                    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
                 "></div>
             </div>
         </div>
@@ -142,38 +142,19 @@
     {{-- Navigation Menu --}}
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main" style="height: calc(100vh - 260px); overflow-y: auto;">
         <ul class="navbar-nav" id="sidenav-scrollbar" role="menu" style="padding: 0 0.75rem;">
-            @foreach($navGroups as $group)
-                {{-- Section Header --}}
-                <li class="nav-item" role="presentation" style="margin-top: 1.25rem; margin-bottom: 0.5rem;">
-                    <div style="display: flex; align-items: center; padding: 0 0.5rem;">
-                        <div style="flex: 1; height: 1px; background: linear-gradient(90deg, #e2e8f0, transparent);"></div>
-                        <span style="
-                            font-size: 0.65rem;
-                            font-weight: 600;
-                            color: #94a3b8;
-                            text-transform: uppercase;
-                            letter-spacing: 0.8px;
-                            padding: 0 10px;
-                            white-space: nowrap;
-                        ">{{ $group['title'] }}</span>
-                        <div style="flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #e2e8f0);"></div>
-                    </div>
-                </li>
-                
-                {{-- Section Items --}}
-                @foreach($group['items'] as $item)
+            @foreach($menuItems as $menuItem)
+                @if($menuItem['type'] === 'single')
+                    {{-- Single Menu Item (Dashboard) --}}
                     @php
-                        $activePattern = $item['active'] ?? $item['route'];
-                        $isActive = request()->routeIs($activePattern);
-                        $isDisabled = $item['disabled'] ?? false;
+                        $isActive = request()->routeIs($menuItem['route']);
                     @endphp
-                    <li class="nav-item" role="presentation" style="margin-bottom: 2px;">
+                    <li class="nav-item" role="presentation" style="margin-bottom: 4px;">
                         <a 
-                            class="nav-link {{ $isActive ? 'active' : '' }} {{ $isDisabled ? 'opacity-6 pe-none' : '' }}" 
-                            href="{{ $isDisabled ? 'javascript:;' : route($item['route']) }}"
+                            class="nav-link {{ $isActive ? 'active' : '' }}" 
+                            href="{{ route($menuItem['route']) }}"
                             role="menuitem"
                             style="
-                                padding: 0.65rem 1rem;
+                                padding: 0.75rem 1rem;
                                 border-radius: 10px;
                                 transition: all 0.2s ease;
                                 {{ $isActive ? '
@@ -186,29 +167,93 @@
                         >
                             <div class="d-flex align-items-center">
                                 <div style="
-                                    width: 30px;
-                                    height: 30px;
+                                    width: 32px;
+                                    height: 32px;
                                     border-radius: 8px;
                                     display: flex;
                                     align-items: center;
                                     justify-content: center;
-                                    margin-right: 10px;
-                                    {{ $isActive ? 'background: rgba(255,255,255,0.2);' : 'background: #f8fafc;' }}
+                                    margin-right: 12px;
+                                    {{ $isActive ? 'background: rgba(255,255,255,0.2);' : 'background: #f1f5f9;' }}
                                 ">
-                                    <i class="material-symbols-rounded" style="font-size: 18px; {{ $isActive ? 'color: white;' : 'color: #64748b;' }}">{{ $item['icon'] }}</i>
+                                    <i class="material-symbols-rounded" style="font-size: 20px; {{ $isActive ? 'color: white;' : 'color: #64748b;' }}">{{ $menuItem['icon'] }}</i>
                                 </div>
                                 <span style="
-                                    font-size: 0.8rem;
+                                    font-size: 0.875rem;
                                     font-weight: 500;
-                                    {{ $isActive ? 'color: white;' : 'color: #475569;' }}
-                                ">{{ $item['label'] }}</span>
-                                @if(isset($item['badge']))
-                                    <span class="badge badge-sm bg-gradient-danger ms-auto">{{ $item['badge'] }}</span>
-                                @endif
+                                    {{ $isActive ? 'color: white;' : 'color: #334155;' }}
+                                ">{{ $menuItem['label'] }}</span>
                             </div>
                         </a>
                     </li>
-                @endforeach
+                @elseif($menuItem['type'] === 'section')
+                    {{-- Section Header --}}
+                    <li class="nav-item" role="presentation" style="margin-top: 1.25rem; margin-bottom: 0.5rem;">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            padding: 0 0.5rem;
+                        ">
+                            <div style="flex: 1; height: 1px; background: linear-gradient(90deg, #e2e8f0, transparent);"></div>
+                            <span style="
+                                font-size: 0.65rem;
+                                font-weight: 600;
+                                color: #94a3b8;
+                                text-transform: uppercase;
+                                letter-spacing: 0.8px;
+                                padding: 0 10px;
+                                white-space: nowrap;
+                            ">{{ $menuItem['label'] }}</span>
+                            <div style="flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #e2e8f0);"></div>
+                        </div>
+                    </li>
+                    
+                    {{-- Section Items --}}
+                    @foreach($menuItem['items'] as $item)
+                        @php
+                            $targetRoute = $item['routeIndex'] ?? $item['route'];
+                            $isActive = request()->routeIs($item['route']);
+                        @endphp
+                        <li class="nav-item" role="presentation" style="margin-bottom: 2px;">
+                            <a 
+                                class="nav-link {{ $isActive ? 'active' : '' }}" 
+                                href="{{ route($targetRoute) }}"
+                                role="menuitem"
+                                style="
+                                    padding: 0.65rem 1rem;
+                                    border-radius: 10px;
+                                    transition: all 0.2s ease;
+                                    {{ $isActive ? '
+                                        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                                        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+                                    ' : '' }}
+                                "
+                                onmouseover="if(!this.classList.contains('active')) { this.style.background='#f1f5f9'; this.style.transform='translateX(4px)'; }"
+                                onmouseout="if(!this.classList.contains('active')) { this.style.background='transparent'; this.style.transform='translateX(0)'; }"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <div style="
+                                        width: 30px;
+                                        height: 30px;
+                                        border-radius: 8px;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        margin-right: 10px;
+                                        {{ $isActive ? 'background: rgba(255,255,255,0.2);' : 'background: #f8fafc;' }}
+                                    ">
+                                        <i class="material-symbols-rounded" style="font-size: 18px; {{ $isActive ? 'color: white;' : 'color: #64748b;' }}">{{ $item['icon'] }}</i>
+                                    </div>
+                                    <span style="
+                                        font-size: 0.8rem;
+                                        font-weight: 500;
+                                        {{ $isActive ? 'color: white;' : 'color: #475569;' }}
+                                    ">{{ $item['label'] }}</span>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
+                @endif
             @endforeach
         </ul>
     </div>
@@ -264,30 +309,8 @@
     background: #94a3b8;
 }
 
-/* Mobile Sidebar Logic */
-@media (max-width: 1199px) {
-    #sidenav-main {
-        position: fixed !important;
-        left: 0 !important;
-        margin-left: 0 !important; 
-        transform: translateX(-110%);
-        height: 100vh;
-        box-shadow: none;
-        transition: transform 0.3s ease-in-out;
-        z-index: 1050;
-    }
-    #sidenav-main.mobile-visible {
-        transform: translateX(0) !important;
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    }
-    body.sidebar-open::before {
-        content: '';
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5);
-        z-index: 1040;
-        backdrop-filter: blur(2px);
-    }
+/* Nav Link Transitions */
+.sidenav .nav-link {
+    transition: all 0.2s ease !important;
 }
 </style>
