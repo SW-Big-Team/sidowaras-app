@@ -54,7 +54,7 @@ class PembelianController extends Controller
     {
         $request->validate([
             'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur',
-            'supplier_id' => 'required|exists:suppliers,id',
+            'supplier_id' => 'required|exists:supplier,id',
             'nama_pengirim' => 'nullable|string|max:100', // Optional now
             'no_telepon_pengirim' => 'nullable|string|max:20',
             'metode_pembayaran' => 'required|in:tunai,non tunai,termin',
@@ -80,7 +80,7 @@ class PembelianController extends Controller
                 'uuid' => (string) Str::uuid(),
                 'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
                 'supplier_id' => $request->supplier_id,
-                'nama_pengirim' => $request->nama_pengirim ?? Supplier::find($request->supplier_id)->nama_supplier,
+                'nama_pengirim' => $request->nama_pengirim ?? Supplier::find($request->supplier_id)->supplier_name,
                 'no_telepon_pengirim' => $request->no_telepon_pengirim,
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,
@@ -128,7 +128,7 @@ class PembelianController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('pembelian.index')->with('success', '✅ Pembelian berhasil disimpan!');
+            return redirect()->route('pembelian.index')->with('success', 'Pembelian berhasil disimpan!');
         } catch (\Throwable $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()])->withInput();
@@ -139,7 +139,7 @@ class PembelianController extends Controller
     {
         $request->validate([
             'no_faktur' => 'nullable|string|max:100|unique:pembelian,no_faktur,' . $pembelian->id,
-            'supplier_id' => 'required|exists:suppliers,id',
+            'supplier_id' => 'required|exists:supplier,id',
             'nama_pengirim' => 'nullable|string|max:100',
             'no_telepon_pengirim' => 'nullable|string|max:20',
             'metode_pembayaran' => 'required|in:tunai,non tunai,termin',
@@ -164,7 +164,7 @@ class PembelianController extends Controller
             $pembelian->update([
                 'no_faktur' => $request->no_faktur ?: 'INV-' . strtoupper(Str::random(8)),
                 'supplier_id' => $request->supplier_id,
-                'nama_pengirim' => $request->nama_pengirim ?? Supplier::find($request->supplier_id)->nama_supplier,
+                'nama_pengirim' => $request->nama_pengirim ?? Supplier::find($request->supplier_id)->supplier_name,
                 'no_telepon_pengirim' => $request->no_telepon_pengirim,
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'tgl_pembelian' => $tglPembelian,

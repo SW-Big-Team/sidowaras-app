@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pembelian', function (Blueprint $table) {
-            $table->foreignId('supplier_id')->nullable()->after('user_id')->constrained('suppliers')->nullOnDelete();
+            $table->foreignId('supplier_id')->nullable()->after('user_id')->constrained('supplier')->nullOnDelete();
         });
     }
 
