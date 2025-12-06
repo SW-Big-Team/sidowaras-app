@@ -35,7 +35,8 @@ class TransaksiController extends Controller
             $query->where('metode_pembayaran', $request->metode);
         }
 
-        $transaksis = $query->latest()->paginate(15)->withQueryString();
+        $perPage = $request->input('per_page', 10);
+    $transaksis = $query->latest()->paginate($perPage)->withQueryString();
 
         return view('kasir.transaksi.riwayat', compact('transaksis'));
     }

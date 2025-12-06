@@ -10,15 +10,35 @@ use Illuminate\Support\Facades\Auth;
 class TransaksiController extends Controller
 {
     public function index(Request $request)
-    {
-        $perPage = $request->input('per_page', 10);
-        $transaksis = Transaksi::where('user_id', Auth::id())
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
+{
+    $query = Transaksi::where('user_id', Auth::id());
 
-        return view('karyawan.transaksi.index', compact('transaksis'));
+    // Search by transaction number
+    if ($request->filled('search')) {
+        $query->where('no_transaksi', 'like', '%' . $request->search . '%');
     }
+
+    // Filter by date range
+    if ($request->filled('start_date')) {
+        $query->whereDate('created_at', '>=', $request->start_date);
+    }
+
+    if ($request->filled('end_date')) {
+        $query->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    // Filter by payment method
+    if ($request->filled('metode')) {
+        $query->where('metode_pembayaran', $request->metode);
+    }
+
+    $perPage = $request->input('per_page', 10);
+    $transaksis = $query->latest()
+        ->paginate($perPage)
+        ->withQueryString();
+
+    return view('karyawan.transaksi.index', compact('transaksis'));
+}
 
     public function show(Transaksi $transaksi)
     {
