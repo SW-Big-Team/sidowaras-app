@@ -144,6 +144,45 @@
                                 </span>
                             </div>
                         </div>
+                        {{-- Filter & Search UI - Inline Layout --}}
+                        <div class="d-flex align-items-center gap-2">
+                            <form action="{{ route('admin.supplier.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-nowrap">
+                                {{-- Status Filter with Icon --}}
+                                <div class="input-group" style="width: auto;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
+                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">filter_list</i>
+                                    </span>
+                                    <select name="status" class="form-control form-select-sm" onchange="this.form.submit()" style="min-width: 130px; border-radius: 0 8px 8px 0;">
+                                        <option value="">Semua Status</option>
+                                        <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                        <option value="nonaktif" {{ request('status') == 'nonaktif' ? 'selected' : '' }}>Non-Aktif</option>
+                                    </select>
+                                </div>
+                                {{-- Search Input with Icon --}}
+                                <div class="input-group" style="width: 220px;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
+                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">search</i>
+                                    </span>
+                                    <input type="text" 
+                                           name="search" 
+                                           value="{{ request('search') }}" 
+                                           class="form-control ps-0" 
+                                           style="border-radius: 0 8px 8px 0; border-left: 0;"
+                                           placeholder="Cari supplier...">
+                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
+                                </div>
+                                {{-- Search Button --}}
+                                <button type="submit" class="btn bg-gradient-dark mb-0 px-3" style="border-radius: 8px;">
+                                    <i class="material-symbols-rounded" style="font-size: 18px;">search</i>
+                                </button>
+                                {{-- Clear Filter --}}
+                                @if(request('search') || request('status'))
+                                    <a href="{{ route('admin.supplier.index') }}" class="btn btn-outline-secondary mb-0 px-3" style="border-radius: 8px;" title="Hapus Filter">
+                                        <i class="material-symbols-rounded" style="font-size: 18px;">close</i>
+                                    </a>
+                                @endif
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body px-0 pb-2">
@@ -243,12 +282,31 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="px-4 py-3 border-top d-flex justify-content-between align-items-center">
-                        <div class="text-xs text-secondary">
-                            Menampilkan {{ $suppliers->firstItem() ?? 0 }} sampai {{ $suppliers->lastItem() ?? 0 }} dari {{ $suppliers->total() }} data
-                        </div>
-                        <div>
-                            {{ $suppliers->links('pagination::bootstrap-5') }}
+                    <div class="px-4 py-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            {{-- Left: Per Page Selector --}}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-xs text-secondary">Tampilkan</span>
+                                <select class="form-select form-select-sm border rounded-2 px-2 py-1" 
+                                        style="width: auto; min-width: 65px;" 
+                                        onchange="window.location.href='{{ route('admin.supplier.index') }}?per_page='+this.value+'&search={{ request('search') }}&status={{ request('status') }}'">
+                                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                </select>
+                                <span class="text-xs text-secondary">data per halaman</span>
+                            </div>
+                            {{-- Center: Info --}}
+                            <p class="text-xs text-secondary mb-0">
+                                <span class="fw-bold">{{ $suppliers->firstItem() ?? 0 }}</span> - 
+                                <span class="fw-bold">{{ $suppliers->lastItem() ?? 0 }}</span> dari 
+                                <span class="fw-bold">{{ $suppliers->total() }}</span> data
+                            </p>
+                            {{-- Right: Pagination --}}
+                            <div>
+                                {{ $suppliers->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     </div>
                 </div>

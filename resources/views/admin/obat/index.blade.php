@@ -134,21 +134,42 @@
                                 </span>
                             </div>
                         </div>
+                        {{-- Filter & Search UI - Inline Layout --}}
                         <div class="d-flex align-items-center gap-2">
-                            <form method="GET" action="{{ route('admin.obat.index') }}" class="d-flex align-items-center">
-                                <div class="input-group input-group-outline">
+                            <form method="GET" action="{{ route('admin.obat.index') }}" class="d-flex align-items-center gap-2 flex-nowrap">
+                                {{-- Kategori Filter with Icon --}}
+                                <div class="input-group" style="width: auto;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
+                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">filter_list</i>
+                                    </span>
+                                    <select name="kategori" class="form-control form-select-sm" onchange="this.form.submit()" style="min-width: 150px; border-radius: 0 8px 8px 0;">
+                                        <option value="">Semua Kategori</option>
+                                        @foreach($kategoriList as $kat)
+                                            <option value="{{ $kat->id }}" {{ request('kategori') == $kat->id ? 'selected' : '' }}>{{ $kat->nama_kategori }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                {{-- Search Input with Icon --}}
+                                <div class="input-group" style="width: 200px;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
+                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">search</i>
+                                    </span>
                                     <input type="text" 
-                                           class="form-control" 
                                            name="search" 
                                            value="{{ request('search') }}" 
+                                           class="form-control ps-0" 
+                                           style="border-radius: 0 8px 8px 0; border-left: 0;"
                                            placeholder="Cari obat...">
+                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                                 </div>
-                                <button type="submit" class="btn bg-gradient-primary mb-0 ms-2">
-                                    <i class="material-symbols-rounded">search</i>
+                                {{-- Search Button --}}
+                                <button type="submit" class="btn bg-gradient-dark mb-0 px-3" style="border-radius: 8px;">
+                                    <i class="material-symbols-rounded" style="font-size: 18px;">search</i>
                                 </button>
-                                @if(request('search'))
-                                    <a href="{{ route('admin.obat.index') }}" class="btn btn-outline-secondary mb-0 ms-2">
-                                        <i class="material-symbols-rounded">close</i>
+                                {{-- Clear Filter --}}
+                                @if(request('search') || request('kategori'))
+                                    <a href="{{ route('admin.obat.index') }}" class="btn btn-outline-secondary mb-0 px-3" style="border-radius: 8px;" title="Hapus Filter">
+                                        <i class="material-symbols-rounded" style="font-size: 18px;">close</i>
                                     </a>
                                 @endif
                             </form>
@@ -237,12 +258,31 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="px-4 py-3 border-top d-flex justify-content-between align-items-center">
-                        <div class="text-xs text-secondary">
-                            Menampilkan {{ $obats->firstItem() ?? 0 }} sampai {{ $obats->lastItem() ?? 0 }} dari {{ $obats->total() }} data
-                        </div>
-                        <div>
-                            {{ $obats->links('pagination::bootstrap-5') }}
+                    <div class="px-4 py-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            {{-- Left: Per Page Selector --}}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-xs text-secondary">Tampilkan</span>
+                                <select class="form-select form-select-sm border rounded-2 px-2 py-1" 
+                                        style="width: auto; min-width: 65px;" 
+                                        onchange="window.location.href='{{ route('admin.obat.index') }}?per_page='+this.value+'&search={{ request('search') }}&kategori={{ request('kategori') }}'">
+                                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                </select>
+                                <span class="text-xs text-secondary">data per halaman</span>
+                            </div>
+                            {{-- Center: Info --}}
+                            <p class="text-xs text-secondary mb-0">
+                                <span class="fw-bold">{{ $obats->firstItem() ?? 0 }}</span> - 
+                                <span class="fw-bold">{{ $obats->lastItem() ?? 0 }}</span> dari 
+                                <span class="fw-bold">{{ $obats->total() }}</span> data
+                            </p>
+                            {{-- Right: Pagination --}}
+                            <div>
+                                {{ $obats->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -57,8 +57,32 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer py-4">
-                    {{ $transaksis->links() }}
+                <div class="card-footer py-3">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        {{-- Left: Per Page Selector --}}
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-xs text-secondary">Tampilkan</span>
+                            <select class="form-select form-select-sm border rounded-2 px-2 py-1" 
+                                    style="width: auto; min-width: 65px;" 
+                                    onchange="window.location.href='{{ route('karyawan.transaksi.index') }}?per_page='+this.value">
+                                <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                            <span class="text-xs text-secondary">data per halaman</span>
+                        </div>
+                        {{-- Center: Info --}}
+                        <p class="text-xs text-secondary mb-0">
+                            <span class="fw-bold">{{ $transaksis->firstItem() ?? 0 }}</span> - 
+                            <span class="fw-bold">{{ $transaksis->lastItem() ?? 0 }}</span> dari 
+                            <span class="fw-bold">{{ $transaksis->total() }}</span> data
+                        </p>
+                        {{-- Right: Pagination --}}
+                        <div>
+                            {{ $transaksis->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

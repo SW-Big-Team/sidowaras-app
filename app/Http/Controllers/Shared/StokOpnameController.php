@@ -98,13 +98,31 @@ class StokOpnameController extends Controller
         return view('shared.stokopname.show', compact('opname'));
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $opnames = StockOpname::with(['creator'])
-            ->latest()
-            ->paginate(10);
+        $search = $request->input('search');
+
+        $query = StockOpname::with(['creator', 'approver']);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                // Search by creator name
+                $q->whereHas('creator', fn($rel) => $rel->where('name', 'like', "%{$search}%"));
+                // Search by approver name
+                $q->orWhereHas('approver', fn($rel) => $rel->where('name', 'like', "%{$search}%"));
+                // Search by status
+                $q->orWhere('status', 'like', "%{$search}%");
+                // Search by date (format: Y-m-d)
+                $q->orWhereDate('tanggal', 'like', "%{$search}%");
+                // Search by catatan
+                $q->orWhere('catatan', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = $request->input('per_page', 10);
+        $opnames = $query->latest()->paginate($perPage)->withQueryString();
         
-        return view('shared.stokopname.index', compact('opnames'));
+        return view('shared.stokopname.index', compact('opnames', 'search'));
     }
 
     public function pending()

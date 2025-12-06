@@ -81,10 +81,38 @@
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-1">
                                 <h6 class="mb-0 fw-bold">Data Pembelian</h6>
-                                <span class="text-xs text-secondary">
-                                    {{ $pembelian->total() }} record ditemukan
+                                <span class="badge bg-soft-primary text-primary text-xs fw-bold rounded-pill">
+                                    {{ $pembelian->total() }} data
                                 </span>
                             </div>
+                        </div>
+                        {{-- Search UI --}}
+                        <div class="d-flex align-items-center gap-2">
+                            <form action="{{ route('pembelian.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-nowrap">
+                                {{-- Search Input with Icon --}}
+                                <div class="input-group" style="width: 220px;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
+                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">search</i>
+                                    </span>
+                                    <input type="text" 
+                                           name="search" 
+                                           value="{{ request('search') }}" 
+                                           class="form-control ps-0" 
+                                           style="border-radius: 0 8px 8px 0; border-left: 0;"
+                                           placeholder="Cari pembelian...">
+                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
+                                </div>
+                                {{-- Search Button --}}
+                                <button type="submit" class="btn bg-gradient-dark mb-0 px-3" style="border-radius: 8px;">
+                                    <i class="material-symbols-rounded" style="font-size: 18px;">search</i>
+                                </button>
+                                {{-- Clear Filter --}}
+                                @if(request('search'))
+                                    <a href="{{ route('pembelian.index') }}" class="btn btn-outline-secondary mb-0 px-3" style="border-radius: 8px;" title="Hapus Filter">
+                                        <i class="material-symbols-rounded" style="font-size: 18px;">close</i>
+                                    </a>
+                                @endif
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -186,11 +214,30 @@
                     </div>
 
                     <div class="card-footer bg-white border-top py-3">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            {{-- Left: Per Page Selector --}}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-xs text-secondary">Tampilkan</span>
+                                <select class="form-select form-select-sm border rounded-2 px-2 py-1" 
+                                        style="width: auto; min-width: 65px;" 
+                                        onchange="window.location.href='{{ route('pembelian.index') }}?per_page='+this.value">
+                                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                </select>
+                                <span class="text-xs text-secondary">data per halaman</span>
+                            </div>
+                            {{-- Center: Info --}}
                             <p class="text-xs text-secondary mb-0">
-                                Menampilkan <span class="fw-bold">{{ $pembelian->firstItem() ?? 0 }}</span> - <span class="fw-bold">{{ $pembelian->lastItem() ?? 0 }}</span> dari <span class="fw-bold">{{ $pembelian->total() }}</span> data
+                                <span class="fw-bold">{{ $pembelian->firstItem() ?? 0 }}</span> - 
+                                <span class="fw-bold">{{ $pembelian->lastItem() ?? 0 }}</span> dari 
+                                <span class="fw-bold">{{ $pembelian->total() }}</span> data
                             </p>
-                            {{ $pembelian->links('pagination::bootstrap-5') }}
+                            {{-- Right: Pagination --}}
+                            <div>
+                                {{ $pembelian->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     </div>
                 </div>

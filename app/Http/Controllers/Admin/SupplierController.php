@@ -11,8 +11,30 @@ class SupplierController extends Controller
 {
     public function index(Request $request)
     {
-        $suppliers = Supplier::orderBy('supplier_name')
-            ->paginate(10)
+        $query = Supplier::query();
+
+        // Search filter
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('supplier_name', 'like', "%{$search}%")
+                  ->orWhere('supplier_phone', 'like', "%{$search}%")
+                  ->orWhere('supplier_email', 'like', "%{$search}%")
+                  ->orWhere('supplier_address', 'like', "%{$search}%");
+            });
+        }
+
+        // Status filter
+        $status = $request->input('status');
+        if ($status === 'aktif') {
+            $query->where('supplier_status', true);
+        } elseif ($status === 'nonaktif') {
+            $query->where('supplier_status', false);
+        }
+
+        $perPage = $request->input('per_page', 10);
+        $suppliers = $query->orderBy('supplier_name')
+            ->paginate($perPage)
             ->withQueryString();
 
         $editingSupplier = null;

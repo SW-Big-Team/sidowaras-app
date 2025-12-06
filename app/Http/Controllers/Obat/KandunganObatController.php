@@ -15,9 +15,10 @@ class KandunganObatController extends Controller
         $this->middleware(['auth', 'role:Admin,Karyawan,Kasir']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = KandunganObat::latest()->paginate(10);
+        $perPage = $request->input('per_page', 10);
+        $data = KandunganObat::latest()->paginate($perPage)->withQueryString();
         return view('admin.kandungan.index', compact('data'));
     }
 

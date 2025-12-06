@@ -148,15 +148,44 @@
                                 </span>
                             </div>
                         </div>
-                        {{-- Placeholder filter/search UI (bisa dihubungkan ke query nantinya) --}}
-                        <div class="d-flex gap-2">
-                            <form action="{{ route('stok.index') }}" method="GET">
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-light border-0">
+                        {{-- Filter & Search UI - Inline Layout --}}
+                        <div class="d-flex align-items-center gap-2">
+                            <form action="{{ route('stok.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-nowrap">
+                                {{-- Status Filter with Icon --}}
+                                <div class="input-group" style="width: auto;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
+                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">filter_list</i>
+                                    </span>
+                                    <select name="status" class="form-control form-select-sm" onchange="this.form.submit()" style="min-width: 140px; border-radius: 0 8px 8px 0;">
+                                        <option value="">Semua Status</option>
+                                        <option value="aman" {{ request('status') == 'aman' ? 'selected' : '' }}>Stok Aman</option>
+                                        <option value="rendah" {{ request('status') == 'rendah' ? 'selected' : '' }}>Stok Rendah</option>
+                                        <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>Exp < 30 Hari</option>
+                                    </select>
+                                </div>
+                                {{-- Search Input with Icon --}}
+                                <div class="input-group" style="width: 220px;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
                                         <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">search</i>
                                     </span>
-                                    <input type="text" name="search" value="{{ request('search') }}" class="form-control border-0 bg-light text-xs" placeholder="Cari nama / kode...">
+                                    <input type="text" 
+                                           name="search" 
+                                           value="{{ request('search') }}" 
+                                           class="form-control ps-0" 
+                                           style="border-radius: 0 8px 8px 0; border-left: 0;"
+                                           placeholder="Cari nama / kode...">
+                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                                 </div>
+                                {{-- Search Button --}}
+                                <button type="submit" class="btn bg-gradient-dark mb-0 px-3" style="border-radius: 8px;">
+                                    <i class="material-symbols-rounded" style="font-size: 18px;">search</i>
+                                </button>
+                                {{-- Clear Filter --}}
+                                @if(request('search') || request('status'))
+                                    <a href="{{ route('stok.index') }}" class="btn btn-outline-secondary mb-0 px-3" style="border-radius: 8px;" title="Hapus Filter">
+                                        <i class="material-symbols-rounded" style="font-size: 18px;">close</i>
+                                    </a>
+                                @endif
                             </form>
                         </div>
                     </div>
@@ -291,17 +320,30 @@
                     </div>
 
                     <div class="card-footer bg-white border-top py-3">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            {{-- Left: Per Page Selector --}}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-xs text-secondary">Tampilkan</span>
+                                <select class="form-select form-select-sm border rounded-2 px-2 py-1" 
+                                        style="width: auto; min-width: 65px;" 
+                                        onchange="window.location.href='{{ route('stok.index') }}?per_page='+this.value+'&search={{ request('search') }}&status={{ request('status') }}'">
+                                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                </select>
+                                <span class="text-xs text-secondary">data per halaman</span>
+                            </div>
+                            {{-- Center: Info --}}
                             <p class="text-xs text-secondary mb-0">
-                                Menampilkan
-                                <span class="fw-bold">{{ $obats->firstItem() ?? 0 }}</span>
-                                -
-                                <span class="fw-bold">{{ $obats->lastItem() ?? 0 }}</span>
-                                dari
-                                <span class="fw-bold">{{ $obats->total() }}</span>
-                                data
+                                <span class="fw-bold">{{ $obats->firstItem() ?? 0 }}</span> - 
+                                <span class="fw-bold">{{ $obats->lastItem() ?? 0 }}</span> dari 
+                                <span class="fw-bold">{{ $obats->total() }}</span> data
                             </p>
-                            {{ $obats->links('pagination::bootstrap-5') }}
+                            {{-- Right: Pagination --}}
+                            <div>
+                                {{ $obats->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     </div>
                 </div>

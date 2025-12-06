@@ -39,6 +39,8 @@ class ObatController extends Controller
     {
         $search = $request->input('search');
         $filter = $request->input('filter');
+        $kategoriFilter = $request->input('kategori');
+        $perPage = $request->input('per_page', 10);
 
         $query = Obat::with(['kategori', 'satuan'])
             ->withSum('stokBatches as total_stok', 'sisa_stok');
@@ -54,6 +56,11 @@ class ObatController extends Controller
             });
         }
 
+        // Filter by kategori
+        if ($kategoriFilter) {
+            $query->where('kategori_id', $kategoriFilter);
+        }
+
         if ($filter === 'min_stock') {
             $query->whereRaw('(select coalesce(sum(sisa_stok), 0) from stok_batch where stok_batch.obat_id = obat.id) <= obat.stok_minimum');
         } elseif ($filter === 'expired') {
@@ -63,9 +70,10 @@ class ObatController extends Controller
             });
         }
 
-        $obats = $query->latest()->paginate(10);
+        $obats = $query->latest()->paginate($perPage)->withQueryString();
+        $kategoriList = KategoriObat::orderBy('nama_kategori')->get();
 
-        return view('admin.obat.index', compact('obats', 'search'));
+        return view('admin.obat.index', compact('obats', 'search', 'kategoriList', 'kategoriFilter'));
     }
 
     // Form tambah obat

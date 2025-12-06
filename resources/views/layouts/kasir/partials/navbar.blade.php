@@ -42,11 +42,7 @@
         
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
             <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                <!-- Search or other controls could go here -->
-                <div class="input-group input-group-outline">
-                    <label class="form-label">Cari...</label>
-                    <input type="text" class="form-control">
-                </div>
+                <!-- Spacer -->
             </div>
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -136,13 +132,7 @@
                         </li>
                     </ul>
                 </li>
-                
-                <!-- Settings Toggle (Desktop) -->
-                <li class="nav-item px-3 d-flex align-items-center">
-                    <a href="javascript:;" class="nav-link text-body p-0 fixed-plugin-button-nav">
-                        <i class="material-symbols-rounded fixed-plugin-button-nav cursor-pointer">settings</i>
-                    </a>
-                </li>
+
             </ul>
         </div>
     </div>

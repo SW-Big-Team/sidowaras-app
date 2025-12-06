@@ -107,6 +107,34 @@
                                 </span>
                             </div>
                         </div>
+                        {{-- Search UI --}}
+                        <div class="d-flex align-items-center gap-2">
+                            <form action="{{ route('admin.kandungan.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-nowrap">
+                                {{-- Search Input with Icon --}}
+                                <div class="input-group" style="width: 220px;">
+                                    <span class="input-group-text bg-white" style="border-radius: 8px 0 0 8px; border-right: 0;">
+                                        <i class="material-symbols-rounded text-secondary" style="font-size: 18px;">search</i>
+                                    </span>
+                                    <input type="text" 
+                                           name="search" 
+                                           value="{{ request('search') }}" 
+                                           class="form-control ps-0" 
+                                           style="border-radius: 0 8px 8px 0; border-left: 0;"
+                                           placeholder="Cari kandungan...">
+                                    <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
+                                </div>
+                                {{-- Search Button --}}
+                                <button type="submit" class="btn bg-gradient-dark mb-0 px-3" style="border-radius: 8px;">
+                                    <i class="material-symbols-rounded" style="font-size: 18px;">search</i>
+                                </button>
+                                {{-- Clear Filter --}}
+                                @if(request('search'))
+                                    <a href="{{ route('admin.kandungan.index') }}" class="btn btn-outline-secondary mb-0 px-3" style="border-radius: 8px;" title="Hapus Filter">
+                                        <i class="material-symbols-rounded" style="font-size: 18px;">close</i>
+                                    </a>
+                                @endif
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body px-0 pb-2">
@@ -179,12 +207,31 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="px-4 py-3 border-top d-flex justify-content-between align-items-center">
-                        <div class="text-xs text-secondary">
-                            Menampilkan {{ $data->firstItem() ?? 0 }} sampai {{ $data->lastItem() ?? 0 }} dari {{ $data->total() }} data
-                        </div>
-                        <div>
-                            {{ $data->links('pagination::bootstrap-5') }}
+                    <div class="px-4 py-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            {{-- Left: Per Page Selector --}}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-xs text-secondary">Tampilkan</span>
+                                <select class="form-select form-select-sm border rounded-2 px-2 py-1" 
+                                        style="width: auto; min-width: 65px;" 
+                                        onchange="window.location.href='{{ route('admin.kandungan.index') }}?per_page='+this.value">
+                                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                </select>
+                                <span class="text-xs text-secondary">data per halaman</span>
+                            </div>
+                            {{-- Center: Info --}}
+                            <p class="text-xs text-secondary mb-0">
+                                <span class="fw-bold">{{ $data->firstItem() ?? 0 }}</span> - 
+                                <span class="fw-bold">{{ $data->lastItem() ?? 0 }}</span> dari 
+                                <span class="fw-bold">{{ $data->total() }}</span> data
+                            </p>
+                            {{-- Right: Pagination --}}
+                            <div>
+                                {{ $data->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     </div>
                 </div>

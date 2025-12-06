@@ -15,9 +15,10 @@ class SatuanObatController extends Controller
         $this->middleware(['auth', 'role:Admin,Karyawan,Kasir']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $satuan = SatuanObat::latest()->paginate(10);
+        $perPage = $request->input('per_page', 10);
+        $satuan = SatuanObat::latest()->paginate($perPage)->withQueryString();
         return view('admin.satuan.index', compact('satuan'));
     }
 

@@ -23,9 +23,10 @@ class PembelianController extends Controller
         $this->middleware('role:Admin')->only(['create','store','destroy','bayarTermin']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pembelian = Pembelian::with(['user', 'pembayaranTermin'])->orderByDesc('created_at')->paginate(15);
+        $perPage = $request->input('per_page', 10);
+        $pembelian = Pembelian::with(['user', 'pembayaranTermin'])->orderByDesc('created_at')->paginate($perPage)->withQueryString();
         return view('shared.pembelian.index', compact('pembelian'));
     }
 

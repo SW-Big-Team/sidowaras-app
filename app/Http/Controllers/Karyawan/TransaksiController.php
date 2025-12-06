@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->input('per_page', 10);
         $transaksis = Transaksi::where('user_id', Auth::id())
             ->latest()
-            ->paginate(10);
+            ->paginate($perPage)
+            ->withQueryString();
 
         return view('karyawan.transaksi.index', compact('transaksis'));
     }

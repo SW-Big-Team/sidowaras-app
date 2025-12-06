@@ -15,9 +15,10 @@ class KategoriObatController extends Controller
         $this->middleware(['auth', 'role:Admin,Karyawan,Kasir']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = KategoriObat::latest()->paginate(10);
+        $perPage = $request->input('per_page', 10);
+        $kategori = KategoriObat::latest()->paginate($perPage)->withQueryString();
         return view('admin.kategori.index', compact('kategori'));
     }
 
