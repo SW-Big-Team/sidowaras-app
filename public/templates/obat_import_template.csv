@@ -1,0 +1,4 @@
+kode_obat,nama_obat,deskripsi,kategori,satuan,stok_minimum,is_racikan,lokasi_rak,barcode
+OBT-001,Paracetamol 500mg,Obat pereda nyeri dan demam,Tablet,Strip,10,0,A1,8991234567890
+OBT-002,Amoxicillin 500mg,Antibiotik spektrum luas,Kapsul,Strip,15,0,A2,8991234567891
+,Vitamin C 1000mg,Suplemen daya tahan tubuh,Tablet,Botol,20,0,B1,

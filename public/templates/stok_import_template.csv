@@ -1,0 +1,4 @@
+kode_obat,no_batch,harga_beli,harga_jual,jumlah,tgl_kadaluarsa
+OBT-001,BATCH-001,5000,7500,100,2026-12-31
+OBT-002,BATCH-002,8000,12000,50,2026-06-30
+OBT-003,BATCH-003,15000,22000,30,2025-12-31

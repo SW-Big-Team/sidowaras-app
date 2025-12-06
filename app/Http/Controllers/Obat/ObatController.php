@@ -211,5 +211,148 @@ class ObatController extends Controller
             return back()->with('error', 'Gagal menghapus data obat: ' . $e->getMessage());
         }
     }
-    
+
+    /**
+     * Download import template
+     */
+    public function downloadTemplate($format = 'csv')
+    {
+        if ($format === 'csv') {
+            $path = public_path('templates/obat_import_template.csv');
+            if (!file_exists($path)) {
+                return back()->with('error', 'Template file tidak ditemukan.');
+            }
+            return response()->download($path, 'template_import_obat.csv');
+        }
+
+        return back()->with('error', 'Format tidak didukung.');
+    }
+
+    /**
+     * Import obat from CSV
+     */
+    public function import(Request $request)
+    {
+        if (Auth::user()->role->nama_role !== 'Admin') {
+            abort(403, 'Hanya admin yang boleh mengimport data obat.');
+        }
+
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:2048',
+        ]);
+
+        $file = $request->file('file');
+        $handle = fopen($file->getPathname(), 'r');
+        
+        if (!$handle) {
+            return back()->with('error', 'Gagal membaca file.');
+        }
+
+        // Skip header row
+        $header = fgetcsv($handle);
+        
+        $imported = 0;
+        $errors = [];
+        $rowNumber = 1;
+
+        DB::beginTransaction();
+        try {
+            while (($row = fgetcsv($handle)) !== false) {
+                $rowNumber++;
+                
+                // Skip empty rows
+                if (empty(array_filter($row))) {
+                    continue;
+                }
+
+                // Map CSV columns to data
+                $data = [
+                    'kode_obat' => trim($row[0] ?? ''),
+                    'nama_obat' => trim($row[1] ?? ''),
+                    'deskripsi' => trim($row[2] ?? ''),
+                    'kategori' => trim($row[3] ?? ''),
+                    'satuan' => trim($row[4] ?? ''),
+                    'stok_minimum' => trim($row[5] ?? '10'),
+                    'is_racikan' => trim($row[6] ?? '0'),
+                    'lokasi_rak' => trim($row[7] ?? ''),
+                    'barcode' => trim($row[8] ?? ''),
+                ];
+
+                // Validate required fields
+                if (empty($data['nama_obat'])) {
+                    $errors[] = "Baris {$rowNumber}: nama_obat wajib diisi.";
+                    continue;
+                }
+
+                // Find kategori by name
+                $kategori = KategoriObat::where('nama_kategori', $data['kategori'])->first();
+                if (!$kategori) {
+                    $errors[] = "Baris {$rowNumber}: Kategori '{$data['kategori']}' tidak ditemukan.";
+                    continue;
+                }
+
+                // Find satuan by name
+                $satuan = SatuanObat::where('nama_satuan', $data['satuan'])->first();
+                if (!$satuan) {
+                    $errors[] = "Baris {$rowNumber}: Satuan '{$data['satuan']}' tidak ditemukan.";
+                    continue;
+                }
+
+                // Check for duplicate barcode
+                if (!empty($data['barcode'])) {
+                    $existingBarcode = Obat::where('barcode', $data['barcode'])->exists();
+                    if ($existingBarcode) {
+                        $errors[] = "Baris {$rowNumber}: Barcode '{$data['barcode']}' sudah digunakan.";
+                        continue;
+                    }
+                }
+
+                // Auto-generate kode_obat if empty
+                $kodeObat = $data['kode_obat'];
+                if (empty($kodeObat)) {
+                    $kodeObat = 'OBAT-' . strtoupper(Str::random(6));
+                }
+
+                // Check for duplicate kode_obat
+                if (Obat::where('kode_obat', $kodeObat)->exists()) {
+                    $kodeObat = 'OBAT-' . strtoupper(Str::random(6));
+                }
+
+                // Create obat
+                Obat::create([
+                    'uuid' => Str::uuid(),
+                    'kode_obat' => $kodeObat,
+                    'nama_obat' => $data['nama_obat'],
+                    'deskripsi' => $data['deskripsi'] ?: null,
+                    'kategori_id' => $kategori->id,
+                    'satuan_obat_id' => $satuan->id,
+                    'stok_minimum' => (int) ($data['stok_minimum'] ?: 10),
+                    'is_racikan' => (bool) $data['is_racikan'],
+                    'lokasi_rak' => $data['lokasi_rak'] ?: null,
+                    'barcode' => $data['barcode'] ?: null,
+                ]);
+
+                $imported++;
+            }
+
+            fclose($handle);
+
+            if ($imported > 0) {
+                DB::commit();
+                $message = "Berhasil mengimport {$imported} data obat.";
+                if (!empty($errors)) {
+                    $message .= " Terdapat " . count($errors) . " baris yang gagal.";
+                }
+                return back()->with('success', $message)->with('import_errors', $errors);
+            } else {
+                DB::rollBack();
+                return back()->with('error', 'Tidak ada data yang berhasil diimport.')
+                             ->with('import_errors', $errors);
+            }
+        } catch (\Exception $e) {
+            fclose($handle);
+            DB::rollBack();
+            return back()->with('error', 'Gagal mengimport data: ' . $e->getMessage());
+        }
+    }
 }

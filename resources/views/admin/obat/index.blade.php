@@ -23,6 +23,10 @@
                     <p class="welcome-subtitle">Kelola informasi obat, kategori, satuan, dan kandungan untuk apotek Anda.</p>
                 </div>
                 <div class="welcome-stats">
+                    <button type="button" class="stat-pill info" data-bs-toggle="modal" data-bs-target="#importModal">
+                        <i class="material-symbols-rounded">upload_file</i>
+                        <span>Import CSV</span>
+                    </button>
                     <a href="{{ route('admin.obat.create') }}" class="stat-pill success">
                         <i class="material-symbols-rounded">add_circle</i>
                         <span>Tambah Obat</span>
@@ -256,6 +260,93 @@
         </div>
     @endif
 </div>
+
+{{-- Import Modal --}}
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-pro">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon">
+                        <i class="material-symbols-rounded">upload_file</i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">Import Data Obat</h5>
+                        <p class="text-muted small mb-0">Upload file CSV untuk import data obat</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{-- Download Template Section --}}
+                <div class="template-section mb-4">
+                    <h6 class="fw-semibold mb-2">1. Download Template</h6>
+                    <p class="text-muted small mb-3">Download template terlebih dahulu, isi sesuai format, lalu upload.</p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('admin.obat.template', 'csv') }}" class="btn-template">
+                            <i class="material-symbols-rounded">table_chart</i>
+                            Download CSV
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Info Alert --}}
+                <div class="info-alert mb-4">
+                    <i class="material-symbols-rounded">info</i>
+                    <div>
+                        <strong>Panduan pengisian:</strong>
+                        <ul class="mb-0 mt-1 ps-3">
+                            <li><code>kategori</code> harus sesuai nama kategori yang sudah ada</li>
+                            <li><code>satuan</code> harus sesuai nama satuan yang sudah ada</li>
+                            <li><code>is_racikan</code> isi dengan 0 atau 1</li>
+                            <li><code>kode_obat</code> kosongkan jika ingin auto-generate</li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- Upload Form --}}
+                <form action="{{ route('admin.obat.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <h6 class="fw-semibold mb-2">2. Upload File</h6>
+                    <div class="upload-zone mb-3">
+                        <input type="file" name="file" id="importFile" accept=".csv,.txt" required class="d-none">
+                        <label for="importFile" class="upload-label">
+                            <i class="material-symbols-rounded">cloud_upload</i>
+                            <span class="upload-text">Klik untuk pilih file CSV</span>
+                            <span class="upload-hint">Maksimal 2MB</span>
+                        </label>
+                        <div class="file-name-display" id="fileNameDisplay"></div>
+                    </div>
+                    <button type="submit" class="btn-import w-100">
+                        <i class="material-symbols-rounded">upload</i>
+                        Import Data
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Import Errors Alert --}}
+@if(session('import_errors') && count(session('import_errors')) > 0)
+<div class="modal fade show" id="importErrorsModal" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger"><i class="material-symbols-rounded me-2">warning</i>Import Errors</h5>
+                <button type="button" class="btn-close" onclick="this.closest('.modal').remove()"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled mb-0">
+                    @foreach(session('import_errors') as $error)
+                        <li class="mb-2 text-danger small"><i class="material-symbols-rounded me-1" style="font-size: 14px;">error</i>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('styles')
@@ -364,5 +455,61 @@
     .welcome-illustration { display: none; }
     .pro-card-header { flex-direction: column; align-items: stretch; }
 }
+
+/* Info Stat Pill */
+.stat-pill.info { background: rgba(59,130,246,0.15); color: #3b82f6; border: none; }
+.stat-pill.info:hover { background: #3b82f6; color: white; }
+
+/* Import Modal */
+.modal-pro { border-radius: 16px; overflow: hidden; }
+.modal-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); display: flex; align-items: center; justify-content: center; }
+.modal-icon i { color: white; font-size: 24px; }
+
+.btn-template {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; background: #f1f5f9; border-radius: 8px;
+    color: #475569; font-weight: 500; font-size: 0.85rem;
+    text-decoration: none; transition: all 0.2s;
+}
+.btn-template:hover { background: #e2e8f0; color: #1e293b; }
+.btn-template i { font-size: 18px; }
+
+.info-alert {
+    display: flex; gap: 12px; padding: 12px 16px;
+    background: rgba(59,130,246,0.08); border-radius: 10px;
+    font-size: 0.8rem; color: #475569;
+}
+.info-alert i { color: #3b82f6; font-size: 20px; flex-shrink: 0; }
+.info-alert code { background: rgba(59,130,246,0.15); padding: 2px 6px; border-radius: 4px; color: #1d4ed8; }
+
+.upload-zone { border: 2px dashed #e2e8f0; border-radius: 12px; transition: all 0.2s; }
+.upload-zone:hover { border-color: #3b82f6; }
+.upload-label {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px; cursor: pointer; text-align: center;
+}
+.upload-label i { font-size: 40px; color: #94a3b8; margin-bottom: 8px; }
+.upload-text { font-weight: 500; color: #475569; }
+.upload-hint { font-size: 0.75rem; color: #94a3b8; }
+.file-name-display { text-align: center; padding: 8px; font-size: 0.85rem; color: #10b981; font-weight: 500; }
+.file-name-display:empty { display: none; }
+
+.btn-import {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px; background: linear-gradient(135deg, #10b981, #059669);
+    border: none; border-radius: 10px; color: white; font-weight: 600;
+    font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+}
+.btn-import:hover { box-shadow: 0 6px 20px rgba(16,185,129,0.35); }
+.btn-import i { font-size: 20px; }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.getElementById('importFile').addEventListener('change', function() {
+    const fileName = this.files[0]?.name || '';
+    document.getElementById('fileNameDisplay').textContent = fileName ? '📄 ' + fileName : '';
+});
+</script>
 @endpush

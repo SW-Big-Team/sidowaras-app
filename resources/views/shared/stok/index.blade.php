@@ -29,7 +29,15 @@
                     <h2 class="welcome-title">Daftar Stok Obat</h2>
                     <p class="welcome-subtitle">Monitoring persediaan, stok minimum, dan status kadaluarsa obat.</p>
                 </div>
-                <a href="{{ route('pembelian.index') }}" class="stat-pill"><i class="material-symbols-rounded">shopping_cart</i><span>Pembelian</span></a>
+                <div class="welcome-stats-group">
+                    @if(auth()->user()->role->nama_role === 'Admin')
+                    <button type="button" class="stat-pill info" data-bs-toggle="modal" data-bs-target="#importModal">
+                        <i class="material-symbols-rounded">upload_file</i>
+                        <span>Import Stok</span>
+                    </button>
+                    @endif
+                    <a href="{{ route('pembelian.index') }}" class="stat-pill"><i class="material-symbols-rounded">shopping_cart</i><span>Pembelian</span></a>
+                </div>
             </div>
             <div class="welcome-illustration">
                 <div class="floating-icon icon-1"><i class="material-symbols-rounded">medication</i></div>
@@ -167,6 +175,86 @@
     <span class="legend-item"><span class="status-dot danger"></span> Exp < 30 Hari</span>
 </div>
 
+{{-- Import Modal --}}
+@if(auth()->user()->role->nama_role === 'Admin')
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-pro">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon">
+                        <i class="material-symbols-rounded">upload_file</i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">Import Stok Awal</h5>
+                        <p class="text-muted small mb-0">Upload CSV untuk menambah stok obat</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                {{-- Download Template --}}
+                <div class="template-section mb-4">
+                    <h6 class="fw-semibold mb-2">1. Download Template</h6>
+                    <p class="text-muted small mb-3">Download template, isi data stok, lalu upload.</p>
+                    <a href="{{ route('stok.template', 'csv') }}" class="btn-template">
+                        <i class="material-symbols-rounded">table_chart</i>
+                        Download CSV
+                    </a>
+                </div>
+
+                {{-- Info --}}
+                <div class="info-alert mb-4">
+                    <i class="material-symbols-rounded">info</i>
+                    <div>
+                        <strong>Format kolom:</strong>
+                        <ul class="mb-0 mt-1 ps-3">
+                            <li><code>kode_obat</code> harus sesuai data master obat</li>
+                            <li><code>no_batch</code> opsional (auto-generate jika kosong)</li>
+                            <li><code>harga_beli</code> dan <code>harga_jual</code> dalam Rupiah</li>
+                            <li><code>jumlah</code> jumlah stok yang masuk</li>
+                            <li><code>tgl_kadaluarsa</code> format: YYYY-MM-DD</li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- Upload Form --}}
+                <form action="{{ route('stok.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <h6 class="fw-semibold mb-2">2. Upload File</h6>
+                    <div class="upload-zone mb-3">
+                        <input type="file" name="file" id="importFile" accept=".csv,.txt" required class="d-none">
+                        <label for="importFile" class="upload-label">
+                            <i class="material-symbols-rounded">cloud_upload</i>
+                            <span class="upload-text">Klik untuk pilih file CSV</span>
+                            <span class="upload-hint">Maksimal 2MB</span>
+                        </label>
+                        <div class="file-name-display" id="fileNameDisplay"></div>
+                    </div>
+                    <button type="submit" class="btn-import w-100">
+                        <i class="material-symbols-rounded">upload</i>
+                        Import Data Stok
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 @push('styles')
 <style>
 :root { --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --primary: #10b981; --secondary: #64748b; }
@@ -248,6 +336,45 @@
 .legend-bar { display: flex; gap: 20px; justify-content: center; padding: 12px; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--secondary); }
 @media (max-width: 768px) { .welcome-banner { flex-direction: column; text-align: center; } .welcome-illustration { display: none; } .pro-card-header { flex-direction: column; align-items: stretch; } .search-form { width: 100%; flex-direction: column; } .filter-select, .search-input { width: 100%; } }
+
+/* Import Modal Styles */
+.welcome-stats-group { display: flex; gap: 10px; }
+.stat-pill.info { background: rgba(59,130,246,0.2); }
+.stat-pill.info:hover { background: rgba(59,130,246,0.3); }
+
+.modal-pro { border-radius: 16px; overflow: hidden; }
+.modal-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; }
+.modal-icon i { color: white; font-size: 24px; }
+
+.btn-template { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: #f1f5f9; border-radius: 8px; color: #475569; font-weight: 500; font-size: 0.85rem; text-decoration: none; transition: all 0.2s; }
+.btn-template:hover { background: #e2e8f0; color: #1e293b; }
+.btn-template i { font-size: 18px; }
+
+.info-alert { display: flex; gap: 12px; padding: 12px 16px; background: rgba(16,185,129,0.08); border-radius: 10px; font-size: 0.8rem; color: #475569; }
+.info-alert i { color: #10b981; font-size: 20px; flex-shrink: 0; }
+.info-alert code { background: rgba(16,185,129,0.15); padding: 2px 6px; border-radius: 4px; color: #059669; }
+
+.upload-zone { border: 2px dashed #e2e8f0; border-radius: 12px; transition: all 0.2s; }
+.upload-zone:hover { border-color: #10b981; }
+.upload-label { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; cursor: pointer; text-align: center; }
+.upload-label i { font-size: 40px; color: #94a3b8; margin-bottom: 8px; }
+.upload-text { font-weight: 500; color: #475569; }
+.upload-hint { font-size: 0.75rem; color: #94a3b8; }
+.file-name-display { text-align: center; padding: 8px; font-size: 0.85rem; color: #10b981; font-weight: 500; }
+.file-name-display:empty { display: none; }
+
+.btn-import { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+.btn-import:hover { box-shadow: 0 6px 20px rgba(16,185,129,0.35); }
+.btn-import i { font-size: 20px; }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.getElementById('importFile')?.addEventListener('change', function() {
+    const fileName = this.files[0]?.name || '';
+    document.getElementById('fileNameDisplay').textContent = fileName ? '📄 ' + fileName : '';
+});
+</script>
 @endpush
 @endsection

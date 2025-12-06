@@ -21,6 +21,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('adminx')->name('admin.')->gro
         Route::get('/', [ObatController::class, 'index'])->name('index');
         Route::get('/create', [ObatController::class, 'create'])->name('create');
         Route::post('/', [ObatController::class, 'store'])->name('store');
+        Route::get('/template/{format}', [ObatController::class, 'downloadTemplate'])->name('template');
+        Route::post('/import', [ObatController::class, 'import'])->name('import');
         Route::get('/{id}/edit', [ObatController::class, 'edit'])->name('edit');
         Route::put('/{id}', [ObatController::class, 'update'])->name('update');
         Route::delete('/{id}', [ObatController::class, 'destroy'])->name('destroy');

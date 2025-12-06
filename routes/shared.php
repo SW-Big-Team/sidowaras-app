@@ -22,6 +22,8 @@ Route::middleware(['auth', 'role:Admin,Karyawan,Kasir'])->prefix('shared')->grou
     // Stok (read-only untuk semua role)
     Route::prefix('stok')->name('stok.')->group(function () {
         Route::get('/', [StokController::class, 'index'])->name('index');
+        Route::get('/template/{format}', [StokController::class, 'downloadTemplate'])->name('template');
+        Route::post('/import', [StokController::class, 'importStok'])->name('import')->middleware('role:Admin');
     });
 
     Route::prefix('stok-opname')->name('stokopname.')->group(function () {
