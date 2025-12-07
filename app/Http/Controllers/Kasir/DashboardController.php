@@ -14,9 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Pending cart approvals
-        $pendingCartsCount = Cart::where('is_approved', false)
-            ->orWhereNull('is_approved')
-            ->count();
+        $pendingCartsCount = Cart::where('status', 'pending')->count();
 
         // Today's transactions
         $todayTransactionsCount = Transaksi::whereDate('created_at', Carbon::today())
@@ -37,10 +35,7 @@ class DashboardController extends Controller
 
         // Recent pending carts
         $pendingCarts = Cart::with(['user', 'items.obat'])
-            ->where(function($query) {
-                $query->where('is_approved', false)
-                    ->orWhereNull('is_approved');
-            })
+            ->where('status', 'pending')
             ->latest()
             ->take(5)
             ->get();

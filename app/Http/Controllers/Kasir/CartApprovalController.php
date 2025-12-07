@@ -16,7 +16,7 @@ class CartApprovalController extends Controller
 {
     public function index()
     {
-        $carts = Cart::where('is_approved', false)
+        $carts = Cart::where('status', 'pending')
                     ->with('user', 'items.obat')
                     ->latest()
                     ->get();
@@ -26,7 +26,7 @@ class CartApprovalController extends Controller
 
     public function showPayment(Cart $cart)
     {
-        if ($cart->is_approved) {
+        if ($cart->isApproved()) {
             return redirect()->route('kasir.cart.approval')->withErrors('Cart sudah disetujui.');
         }
 
@@ -109,6 +109,7 @@ class CartApprovalController extends Controller
 
             // 3. Tandai cart sebagai disetujui
             $cart->update([
+                'status' => 'approved',
                 'is_approved' => true,
                 'approved_at' => now(),
                 'approved_by' => auth()->id(),
@@ -127,15 +128,20 @@ class CartApprovalController extends Controller
 
     public function reject(Cart $cart)
     {
-        // Generate notification for cart creator before deleting
+        // Update status menjadi rejected
+        $cart->update([
+            'status' => 'rejected',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+        
+        // Generate notification for cart creator
         app(NotificationService::class)->notifyCartRejected($cart);
         
         // Update system notifications
         app(NotificationService::class)->generateSystemNotifications();
         
-        $cart->delete();
-        
         return redirect()->route('kasir.cart.approval')
-                        ->with('success', 'Cart ditolak.');
+                        ->with('success', 'Cart berhasil ditolak.');
     }
 }

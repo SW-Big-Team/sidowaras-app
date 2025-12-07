@@ -12,6 +12,7 @@ class Cart extends Model
     protected $fillable = [
         'uuid',
         'user_id',
+        'status',
         'metode_pembayaran',
         'is_approved',
         'approved_at',
@@ -39,5 +40,25 @@ class Cart extends Model
     public function items()
     {
         return $this->hasMany(CartItem::class);
+    }
+
+    public function isPending()
+    {
+        return $this->status === 'pending';
+    }
+
+    public function isDraft()
+    {
+        return $this->status === 'draft';
+    }
+
+    public function isApproved()
+    {
+        return $this->status === 'approved';
+    }
+
+    public function isRejected()
+    {
+        return $this->status === 'rejected';
     }
 }

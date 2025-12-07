@@ -27,62 +27,93 @@
   </div>
 </div>
 
+{{-- Info Alert if cart was rejected --}}
+@if(session('cart_rejected'))
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="alert-pro warning">
+      <i class="material-symbols-rounded">info</i>
+      <div>
+        <strong>Pesanan Ditolak</strong>
+        <p class="mb-0">Pesanan Anda sebelumnya telah ditolak oleh kasir. Silakan buat pesanan baru.</p>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
 <div class="row g-4">
   {{-- Form Tambah Obat --}}
   <div class="col-lg-4 mb-4 mb-lg-0">
     <div class="card pro-card h-100">
       <div class="card-header pro-card-header">
         <div class="header-left">
-          <div class="header-icon primary">
-            <i class="material-symbols-rounded">add_shopping_cart</i>
+          <div class="header-icon {{ $cart && $cart->isPending() ? 'warning' : 'primary' }}">
+            <i class="material-symbols-rounded">{{ $cart && $cart->isPending() ? 'pending' : 'add_shopping_cart' }}</i>
           </div>
           <div>
-            <h6 class="header-title">Tambah Obat</h6>
-            <p class="header-subtitle">Pilih atau scan barcode</p>
+            <h6 class="header-title">{{ $cart && $cart->isPending() ? 'Menunggu Approval' : 'Tambah Obat' }}</h6>
+            <p class="header-subtitle">{{ $cart && $cart->isPending() ? 'Sedang diproses kasir' : 'Pilih atau scan barcode' }}</p>
           </div>
         </div>
       </div>
       <div class="card-body">
-        <form action="{{ route('karyawan.cart.add') }}" method="POST">
-          @csrf
-          <div class="form-group-pro mb-4">
-            <label class="form-label-pro">Pilih Obat</label>
-            <div class="select-with-scan">
-              <select name="obat_id" id="obatSelect" class="form-select-pro" required>
-                <option value="">-- Cari atau pilih obat --</option>
-                @foreach($obats as $obat)
-                  <option value="{{ $obat->id }}" data-stok="{{ $obat->sisa_stok ?? 0 }}" data-barcode="{{ $obat->barcode ?? '' }}">
-                    {{ $obat->nama_obat }} ({{ $obat->kode_obat }})
-                    @if($obat->sisa_stok && $obat->sisa_stok > 0)
-                      — Stok: {{ $obat->sisa_stok }}
-                    @else
-                      — Stok Habis
-                    @endif
-                  </option>
-                @endforeach
-              </select>
-              <button class="btn-scan" type="button" id="btnOpenQr" title="Scan Barcode">
-                <i class="material-symbols-rounded">qr_code_scanner</i>
-              </button>
+        @if($cart && $cart->isPending())
+          {{-- Pending Status Info --}}
+          <div class="pending-info-card">
+            <div class="pending-icon">
+              <i class="material-symbols-rounded">schedule</i>
+            </div>
+            <h6 class="pending-title">Pesanan Sedang Diproses</h6>
+            <p class="pending-text">Keranjang Anda telah dikirim ke kasir dan sedang menunggu approval</p>
+            <div class="pending-badge">
+              <i class="material-symbols-rounded">info</i>
+              <span>Status: Menunggu Approval Kasir</span>
             </div>
           </div>
-          <div class="form-group-pro mb-4">
-            <label class="form-label-pro">Jumlah</label>
-            <div class="qty-input-group">
-              <button class="qty-btn" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                <i class="material-symbols-rounded">remove</i>
-              </button>
-              <input type="number" name="jumlah" class="qty-input" min="1" value="1" required>
-              <button class="qty-btn" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                <i class="material-symbols-rounded">add</i>
-              </button>
+        @else
+          {{-- Form Input Normal --}}
+          <form action="{{ route('karyawan.cart.add') }}" method="POST">
+            @csrf
+            <div class="form-group-pro mb-4">
+              <label class="form-label-pro">Pilih Obat</label>
+              <div class="select-with-scan">
+                <select name="obat_id" id="obatSelect" class="form-select-pro" required>
+                  <option value="">-- Cari atau pilih obat --</option>
+                  @foreach($obats as $obat)
+                    <option value="{{ $obat->id }}" data-stok="{{ $obat->sisa_stok ?? 0 }}" data-barcode="{{ $obat->barcode ?? '' }}">
+                      {{ $obat->nama_obat }} ({{ $obat->kode_obat }})
+                      @if($obat->sisa_stok && $obat->sisa_stok > 0)
+                        — Stok: {{ $obat->sisa_stok }}
+                      @else
+                        — Stok Habis
+                      @endif
+                    </option>
+                  @endforeach
+                </select>
+                <button class="btn-scan" type="button" id="btnOpenQr" title="Scan Barcode">
+                  <i class="material-symbols-rounded">qr_code_scanner</i>
+                </button>
+              </div>
             </div>
-          </div>
-          <button type="submit" class="btn-add-cart">
-            <i class="material-symbols-rounded">add</i>
-            Tambah ke Keranjang
-          </button>
-        </form>
+            <div class="form-group-pro mb-4">
+              <label class="form-label-pro">Jumlah</label>
+              <div class="qty-input-group">
+                <button class="qty-btn" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                  <i class="material-symbols-rounded">remove</i>
+                </button>
+                <input type="number" name="jumlah" class="qty-input" min="1" value="1" required>
+                <button class="qty-btn" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                  <i class="material-symbols-rounded">add</i>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="btn-add-cart">
+              <i class="material-symbols-rounded">add</i>
+              Tambah ke Keranjang
+            </button>
+          </form>
+        @endif
       </div>
     </div>
   </div>
@@ -176,12 +207,18 @@
                       <span class="subtotal-cell">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </td>
                     <td class="text-center">
-                      <form action="{{ route('karyawan.cart.remove', $item->id) }}" method="POST" style="display:inline">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn-delete" title="Hapus">
-                          <i class="material-symbols-rounded">delete</i>
+                      @if($cart->isPending())
+                        <button type="button" class="btn-delete" disabled title="Tidak dapat dihapus">
+                          <i class="material-symbols-rounded">lock</i>
                         </button>
-                      </form>
+                      @else
+                        <form action="{{ route('karyawan.cart.remove', $item->id) }}" method="POST" style="display:inline">
+                          @csrf @method('DELETE')
+                          <button type="submit" class="btn-delete" title="Hapus">
+                            <i class="material-symbols-rounded">delete</i>
+                          </button>
+                        </form>
+                      @endif
                     </td>
                   </tr>
                 @endforeach
@@ -203,12 +240,18 @@
                     <span class="item-name">{{ $item->obat->nama_obat }}</span>
                     <span class="item-code">{{ $item->obat->kode_obat }}</span>
                   </div>
-                  <form action="{{ route('karyawan.cart.remove', $item->id) }}" method="POST">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn-delete-sm">
-                      <i class="material-symbols-rounded">delete</i>
+                  @if($cart->isPending())
+                    <button type="button" class="btn-delete-sm" disabled>
+                      <i class="material-symbols-rounded">lock</i>
                     </button>
-                  </form>
+                  @else
+                    <form action="{{ route('karyawan.cart.remove', $item->id) }}" method="POST">
+                      @csrf @method('DELETE')
+                      <button type="submit" class="btn-delete-sm">
+                        <i class="material-symbols-rounded">delete</i>
+                      </button>
+                    </form>
+                  @endif
                 </div>
                 <div class="item-footer">
                   <div>
@@ -225,17 +268,21 @@
             <div class="summary-content">
               <div class="summary-info">
                 <span class="summary-label">Total Pembayaran</span>
-                <span class="summary-note">Siap untuk diajukan ke kasir</span>
+                <!-- <span class="summary-note">{{ $cart->isPending() ? 'Menunggu approval kasir' : 'Siap untuk diajukan ke kasir' }}</span> -->
               </div>
               <h3 class="summary-total">Rp {{ number_format($total, 0, ',', '.') }}</h3>
             </div>
-            <form action="{{ route('karyawan.cart.checkout') }}" method="POST" class="w-100 mt-3">
-              @csrf
-              <button type="submit" class="btn-checkout">
+            @if($cart->isPending())
+              <div class="btn-pending-status">
+                <i class="material-symbols-rounded">schedule</i>
+                <span>Menunggu Approval Kasir</span>
+              </div>
+            @else
+              <button type="button" class="btn-checkout" data-bs-toggle="modal" data-bs-target="#confirmCheckoutModal">
                 <span>Kirim ke Kasir</span>
                 <i class="material-symbols-rounded">arrow_forward</i>
               </button>
-            </form>
+            @endif
           </div>
 
         @else
@@ -248,6 +295,56 @@
             <p>Belum ada obat yang ditambahkan. Silakan pilih obat dari form di sebelah kiri.</p>
           </div>
         @endif
+      </div>
+    </div>
+  </div>
+</div>
+
+{{-- Modal: Confirm Checkout --}}
+<div class="modal fade" id="confirmCheckoutModal" tabindex="-1" aria-labelledby="confirmCheckoutLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-pro">
+      <div class="modal-header-pro">
+        <div class="modal-icon">
+          <i class="material-symbols-rounded">send</i>
+        </div>
+        <div>
+          <h5 class="modal-title-pro">Konfirmasi Pengiriman</h5>
+          <p class="modal-subtitle-pro">Kirim pesanan ke kasir untuk diproses</p>
+        </div>
+        <button type="button" class="btn-modal-close" data-bs-dismiss="modal" aria-label="Close">
+          <i class="material-symbols-rounded">close</i>
+        </button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="confirm-info">
+          <i class="material-symbols-rounded">info</i>
+          <div>
+            <p class="mb-2"><strong>Apakah Anda yakin ingin mengirim pesanan ini ke kasir?</strong></p>
+          </div>
+        </div>
+        @if($cart && $cart->items->isNotEmpty())
+          <div class="checkout-summary">
+            <div class="summary-row">
+              <span class="summary-label">Total Item:</span>
+              <span class="summary-value">{{ $cart->items->count() }} item</span>
+            </div>
+            <div class="summary-row total">
+              <span class="summary-label">Total Pembayaran:</span>
+              <span class="summary-value">Rp {{ number_format($cart->items->sum(fn($i) => $i->jumlah * $i->harga_satuan), 0, ',', '.') }}</span>
+            </div>
+          </div>
+        @endif
+      </div>
+      <div class="modal-footer-pro">
+        <button type="button" class="btn-modal-secondary" data-bs-dismiss="modal">Batal</button>
+        <form action="{{ route('karyawan.cart.checkout') }}" method="POST" style="display:inline">
+          @csrf
+          <button type="submit" class="btn-modal-primary">
+            <i class="material-symbols-rounded">send</i>
+            <span>Ya</span>
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -357,6 +454,7 @@
 .header-icon i { color: #000000 !important; font-size: 20px; }
 .header-icon.primary { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 .header-icon.success { background: linear-gradient(135deg, #10b981, #059669); }
+.header-icon.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
 
 .header-title { font-size: 1rem; font-weight: 600; color: #000000 !important; margin: 0; }
 .header-subtitle { font-size: 0.75rem; color: #000000 !important; margin: 2px 0 0; }
@@ -397,6 +495,7 @@
   background: white;
   outline: none;
   transition: all 0.2s;
+  min-width: 0; /* Allow flex item to shrink */
 }
 .form-select-pro:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
 
@@ -411,6 +510,7 @@
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
+  flex-shrink: 0; /* Prevent button from shrinking */
 }
 .btn-scan i { color: white; font-size: 22px; }
 .btn-scan:hover { background: #0f172a; }
@@ -467,6 +567,86 @@
 }
 .btn-add-cart:hover { box-shadow: 0 4px 15px rgba(139,92,246,0.4); }
 .btn-add-cart i { font-size: 18px; }
+
+/* ===== Pending Status Card ===== */
+.pending-info-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-radius: 12px;
+  border: 2px dashed var(--warning);
+}
+
+.pending-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  animation: pulse 2s ease-in-out infinite;
+}
+.pending-icon i { font-size: 40px; color: white; }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245,158,11,0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(245,158,11,0); }
+}
+
+.pending-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.pending-text {
+  font-size: 0.85rem;
+  color: #b45309;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.pending-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(245,158,11,0.2);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #92400e;
+}
+.pending-badge i { font-size: 16px; }
+
+.btn-pending-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+.btn-pending-status i { font-size: 20px; animation: spin 2s linear infinite; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
 /* ===== Success Toast ===== */
 .success-toast {
@@ -532,6 +712,7 @@
 }
 .alert-pro.success { background: rgba(16,185,129,0.12); color: var(--success); }
 .alert-pro.danger { background: rgba(239,68,68,0.12); color: var(--danger); }
+.alert-pro.warning { background: rgba(245,158,11,0.12); color: #92400e; }
 .alert-pro i { font-size: 20px; flex-shrink: 0; }
 .alert-pro ul { padding-left: 16px; margin: 0; }
 
@@ -598,6 +779,14 @@
 .btn-delete i { font-size: 18px; color: var(--danger); }
 .btn-delete:hover { background: var(--danger); }
 .btn-delete:hover i { color: white; }
+.btn-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f1f5f9;
+}
+.btn-delete:disabled i { color: var(--secondary); }
+.btn-delete:disabled:hover { background: #f1f5f9; }
+.btn-delete:disabled:hover i { color: var(--secondary); }
 
 /* ===== Mobile Cart Item ===== */
 .cart-item-card {
@@ -625,6 +814,11 @@
   cursor: pointer;
 }
 .btn-delete-sm i { font-size: 22px; color: var(--danger); }
+.btn-delete-sm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-delete-sm:disabled i { color: var(--secondary); }
 
 .item-footer {
   display: flex;
@@ -771,6 +965,86 @@
 }
 .btn-modal-secondary:hover { background: #f1f5f9; color: #1e293b; }
 
+.btn-modal-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-modal-primary:hover { 
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+}
+.btn-modal-primary i { font-size: 18px; }
+
+.confirm-info {
+  display: flex;
+  gap: 12px;
+  background: rgba(59,130,246,0.1);
+  color: var(--info);
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+.confirm-info i { 
+  font-size: 24px; 
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.checkout-summary {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.summary-row:last-child { border-bottom: none; }
+.summary-row.total {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: var(--secondary);
+  font-weight: 500;
+}
+.summary-row.total .summary-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.summary-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+.summary-row.total .summary-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
 /* ===== QR Scanner Overrides ===== */
 #qr-reader__dashboard { padding: 0 !important; border: none !important; }
 #qr-reader__scan_region video { width: 100% !important; height: auto !important; object-fit: cover; }
@@ -779,6 +1053,20 @@
 @media (max-width: 768px) {
   .page-header-banner { flex-direction: column; gap: 16px; text-align: center; }
   .header-content { flex-direction: column; }
+  
+  .select-with-scan {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .btn-scan {
+    width: 100%;
+    height: 48px;
+  }
+  
+  .form-select-pro {
+    width: 100%;
+  }
 }
 </style>
 @endpush
@@ -788,16 +1076,6 @@
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Checkout Confirmation
-  const checkoutForm = document.querySelector('form[action="{{ route('karyawan.cart.checkout') }}"]');
-  if(checkoutForm) {
-    checkoutForm.addEventListener('submit', function(e) {
-      if(!confirm('Apakah Anda yakin ingin mengirim pesanan ini ke kasir?')) {
-        e.preventDefault();
-      }
-    });
-  }
-
   // QR Scanner Logic
   let html5QrcodeScanner = null;
 

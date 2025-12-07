@@ -14,9 +14,11 @@ class CartController extends Controller
 {
     public function index()
     {
+        // Ambil cart yang sedang aktif (draft atau pending)
         $cart = Cart::where('user_id', auth()->id())
-                    ->where('is_approved', false)
+                    ->whereIn('status', ['draft', 'pending'])
                     ->with('items.obat')
+                    ->latest()
                     ->first();
 
         // Hanya obat non-racikan & stok > 0
@@ -56,10 +58,10 @@ class CartController extends Controller
                           ->orderBy('tgl_kadaluarsa')
                           ->first();
 
-        // Buat atau ambil cart aktif
+        // Buat atau ambil cart aktif (draft)
         $cart = Cart::firstOrCreate(
-            ['user_id' => auth()->id(), 'is_approved' => false],
-            ['uuid' => \Illuminate\Support\Str::uuid()]
+            ['user_id' => auth()->id(), 'status' => 'draft'],
+            ['uuid' => \Illuminate\Support\Str::uuid(), 'is_approved' => false]
         );
 
         // Simpan harga jual saat ini (snapshot)
@@ -74,26 +76,32 @@ class CartController extends Controller
     public function removeItem($id)
     {
         $item = CartItem::findOrFail($id);
+        
+        // Cek apakah cart masih draft
+        if ($item->cart->status !== 'draft') {
+            return back()->withErrors(['error' => 'Tidak dapat menghapus item dari keranjang yang sudah dikirim.']);
+        }
+        
         $item->delete();
-        return back();
+        return back()->with('success', 'Item berhasil dihapus dari keranjang.');
     }
 
     public function checkout(Request $request)
     {
         // Tidak perlu validasi metode_pembayaran - akan diisi oleh Kasir saat approval
         $cart = Cart::where('user_id', auth()->id())
-                    ->where('is_approved', false)
+                    ->where('status', 'draft')
                     ->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             return back()->withErrors(['cart' => 'Keranjang kosong.']);
         }
 
-        // Kirim ke kasir tanpa metode pembayaran (metode_pembayaran tetap null)
-        // Kasir yang akan mengisi metode_pembayaran saat approval
+        // Ubah status menjadi pending - menunggu approval kasir
+        $cart->update(['status' => 'pending']);
 
         return redirect()->route('karyawan.cart.index')
-                         ->with('success', 'Keranjang dikirim ke kasir untuk approval.');
+                         ->with('success', 'Keranjang berhasil dikirim ke kasir untuk approval.');
     }
 
     public function show(Cart $cart)
