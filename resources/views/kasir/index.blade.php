@@ -548,14 +548,14 @@
   align-items: center;
   justify-content: center;
 }
-.header-icon i { color: white; font-size: 20px; }
+.header-icon i { color: #000000 !important; font-size: 20px; }
 .header-icon.success { background: linear-gradient(135deg, #10b981, #059669); }
 .header-icon.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
 .header-icon.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
 .header-icon.info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 
-.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
-.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 2px 0 0; }
+.header-title { font-size: 1rem; font-weight: 600; color: #000000 !important; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: #000000 !important; margin: 2px 0 0; }
 
 .btn-pro {
   display: inline-flex;

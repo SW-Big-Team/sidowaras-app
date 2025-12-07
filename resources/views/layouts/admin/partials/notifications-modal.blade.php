@@ -71,7 +71,7 @@
 .notif-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
 .header-left { display: flex; align-items: center; gap: 12px; }
 .header-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-.header-icon i { color: white; font-size: 22px; }
+.header-icon i { color: #000000 !important; font-size: 22px; }
 .header-title { font-size: 1.1rem; font-weight: 700; color: white; margin: 0; }
 .header-subtitle { font-size: 0.75rem; color: rgba(255,255,255,0.8); }
 .close-btn { width: 36px; height: 36px; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }

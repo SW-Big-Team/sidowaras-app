@@ -226,9 +226,9 @@
 .pro-card-header { padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; gap: 1rem; }
 .header-left { display: flex; align-items: center; gap: 12px; }
 .header-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; }
-.header-icon i { color: white; font-size: 20px; }
-.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
-.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.header-icon i { color: #000000 !important; font-size: 20px; }
+.header-title { font-size: 1rem; font-weight: 600; color: #000000 !important; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: #000000 !important; margin: 0; }
 .filter-form { display: flex; align-items: center; gap: 8px; }
 .filter-group, .search-group { position: relative; display: flex; align-items: center; }
 .filter-icon, .search-icon { position: absolute; left: 10px; color: var(--secondary); font-size: 18px; }

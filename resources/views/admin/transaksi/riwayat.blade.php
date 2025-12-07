@@ -334,10 +334,10 @@
 .pro-card-header { padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
 .header-left { display: flex; align-items: center; gap: 12px; }
 .header-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #1e293b, #475569); display: flex; align-items: center; justify-content: center; }
-.header-icon i { color: white; font-size: 20px; }
+.header-icon i { color: #000000 !important; font-size: 20px; }
 .header-icon.primary { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
-.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.header-title { font-size: 1rem; font-weight: 600; color: #000000 !important; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: #000000 !important; margin: 0; }
 
 .btn-pro { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; background: linear-gradient(135deg, #1e293b, #475569); color: white; font-size: 0.85rem; font-weight: 500; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; }
 .btn-pro:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,41,59,0.4); }

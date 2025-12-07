@@ -147,9 +147,9 @@
 .pro-card-header { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
 .header-left { display: flex; align-items: center; gap: 12px; }
 .header-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: flex; align-items: center; justify-content: center; }
-.header-icon i { color: white; font-size: 22px; }
-.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
-.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.header-icon i { color: #000000 !important; font-size: 22px; }
+.header-title { font-size: 1rem; font-weight: 600; color: #000000 !important; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: #000000 !important; margin: 0; }
 
 .form-section { margin-bottom: 2rem; }
 .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px dashed #e2e8f0; }

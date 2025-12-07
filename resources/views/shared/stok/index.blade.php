@@ -291,10 +291,10 @@
 .pro-card-header { padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; gap: 12px; }
 .header-left { display: flex; align-items: center; gap: 12px; }
 .header-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-.header-icon i { color: white; font-size: 20px; }
+.header-icon i { color: #000000 !important; font-size: 20px; }
 .header-icon.primary { background: linear-gradient(135deg, #10b981, #059669); }
-.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
-.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.header-title { font-size: 1rem; font-weight: 600; color: #000000 !important; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: #000000 !important; margin: 0; }
 .search-form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .filter-group, .search-group { position: relative; }
 .filter-group .input-icon, .search-group .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--secondary); font-size: 18px; z-index: 2; }

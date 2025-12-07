@@ -331,7 +331,7 @@
 /* Table */
 .pro-table { margin: 0; }
 .pro-table thead { background: #faf5ff; }
-.pro-table th { font-size: 0.7rem; font-weight: 600; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 14px; border: none; white-space: nowrap; }
+.pro-table th { font-size: 0.7rem; font-weight: 600; color: #000000; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 14px; border: none; white-space: nowrap; }
 .pro-table th i { font-size: 12px; margin-right: 4px; }
 .pro-table td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 .pro-table tbody tr { transition: background 0.15s; }

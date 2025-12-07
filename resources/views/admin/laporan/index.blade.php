@@ -410,13 +410,13 @@
 .pro-card-header { padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
 .header-left { display: flex; align-items: center; gap: 12px; }
 .header-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; }
-.header-icon i { color: white; font-size: 20px; }
+.header-icon i { color: #000000 !important; font-size: 20px; }
 .header-icon.success { background: linear-gradient(135deg, #10b981, #059669); }
 .header-icon.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
 .header-icon.info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 .header-icon.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
-.header-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 0; }
-.header-subtitle { font-size: 0.75rem; color: var(--secondary); margin: 0; }
+.header-title { font-size: 1rem; font-weight: 600; color: #000000 !important; margin: 0; }
+.header-subtitle { font-size: 0.75rem; color: #000000 !important; margin: 0; }
 
 .btn-pro { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 0.85rem; font-weight: 500; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; }
 .btn-pro:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16,185,129,0.4); }
