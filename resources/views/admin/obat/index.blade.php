@@ -23,7 +23,7 @@
                     <p class="welcome-subtitle">Kelola informasi obat, kategori, satuan, dan kandungan untuk apotek Anda.</p>
                 </div>
                 <div class="welcome-stats">
-                    <button type="button" class="stat-pill info" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <button type="button" class="btn-import-highlight" data-bs-toggle="modal" data-bs-target="#importModal">
                         <i class="material-symbols-rounded">upload_file</i>
                         <span>Import CSV</span>
                     </button>
@@ -84,11 +84,11 @@
                 <i class="material-symbols-rounded">warning</i>
             </div>
             <div class="metric-content">
-                <span class="metric-label">Total Kategori</span>
-                <h3 class="metric-value">{{ $kategoriList->count() }}</h3>
-                <div class="metric-change neutral">
-                    <i class="material-symbols-rounded">category</i>
-                    <span>Kategori obat</span>
+                <span class="metric-label">Stok Rendah</span>
+                <h3 class="metric-value">{{ $obatStokRendah }}</h3>
+                <div class="metric-change {{ $obatStokRendah > 0 ? 'warning' : 'neutral' }}">
+                    <i class="material-symbols-rounded">{{ $obatStokRendah > 0 ? 'priority_high' : 'check_circle' }}</i>
+                    <span>{{ $obatStokRendah > 0 ? 'Perlu restok' : 'Stok aman' }}</span>
                 </div>
             </div>
             <div class="metric-glow"></div>
@@ -402,6 +402,7 @@
 .metric-change { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 500; }
 .metric-change i { font-size: 16px; }
 .metric-change.neutral { color: var(--secondary); }
+.metric-change.warning { color: var(--warning); }
 .metric-glow { position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -30px; bottom: -30px; opacity: 0.1; }
 .metric-card.success .metric-glow { background: var(--success); }
 .metric-card.warning .metric-glow { background: var(--warning); }
@@ -459,6 +460,36 @@
 /* Info Stat Pill */
 .stat-pill.info { background: rgba(59,130,246,0.15); color: #3b82f6; border: none; }
 .stat-pill.info:hover { background: #3b82f6; color: white; }
+
+/* Import Button Highlight */
+.btn-import-highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+.btn-import-highlight:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
+    animation: none;
+}
+.btn-import-highlight i {
+    font-size: 20px;
+}
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+    50% { box-shadow: 0 4px 25px rgba(245, 158, 11, 0.6); }
+}
 
 /* Import Modal */
 .modal-pro { border-radius: 16px; overflow: hidden; }

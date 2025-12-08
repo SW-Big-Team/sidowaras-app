@@ -73,7 +73,10 @@ class ObatController extends Controller
         $obats = $query->latest()->paginate($perPage)->withQueryString();
         $kategoriList = KategoriObat::orderBy('nama_kategori')->get();
 
-        return view('admin.obat.index', compact('obats', 'search', 'kategoriList', 'kategoriFilter'));
+        // Hitung obat dengan stok rendah (stok <= stok_minimum)
+        $obatStokRendah = Obat::whereRaw('(select coalesce(sum(sisa_stok), 0) from stok_batch where stok_batch.obat_id = obat.id) <= obat.stok_minimum')->count();
+
+        return view('admin.obat.index', compact('obats', 'search', 'kategoriList', 'kategoriFilter', 'obatStokRendah'));
     }
 
     // Form tambah obat
