@@ -11,7 +11,7 @@ use App\Models\KandunganObat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Models\Pembelian;   
+use App\Models\Pembelian;
 use App\Models\StokBatch;
 use Inertia\Inertia;
 
@@ -22,15 +22,15 @@ class ObatController extends Controller
         $this->middleware('auth');
 
         $this->middleware('role:Admin,Karyawan,Kasir')->only([
-            'index', 
-            'edit', 
+            'index',
+            'edit',
             'update'
         ]);
 
         $this->middleware('role:Admin')->only([
-            'create',     
-            'store',     
-            'destroy'       
+            'create',
+            'store',
+            'destroy'
         ]);
     }
 
@@ -42,7 +42,7 @@ class ObatController extends Controller
         $kategoriFilter = $request->input('kategori');
         $perPage = $request->input('per_page', 10);
 
-        $query = Obat::with(['kategori', 'satuan'])
+        $query = Obat::with(['kategori'])
             ->withSum('stokBatches as total_stok', 'sisa_stok');
 
         if ($search) {
@@ -51,8 +51,14 @@ class ObatController extends Controller
                 foreach ($columns as $col) {
                     $q->orWhere($col, 'like', "%{$search}%");
                 }
-                $q->orWhereHas('kategori', fn($rel) => $rel->where('nama_kategori', 'like', "%{$search}%"))
-                  ->orWhereHas('satuan', fn($rel) => $rel->where('nama_satuan', 'like', "%{$search}%"));
+                $q->orWhereHas('kategori', fn($rel) => $rel->where('nama_kategori', 'like', "%{$search}%"));
+
+                $satuanIds = SatuanObat::where('nama_satuan', 'like', "%{$search}%")->pluck('id')->toArray();
+                if (!empty($satuanIds)) {
+                    foreach ($satuanIds as $sid) {
+                        $q->orWhereJsonContains('satuan_obat_id', $sid);
+                    }
+                }
             });
         }
 
@@ -66,7 +72,7 @@ class ObatController extends Controller
         } elseif ($filter === 'expired') {
             $query->whereHas('stokBatches', function ($q) {
                 $q->where('tgl_kadaluarsa', '<', now())
-                  ->where('sisa_stok', '>', 0);
+                    ->where('sisa_stok', '>', 0);
             });
         }
 
@@ -101,11 +107,12 @@ class ObatController extends Controller
         if (Auth::user()->role->nama_role !== 'Admin') {
             abort(403, 'Hanya admin yang boleh mengelola master data obat.');
         }
-    
+
         $request->validate([
             'nama_obat' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategori_obat,id',
-            'satuan_obat_id' => 'required|exists:satuan_obat,id',
+            'satuan_obat_id' => 'required|array',
+            'satuan_obat_id.*' => 'exists:satuan_obat,id',
             'kandungan_id' => 'nullable|array',
             'kandungan_id.*' => 'exists:kandungan_obat,id',
             'stok_minimum' => 'nullable|integer|min:0',
@@ -114,7 +121,7 @@ class ObatController extends Controller
             'barcode' => 'nullable|string|max:100|unique:obat,barcode',
             'deskripsi' => 'nullable|string',
         ]);
-    
+
         DB::beginTransaction();
         try {
             $obat = Obat::create([
@@ -130,10 +137,10 @@ class ObatController extends Controller
                 'barcode' => $request->barcode,
                 'deskripsi' => $request->deskripsi,
             ]);
-    
+
             DB::commit();
             return redirect()->route('admin.obat.index')
-                             ->with('success', 'Obat berhasil ditambahkan.');
+                ->with('success', 'Obat berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -166,7 +173,8 @@ class ObatController extends Controller
             'nama_obat' => 'required|string|max:255',
             'kode_obat' => 'nullable|string|max:50|unique:obat,kode_obat,' . $obat->id,
             'kategori_id' => 'required|exists:kategori_obat,id',
-            'satuan_obat_id' => 'required|exists:satuan_obat,id',
+            'satuan_obat_id' => 'required|array',
+            'satuan_obat_id.*' => 'exists:satuan_obat,id',
             'kandungan_id' => 'nullable|array',
             'kandungan_id.*' => 'exists:kandungan_obat,id',
             'stok_minimum' => 'required|integer|min:0',
@@ -183,7 +191,7 @@ class ObatController extends Controller
                 'kode_obat' => $request->kode_obat,
                 'kategori_id' => $request->kategori_id,
                 'satuan_obat_id' => $request->satuan_obat_id,
-                'kandungan_id' => $request->kandungan_id, 
+                'kandungan_id' => $request->kandungan_id,
                 'stok_minimum' => $request->stok_minimum,
                 'is_racikan' => $request->is_racikan ?? false,
                 'lokasi_rak' => $request->lokasi_rak,
@@ -246,14 +254,14 @@ class ObatController extends Controller
 
         $file = $request->file('file');
         $handle = fopen($file->getPathname(), 'r');
-        
+
         if (!$handle) {
             return back()->with('error', 'Gagal membaca file.');
         }
 
         // Skip header row
         $header = fgetcsv($handle);
-        
+
         $imported = 0;
         $errors = [];
         $rowNumber = 1;
@@ -262,7 +270,7 @@ class ObatController extends Controller
         try {
             while (($row = fgetcsv($handle)) !== false) {
                 $rowNumber++;
-                
+
                 // Skip empty rows
                 if (empty(array_filter($row))) {
                     continue;
@@ -328,7 +336,7 @@ class ObatController extends Controller
                     'nama_obat' => $data['nama_obat'],
                     'deskripsi' => $data['deskripsi'] ?: null,
                     'kategori_id' => $kategori->id,
-                    'satuan_obat_id' => $satuan->id,
+                    'satuan_obat_id' => [$satuan->id],
                     'stok_minimum' => (int) ($data['stok_minimum'] ?: 10),
                     'is_racikan' => (bool) $data['is_racikan'],
                     'lokasi_rak' => $data['lokasi_rak'] ?: null,
@@ -350,7 +358,7 @@ class ObatController extends Controller
             } else {
                 DB::rollBack();
                 return back()->with('error', 'Tidak ada data yang berhasil diimport.')
-                             ->with('import_errors', $errors);
+                    ->with('import_errors', $errors);
             }
         } catch (\Exception $e) {
             fclose($handle);

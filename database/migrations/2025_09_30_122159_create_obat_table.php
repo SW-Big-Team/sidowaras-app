@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('obat', function (Blueprint $table) {
@@ -16,7 +15,7 @@ return new class extends Migration
             $table->string('nama_obat');
             $table->text('deskripsi')->nullable();
             $table->foreignId('kategori_id')->constrained('kategori_obat');
-            $table->foreignId('satuan_obat_id')->constrained('satuan_obat');
+            $table->json('satuan_obat_id')->nullable();
             $table->integer('stok_minimum')->default(10);
             $table->boolean('is_racikan')->default(false);
             $table->string('lokasi_rak', 50)->nullable();

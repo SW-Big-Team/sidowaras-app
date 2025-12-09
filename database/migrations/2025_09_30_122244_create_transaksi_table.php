@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('transaksi', function (Blueprint $table) {
@@ -18,6 +17,7 @@ return new class extends Migration
             $table->decimal('kembalian', 15, 2);
             $table->enum('metode_pembayaran', ['tunai', 'non tunai'])->default('tunai');
             $table->dateTime('tgl_transaksi')->useCurrent();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

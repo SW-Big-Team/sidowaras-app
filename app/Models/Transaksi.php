@@ -20,6 +20,7 @@ class Transaksi extends Model
         'kembalian',
         'metode_pembayaran',
         'tgl_transaksi',
+        'keterangan',
     ];
 
     protected static function boot()
