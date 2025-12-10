@@ -1,61 +1,253 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Sistem POS Apotek Sidowaras
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Production_Ready-success?style=for-the-badge)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Tugas Besar Mata Kuliah Proyek Teknologi Informasi**  
+Institut Teknologi Sumatera
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+</div>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+Aplikasi web modern yang dibangun dengan Laravel 12 dan React, memanfaatkan Inertia.js untuk routing server-side dan rendering client-side yang mulus.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🎯 Tentang
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Sidowaras App adalah aplikasi web full-stack yang menggabungkan kekuatan backend Laravel yang elegan dengan frontend React yang dinamis. Dibangun dengan praktik pengembangan web modern, aplikasi ini menyediakan fondasi yang kokoh untuk aplikasi yang dapat diskalakan.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Teknologi
 
-## Laravel Sponsors
+### Backend
+- **Laravel 12** - Framework PHP modern
+- **PHP 8.2+** - Versi PHP terbaru dengan peningkatan performa
+- **MySQL/PostgreSQL** - Dukungan database relasional
+- **Redis** - Caching dan manajemen session
+- **Doctrine DBAL** - Database abstraction layer
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Frontend
+- **React 19** - React terbaru dengan fitur concurrent
+- **Inertia.js 2.0** - Arsitektur monolith modern
+- **TypeScript** - JavaScript dengan type-safe
+- **TailwindCSS 3.4** - Framework CSS utility-first
+- **HeroUI** - Library komponen React yang indah
+- **Framer Motion** - Animasi tingkat lanjut
+- **Vite 7** - Build tool frontend generasi terbaru
 
-### Premium Partners
+### Tools Tambahan
+- **Maatwebsite/Excel** - Fungsi import/export Excel
+- **Ziggy** - Generasi route untuk JavaScript
+- **HTML5 QRCode** - Kemampuan scanning QR code
+- **Pest/PHPUnit** - Framework testing
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## ✨ Fitur
 
-## Contributing
+- 🔐 **Autentikasi & Otorisasi** - Manajemen user yang aman
+- 📊 **Manajemen Data** - Operasi CRUD tingkat lanjut
+- 📈 **Integrasi Excel** - Import dan export data
+- 📱 **Desain Responsif** - Pendekatan mobile-first
+- 🎨 **UI/UX Modern** - Interface yang indah dengan TailwindCSS dan HeroUI
+- ⚡ **Performa Tinggi** - Dioptimalkan dengan Vite dan Redis caching
+- 🧪 **Testing Komprehensif** - Unit dan feature test dengan Pest
+- 🔄 **Update Real-time** - Background processing berbasis queue
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📦 Prasyarat
 
-## Code of Conduct
+Sebelum memulai, pastikan Anda telah menginstal:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **PHP** >= 8.2
+- **Composer** >= 2.x
+- **Node.js** >= 18.x
+- **NPM** atau **Yarn**
+- **MySQL** >= 8.0 atau **PostgreSQL** >= 13
+- **Redis** (opsional, untuk caching dan queue)
 
-## Security Vulnerabilities
+## 🚀 Instalasi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 1. Clone Repository
 
-## License
+```bash
+git clone <repository-url>
+cd sidowaras-app
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 2. Install Dependensi PHP
+
+```bash
+composer install
+```
+
+### 3. Install Dependensi JavaScript
+
+```bash
+npm install
+```
+
+### 4. Setup Environment
+
+```bash
+# Salin file environment
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### 5. Setup Database
+
+```bash
+# Buat database
+# Update .env dengan kredensial database Anda
+
+# Jalankan migrasi
+php artisan migrate
+
+# (Opsional) Seed database
+php artisan db:seed
+```
+
+### 6. Storage Link
+
+```bash
+php artisan storage:link
+```
+
+## ⚙️ Konfigurasi
+
+### Environment Variables
+
+Konfigurasi file `.env`
+
+## 💻 Pengembangan
+
+### Menjalankan Aplikasi
+
+#### Opsi 1: Menggunakan Composer Script (Direkomendasikan)
+
+Perintah ini menjalankan semua layanan development secara bersamaan:
+
+```bash
+composer dev
+```
+
+Perintah ini akan menjalankan:
+- Laravel server (http://localhost:8000)
+- Queue listener
+- Application logs (Pail)
+- Vite dev server
+
+#### Opsi 2: Setup Manual
+
+Jalankan setiap layanan di terminal terpisah:
+
+```bash
+# Terminal 1: Laravel server
+php artisan serve
+
+# Terminal 2: Vite dev server
+npm run dev
+
+# Terminal 3: Queue worker (jika menggunakan queue)
+php artisan queue:listen
+
+# Terminal 4: Logs (opsional)
+php artisan pail
+```
+
+### Build untuk Production
+
+```bash
+# Build frontend assets
+npm run build
+
+# Optimasi Laravel
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+## 🧪 Pengujian
+
+### Jalankan Semua Test
+
+```bash
+composer test
+```
+
+Atau menggunakan Artisan:
+
+```bash
+php artisan test
+```
+
+### Jalankan Test Suite Spesifik
+
+```bash
+# Jalankan feature tests
+php artisan test --testsuite=Feature
+
+# Jalankan unit tests
+php artisan test --testsuite=Unit
+
+# Jalankan dengan coverage
+php artisan test --coverage
+```
+
+### Kualitas Kode
+
+```bash
+# Format kode dengan Laravel Pint
+./vendor/bin/pint
+
+# Jalankan static analysis (jika dikonfigurasi)
+./vendor/bin/phpstan analyse
+```
+
+## 🚢 Deployment
+
+### Checklist Production
+
+1. ✅ Set `APP_ENV=production` di `.env`
+2. ✅ Set `APP_DEBUG=false` di `.env`
+3. ✅ Jalankan `composer install --optimize-autoloader --no-dev`
+4. ✅ Jalankan `npm run build`
+5. ✅ Jalankan `php artisan config:cache`
+6. ✅ Jalankan `php artisan route:cache`
+7. ✅ Jalankan `php artisan view:cache`
+8. ✅ Setup permission file yang tepat
+9. ✅ Konfigurasi web server (Apache/Nginx)
+10. ✅ Setup SSL certificate
+11. ✅ Konfigurasi queue workers
+12. ✅ Setup scheduled tasks
+
+### Kebutuhan Server
+
+- PHP >= 8.2 dengan ekstensi: BCMath, Ctype, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
+- Web server (Nginx atau Apache)
+- Database server (MySQL/PostgreSQL)
+- Redis server (direkomendasikan)
+- Supervisor (untuk queue workers)
+
+## 👥 Tim Pengembang
+
+| No | Nama | NIM |
+|:--:|:-----|:----:|
+| 1 | Adi Sulaksono | 120140038 |
+| 2 | Aziz Kurniawan | 122140097 |
+| 3 | Harisya Miranti | 122140049 |
+| 4 | Elma Nurul Fatika | 122140069 |
+| 5 | Rizki Alfariz Ramadhan | 122140061 |
+| 6 | Putri Diana Sari Rambe | 122140052 |
+| 7 | Shafa Aulia | 122140062 |
+| 8 | Fathan Andi Kartagama | 122140055 |
+
+---
+
+Dibuat dengan ❤️ kelompok 4 PTI
