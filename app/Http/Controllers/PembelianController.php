@@ -20,7 +20,7 @@ class PembelianController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('role:Admin,Karyawan,Kasir')->only(['index','show','edit','update']);
-        $this->middleware('role:Admin')->only(['create','store','destroy','bayarTermin']);
+        $this->middleware('role:Admin')->only(['store','destroy','bayarTermin']);
     }
 
     public function index(Request $request)
