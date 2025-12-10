@@ -19,8 +19,8 @@ class PembelianController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:Admin,Karyawan,Kasir')->only(['index','show','edit','update']);
-        $this->middleware('role:Admin')->only(['store','destroy','bayarTermin']);
+        $this->middleware('role:Admin,Kasir,Karyawan')->only(['index','show','edit','update','create','store']);
+        $this->middleware('role:Admin')->only(['destroy','bayarTermin']);
     }
 
     public function index(Request $request)
