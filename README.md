@@ -1,6 +1,6 @@
 <div align="center">
 
-# Sidowaras App
+# Sistem POS Apotek Sidowaras
 
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)
@@ -18,19 +18,6 @@ Institut Teknologi Sumatera
 ---
 
 Aplikasi web modern yang dibangun dengan Laravel 12 dan React, memanfaatkan Inertia.js untuk routing server-side dan rendering client-side yang mulus.
-
-## 📋 Daftar Isi
-
-- [Tentang](#tentang)
-- [Teknologi](#teknologi)
-- [Fitur](#fitur)
-- [Prasyarat](#prasyarat)
-- [Instalasi](#instalasi)
-- [Konfigurasi](#konfigurasi)
-- [Pengembangan](#pengembangan)
-- [Pengujian](#pengujian)
-- [Deployment](#deployment)
-- [Tim Pengembang](#tim-pengembang)
 
 ## 🎯 Tentang
 
