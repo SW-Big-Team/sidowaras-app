@@ -13,11 +13,20 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Exports\LaporanExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\LogMonitorService;
 
 class LaporanController extends Controller
 {
+    protected $logMonitor;
+
+    public function __construct(LogMonitorService $logMonitor)
+    {
+        $this->logMonitor = $logMonitor;
+    }
+
     public function index(Request $request)
     {
+        $this->logMonitor->log('view', 'Dashboard Laporan Viewed');
         // Date range logic based on filter type
         $filterType = $request->filter_type ?? 'custom';
 

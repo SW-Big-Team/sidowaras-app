@@ -12,11 +12,21 @@ use App\Models\StockOpname;
 use App\Models\DetailTransaksi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Services\LogMonitorService;
 
 class AdminController extends Controller
 {
+    protected $logMonitor;
+
+    public function __construct(LogMonitorService $logMonitor)
+    {
+        $this->logMonitor = $logMonitor;
+    }
+
     public function index()
     {
+        $this->logMonitor->log('view', 'Admin Dashboard Viewed');
+        
         $today = Carbon::today();
         $yesterday = Carbon::yesterday();
         $startOfMonth = Carbon::now()->startOfMonth();

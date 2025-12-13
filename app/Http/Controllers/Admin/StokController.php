@@ -5,11 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Obat;
 use Illuminate\Http\Request;
+use App\Services\LogMonitorService;
 
 class StokController extends Controller
 {
+    protected $logMonitor;
+
+    public function __construct(LogMonitorService $logMonitor)
+    {
+        $this->logMonitor = $logMonitor;
+    }
+
     public function index(Request $request)
     {
+        $this->logMonitor->log('view', 'Stok Dashboard Viewed');
         $query = Obat::with('kategori', 'satuan', 'stokBatches');
 
         // Search filter
