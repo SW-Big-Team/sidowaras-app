@@ -14,7 +14,7 @@ class Obat extends Model
 
     protected $casts = [
         'kandungan_id' => 'array',
-        'satuan_obat_id' => 'array',
+
     ];
 
     public function kategori()
@@ -22,13 +22,9 @@ class Obat extends Model
         return $this->belongsTo(KategoriObat::class, 'kategori_id');
     }
 
-    public function getsatuanAttribute()
+    public function satuan()
     {
-        if (empty($this->satuan_obat_id) || !is_array($this->satuan_obat_id)) {
-            return collect();
-        }
-
-        return SatuanObat::whereIn('id', $this->satuan_obat_id)->get();
+        return $this->belongsTo(SatuanObat::class, 'satuan_obat_id');
     }
 
     // Relasi ke batch stok

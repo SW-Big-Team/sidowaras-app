@@ -123,20 +123,13 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group-modern">
-                                <label class="form-label-modern">Satuan <small
-                                        class="text-secondary text-lowercase fw-normal">(bisa pilih lebih dari satu)</small>
-                                    <span class="required">*</span></label>
+                                <label class="form-label-modern">Satuan <span class="required">*</span></label>
                                 <div class="input-modern select">
                                     <i class="material-symbols-rounded input-icon">scale</i>
-                                    @php
-                                        $selectedSatuan = old('satuan_obat_id', $obat->satuan_obat_id ?? []);
-                                        // Ensure it's an array for in_array
-                                        if (!is_array($selectedSatuan))
-                                            $selectedSatuan = [$selectedSatuan];
-                                    @endphp
-                                    <select name="satuan_obat_id[]" id="satuanSelectEdit" class="form-control" multiple
-                                        required>
-                                        @foreach($satuan as $s)<option value="{{ $s->id }}" {{ in_array($s->id, $selectedSatuan) ? 'selected' : '' }}>{{ $s->nama_satuan }}</option>@endforeach
+                                    <select name="satuan_obat_id" id="satuanSelectEdit" class="form-control">
+                                        <option value="">-- Pilih Satuan --</option>
+                                        @foreach($satuan as $s)<option value="{{ $s->id }}" {{ old('satuan_obat_id', $obat->satuan_obat_id) == $s->id ? 'selected' : '' }}>{{ $s->nama_satuan }}
+                                        </option>@endforeach
                                     </select>
                                 </div>
                             </div>

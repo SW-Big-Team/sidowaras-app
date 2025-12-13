@@ -52,13 +52,7 @@ class ObatController extends Controller
                     $q->orWhere($col, 'like', "%{$search}%");
                 }
                 $q->orWhereHas('kategori', fn($rel) => $rel->where('nama_kategori', 'like', "%{$search}%"));
-
-                $satuanIds = SatuanObat::where('nama_satuan', 'like', "%{$search}%")->pluck('id')->toArray();
-                if (!empty($satuanIds)) {
-                    foreach ($satuanIds as $sid) {
-                        $q->orWhereJsonContains('satuan_obat_id', $sid);
-                    }
-                }
+                $q->orWhereHas('satuan', fn($rel) => $rel->where('nama_satuan', 'like', "%{$search}%"));
             });
         }
 
@@ -111,8 +105,7 @@ class ObatController extends Controller
         $request->validate([
             'nama_obat' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategori_obat,id',
-            'satuan_obat_id' => 'required|array',
-            'satuan_obat_id.*' => 'exists:satuan_obat,id',
+            'satuan_obat_id' => 'required|exists:satuan_obat,id',
             'kandungan_id' => 'nullable|array',
             'kandungan_id.*' => 'exists:kandungan_obat,id',
             'stok_minimum' => 'nullable|integer|min:0',
@@ -173,8 +166,7 @@ class ObatController extends Controller
             'nama_obat' => 'required|string|max:255',
             'kode_obat' => 'nullable|string|max:50|unique:obat,kode_obat,' . $obat->id,
             'kategori_id' => 'required|exists:kategori_obat,id',
-            'satuan_obat_id' => 'required|array',
-            'satuan_obat_id.*' => 'exists:satuan_obat,id',
+            'satuan_obat_id' => 'required|exists:satuan_obat,id',
             'kandungan_id' => 'nullable|array',
             'kandungan_id.*' => 'exists:kandungan_obat,id',
             'stok_minimum' => 'required|integer|min:0',
@@ -336,7 +328,7 @@ class ObatController extends Controller
                     'nama_obat' => $data['nama_obat'],
                     'deskripsi' => $data['deskripsi'] ?: null,
                     'kategori_id' => $kategori->id,
-                    'satuan_obat_id' => [$satuan->id],
+                    'satuan_obat_id' => $satuan->id,
                     'stok_minimum' => (int) ($data['stok_minimum'] ?: 10),
                     'is_racikan' => (bool) $data['is_racikan'],
                     'lokasi_rak' => $data['lokasi_rak'] ?: null,

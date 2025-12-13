@@ -142,7 +142,8 @@
                             <option value="">Semua Kategori</option>
                             @foreach($kategoriList as $kat)
                                 <option value="{{ $kat->id }}" {{ request('kategori') == $kat->id ? 'selected' : '' }}>
-                                    {{ $kat->nama_kategori }}</option>
+                                    {{ $kat->nama_kategori }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -199,12 +200,7 @@
                                     <span class="category-badge">{{ $obat->kategori->nama_kategori ?? '-' }}</span>
                                 </td>
                                 <td>
-                                    @php
-                                        // $obat->satuan is now an accessor returning collection
-                                        $satuanNames = $obat->satuan->pluck('nama_satuan')->toArray();
-                                    @endphp
-                                    <span
-                                        class="text-secondary">{{ !empty($satuanNames) ? implode(', ', $satuanNames) : '-' }}</span>
+                                    <span class="text-secondary">{{ $obat->satuan->nama_satuan ?? '-' }}</span>
                                 </td>
                                 <td>
                                     @if(count($kandunganList) > 0)

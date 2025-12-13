@@ -15,9 +15,9 @@ class StokController extends Controller
         // Search filter
         if ($request->has('search') && $request->search) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nama_obat', 'like', "%{$search}%")
-                  ->orWhere('kode_obat', 'like', "%{$search}%");
+                    ->orWhere('kode_obat', 'like', "%{$search}%");
             });
         }
 
@@ -35,7 +35,7 @@ class StokController extends Controller
             // Has batches expiring within 30 days
             $query->whereHas('stokBatches', function ($q) {
                 $q->where('tgl_kadaluarsa', '<=', now()->addDays(30))
-                  ->where('sisa_stok', '>', 0);
+                    ->where('sisa_stok', '>', 0);
             });
         }
 
