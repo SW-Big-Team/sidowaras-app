@@ -123,7 +123,7 @@
                                 <label class="form-label-modern">Satuan <span class="required">*</span></label>
                                 <div class="input-modern select">
                                     <i class="material-symbols-rounded input-icon">scale</i>
-                                    <select name="satuan_obat_id" id="satuanSelect" class="form-control">
+                                    <select name="satuan_obat_id" class="form-control" required>
                                         <option value="">-- Pilih Satuan --</option>
                                         @foreach($satuan as $s)<option value="{{ $s->id }}" {{ old('satuan_obat_id') == $s->id ? 'selected' : '' }}>{{ $s->nama_satuan }}</option>@endforeach
                                     </select>
@@ -691,7 +691,6 @@
         <script>
             $(document).ready(function () {
                 $('#kandunganSelect').select2({ placeholder: 'Pilih kandungan obat', allowClear: true, width: '100%' });
-                $('#satuanSelect').select2({ placeholder: 'Pilih satuan obat', allowClear: true, width: '100%' });
                 let html5QrCode = null;
                 const btnOpenQr = document.getElementById('btnOpenQr');
                 const barcodeInput = document.getElementById('barcodeInput');
