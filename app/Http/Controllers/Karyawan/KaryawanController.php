@@ -10,11 +10,20 @@ use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Services\LogMonitorService;
 
 class KaryawanController extends Controller
 {
+    protected $logMonitor;
+
+    public function __construct(LogMonitorService $logMonitor)
+    {
+        $this->logMonitor = $logMonitor;
+    }
+
     public function index()
     {
+        $this->logMonitor->log('view', 'Karyawan Dashboard Viewed');
         $user = Auth::user();
         $today = Carbon::today();
 

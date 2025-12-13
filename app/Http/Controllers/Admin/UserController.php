@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Services\LogMonitorService;
 
 class UserController extends Controller
 {
     public function __construct()
     {
+        $this->logMonitor = app(LogMonitorService::class);
         // Pastikan user login DAN role-nya Head
         $this->middleware(['auth', 'role:Admin']);
     }
@@ -24,6 +26,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->logMonitor->log('view', 'User Dashboard Viewed');
         $users = User::with('role:id,nama_role')
             ->select('id', 'uuid', 'nama_lengkap', 'email', 'role_id', 'is_active')
             ->get();
@@ -36,6 +39,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->logMonitor->log('view', 'Create User viewed');
         $roles = Role::select('id', 'nama_role')->get();
         return view('admin.users.create', compact('roles'));
     }
@@ -65,12 +69,14 @@ class UserController extends Controller
             ]);
 
             DB::commit();
+            $this->logMonitor->logCreate(new User(), 'User created');
 
             return redirect()
                 ->route('admin.users.index')
                 ->with('success', 'User berhasil dibuat.');
         } catch (\Exception $e) {
             DB::rollBack();
+            $this->logMonitor->logError('create', $e->getMessage(), 'User creation failed', new User());
 
             return redirect()
                 ->back()
@@ -84,6 +90,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $this->logMonitor->log('view', 'Edit User viewed');
         $user = User::findOrFail($id);
         $roles = Role::select('id', 'nama_role')->get();
 
@@ -120,12 +127,14 @@ class UserController extends Controller
             }
 
             DB::commit();
+            $this->logMonitor->logUpdate($user, 'User updated');
 
             return redirect()
                 ->route('admin.users.index')
                 ->with('success', 'User berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
+            $this->logMonitor->logError('update', $e->getMessage(), 'User update failed', $user);
 
             return redirect()
                 ->back()
@@ -187,12 +196,14 @@ class UserController extends Controller
         try {
             $user->delete();
             DB::commit();
+            $this->logMonitor->logDelete($user, 'User deleted');
 
             return redirect()
                 ->route('admin.users.index')
                 ->with('success', 'User berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
+            $this->logMonitor->logError('destroy', $e->getMessage(), 'User deletion failed', $user);
 
             return redirect()
                 ->route('admin.users.index')

@@ -5,11 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use App\Services\LogMonitorService;
 
 class TransaksiController extends Controller
 {
+    protected $logMonitor;
+
+    public function __construct(LogMonitorService $logMonitor)
+    {
+        $this->logMonitor = $logMonitor;
+    }
+
     public function riwayat(Request $request)
     {
+        $this->logMonitor->log('view', 'Riwayat Transaksi Viewed');
         $query = Transaksi::with('user');
 
         // Default filter: 7 hari terakhir jika tidak ada input
@@ -47,6 +56,7 @@ class TransaksiController extends Controller
 
     public function show(Transaksi $transaksi) // Laravel otomatis cari by id
     {
+        $this->logMonitor->log('view', 'Transaksi show viewed');
         $detail = $transaksi->detail()->with('batch.obat')->get();
         return view('admin.transaksi.show', compact('transaksi', 'detail'));
     }

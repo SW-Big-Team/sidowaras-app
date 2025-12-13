@@ -8,11 +8,15 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\LogMonitorService;
 
 class ShiftController extends Controller
 {
+    protected $logMonitor;
+
     public function __construct()
     {
+        $this->logMonitor = app(LogMonitorService::class);
         $this->middleware(['auth', 'role:Admin']);
     }
 
@@ -21,6 +25,7 @@ class ShiftController extends Controller
      */
     public function index()
     {
+        $this->logMonitor->logView(new Shift(), 'Shift Dashboard Viewed');
         $shifts = Shift::orderBy('created_at', 'desc')->get();
         
         // Get users with role "Karyawan" for modal form
@@ -62,7 +67,7 @@ class ShiftController extends Controller
 
         DB::beginTransaction();
         try {
-            Shift::create([
+            $shift = Shift::create([
                 'shift_name' => $validated['shift_name'],
                 'shift_day_of_week' => $validated['shift_day_of_week'],
                 'shift_start' => $validated['shift_start'],
@@ -73,11 +78,15 @@ class ShiftController extends Controller
 
             DB::commit();
 
+            $this->logMonitor->logCreate($shift, 'Shift created');
+
             return redirect()
                 ->route('admin.shift.index')
                 ->with('success', 'Shift berhasil dibuat.');
         } catch (\Exception $e) {
             DB::rollBack();
+
+            $this->logMonitor->logError('create', $e->getMessage(), 'Shift creation failed', $shift);
 
             return redirect()
                 ->route('admin.shift.index')
@@ -124,11 +133,15 @@ class ShiftController extends Controller
 
             DB::commit();
 
+            $this->logMonitor->logUpdate($shift, 'Shift updated');
+
             return redirect()
                 ->route('admin.shift.index')
                 ->with('success', 'Shift berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
+
+            $this->logMonitor->logError('update', $e->getMessage(), 'Shift update failed', $shift);
 
             return redirect()
                 ->route('admin.shift.index')
@@ -144,8 +157,16 @@ class ShiftController extends Controller
     public function toggleStatus($id)
     {
         $shift = Shift::findOrFail($id);
+        if (!$shift) {
+            $this->logMonitor->logError('toggleStatus', 'Shift not found', 'Shift status update failed', $shift);
+            return redirect()
+                ->route('admin.shift.index')
+                ->with('error', 'Shift not found');
+        }
         $shift->shift_status = !$shift->shift_status;
         $shift->save();
+
+        $this->logMonitor->logUpdate($shift, 'Shift status updated to ' . ($shift->shift_status ? 'Active' : 'Inactive'));
 
         return redirect()
             ->route('admin.shift.index')
@@ -164,11 +185,15 @@ class ShiftController extends Controller
             $shift->delete();
             DB::commit();
 
+            $this->logMonitor->logDelete($shift, 'Shift deleted');
+
             return redirect()
                 ->route('admin.shift.index')
                 ->with('success', 'Shift berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
+
+            $this->logMonitor->logError('destroy', $e->getMessage(), 'Shift deletion failed', $shift);
 
             return redirect()
                 ->route('admin.shift.index')

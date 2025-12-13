@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use App\Services\LogMonitorService;
 
 class LoginController extends Controller
 {
+    protected $logMonitor;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -29,6 +32,7 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $user = Auth::user();
+        $this->logMonitor->logLogin($user);
 
         switch ($user->role->nama_role) {
             case 'Admin':
@@ -47,6 +51,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        $this->logMonitor = app(LogMonitorService::class);
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }

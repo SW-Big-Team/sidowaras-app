@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Services\NotificationService;
+use App\Services\LogMonitorService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(NotificationService::class, function ($app) {
             return new NotificationService();
+        });
+        
+        $this->app->singleton(LogMonitorService::class, function ($app) {
+            return new LogMonitorService();
         });
     }
 
